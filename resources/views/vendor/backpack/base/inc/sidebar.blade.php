@@ -24,7 +24,7 @@
 
           <li class="header">Payments</li>
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/plans') }}"><i class="fa fa-cc-stripe"></i> <span>Plans</span></a></li>
-          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/dashboard') }}"><i class="fa fa-usd"></i> <span>Coupons</span></a></li>
+          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/coupons') }}"><i class="fa fa-usd"></i> <span>Coupons</span></a></li>
 
           <!-- ======================================= -->
           <li class="header">{{ trans('backpack::base.user') }}</li>

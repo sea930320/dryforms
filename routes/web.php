@@ -18,4 +18,5 @@ Route::get('/', function () {
 Route::middleware(['auth'])->prefix('admin')->group(function() {
     Route::resource('users', 'Backend\UsersController');
     Route::resource('plans', 'Backend\PlansController');
+    Route::resource('coupons', 'Backend\CouponsController');
 });

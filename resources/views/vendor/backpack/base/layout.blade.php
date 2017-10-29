@@ -84,6 +84,7 @@
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
          @yield('header')
+         @include('backpack::inc.modals')
 
         <!-- Main content -->
         <section class="content">
@@ -161,6 +162,11 @@
         $('.nav-tabs a').on('shown.bs.tab', function (e) {
             location.hash = e.target.hash.replace("#tab_", "#");
         });
+
+        $(document).on('click', '.remove', function() {
+            $('#deleteModal').modal({});
+            $('.link').attr('action', $(this).attr('data-href'));
+        })
     </script>
 
     @include('backpack::inc.alerts')

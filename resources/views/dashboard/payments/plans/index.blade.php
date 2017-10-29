@@ -43,6 +43,9 @@
                                 <td>{{ $plan->interval }}</td>
                                 <td>{{ $plan->trial_period_days }}</td>
                                 <td>
+                                    <a class="btn btn-xs btn-danger pull-right remove" data-href="{{ route('plans.destroy', $plan->id) }}">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
                                     <a class="btn btn-xs btn-default pull-right" href="{{ route('plans.edit', $plan->id) }}">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
