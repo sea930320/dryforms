@@ -47,7 +47,13 @@
           @endrole
 
           @hasanyrole(['User', 'Admin'])
-            <li><a href="#"><span>Account</span></a></li>
+            <li class="treeview">
+                <a href="#"><i class="fa fa-group"></i> <span>Account</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="#"><i class="fa fa-key"></i> <span>Change Password</span></a></li>
+                    <li><a href="#"><i class="fa fa-envelope-o"></i> <span>Change Email</span></a></li>
+                </ul>
+            </li>
           @endrole
 
           @hasanyrole(['Admin'])

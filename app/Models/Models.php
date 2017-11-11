@@ -11,7 +11,7 @@ class Models extends Model
      *
      * @var string
      */
-    protected $table = "models";
+    protected $table = "equipment_models";
 
     /**
      * The attributes that are mass assignable.

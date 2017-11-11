@@ -27,6 +27,6 @@ class CategoriesTableSeeder extends Seeder
             ],
         ];
 
-        DB::table('categories')->insert($categories);
+        DB::table('equipment_categories')->insert($categories);
     }
 }

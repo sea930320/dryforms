@@ -37,7 +37,7 @@
                         </div>
                         <div class="form-group">
                             {{Form::label('prefix', 'Prefix')}}
-                            {{Form::text('prefix', $category->name,, ['class' => 'form-control'])}}
+                            {{Form::text('prefix', $category->name, ['class' => 'form-control'])}}
                             @if($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('prefix') }}</span>
                             @endif

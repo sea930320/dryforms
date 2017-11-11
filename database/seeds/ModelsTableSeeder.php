@@ -33,6 +33,6 @@ class ModelsTableSeeder extends Seeder
             ],
         ];
 
-        DB::table('models')->insert($models);
+        DB::table('equipment_models')->insert($models);
     }
 }

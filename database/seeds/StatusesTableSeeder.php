@@ -27,6 +27,6 @@ class StatusesTableSeeder extends Seeder
             ],
         ];
 
-        DB::table('statuses')->insert($statuses);
+        DB::table('equipment_statuses')->insert($statuses);
     }
 }

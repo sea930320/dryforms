@@ -24,6 +24,6 @@ class TeamsTableSeeder extends Seeder
             ],
         ];
 
-        DB::table('teams')->insert($teams);
+        DB::table('equipment_teams')->insert($teams);
     }
 }

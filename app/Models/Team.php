@@ -11,7 +11,7 @@ class Team extends Model
      *
      * @var string
      */
-    protected $table = "teams";
+    protected $table = "equipment_teams";
 
     /**
      * The attributes that are mass assignable.
