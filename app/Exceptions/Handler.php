@@ -46,8 +46,13 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
+    //TODO extend handler for api
     public function render($request, Exception $exception)
     {
+        if ($request->bearerToken()) {
+            return response()->json($exception->getMessage());
+        }
+
         return parent::render($request, $exception);
     }
 }

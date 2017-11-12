@@ -6,7 +6,7 @@ use App\Repositories\Contracts\CategoryInterface;
 use Prologue\Alerts\Facades\Alert;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Http\Requests\Categories\CategoryCreate;
+use App\Http\Requests\Categories\CategoryStore;
 use App\Http\Requests\Categories\CategoryUpdate;
 
 class CategoryController extends Controller
@@ -51,11 +51,11 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CategoryCreate  $request
+     * @param  CategoryStore  $request
      *
      * @return mixed
      */
-    public function store(CategoryCreate $request)
+    public function store(CategoryStore $request)
     {
         $data = $request->only(['name', 'prefix']);
 
