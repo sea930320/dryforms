@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Repositories\Contracts\CategoryInterface;
 use Prologue\Alerts\Facades\Alert;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -11,14 +12,28 @@ use App\Http\Requests\Categories\CategoryUpdate;
 class CategoryController extends Controller
 {
     /**
+     * @var Category
+     */
+    private $category;
+
+    /**
+     * CategoryController constructor.
+     *
+     * @param CategoryInterface $category
+     */
+    public function __construct(CategoryInterface $category) {
+
+        $this->category = $category;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // get categories list
-        $categories = Category::getList();
+        $categories = $this->category->all();
 
         return view('dashboard.categories.index', compact('categories'));
     }
@@ -42,11 +57,9 @@ class CategoryController extends Controller
      */
     public function store(CategoryCreate $request)
     {
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['name', 'prefix']);
 
-        // create category
-        if( ! Category::createCategory($data)) {
+        if( ! $this->category->create($data)) {
 
             Alert::error('Could not create category')->flash();
 
@@ -65,7 +78,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -77,10 +90,9 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
-        // get category by id
-        if(! $category = Category::getById($id)) {
+        if(! $category = $this->category->findBy('id', $id)) {
 
             Alert::error('Could not get category with id ' . $id . ' from database')->flash();
 
@@ -98,21 +110,18 @@ class CategoryController extends Controller
      *
      * @return mixed
      */
-    public function update(CategoryUpdate $request, $id)
+    public function update(CategoryUpdate $request, int $id)
     {
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['name', 'prefix']);
 
-        // get category
-        if( ! $category = Category::getById($id)) {
+        if( ! $category = $this->category->findBy('id', $id)) {
 
             Alert::error('Could not get category with id ' . $id . ' from database')->flash();
 
             return back()->withInput();
         }
 
-        // update category
-        if( ! $update = Category::updateCategory($data, $category)) {
+        if( ! $update = $this->category->update($data, $category->id)) {
 
             Alert::error('Could not update category')->flash();
 
@@ -131,18 +140,16 @@ class CategoryController extends Controller
      *
      * @return mixed
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        // get category
-        if( ! $category = Category::getById($id)) {
+        if( ! $category = $this->category->findBy('id', $id)) {
 
             Alert::error('Could not get category with id ' . $id . ' from database')->flash();
 
             return back();
         }
 
-        // delete category
-        if( ! $delete = Category::deleteCategory($category)) {
+        if( ! $delete = $this->category->delete($category->id)) {
 
             Alert::error('Could not delete category')->flash();
 

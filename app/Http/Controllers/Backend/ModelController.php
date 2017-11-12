@@ -7,10 +7,33 @@ use App\Http\Requests\Models\ModelUpdate;
 use App\Models\Category;
 use App\Models\Models;
 use App\Http\Controllers\Controller;
+use App\Repositories\Contracts\CategoryInterface;
+use App\Repositories\Contracts\ModelInterface;
 use Prologue\Alerts\Facades\Alert;
 
 class ModelController extends Controller
 {
+    /**
+     * @var Models
+     */
+    private $model;
+    /**
+     * @var Category
+     */
+    private $category;
+
+    /**
+     * ModelController constructor.
+     *
+     * @param ModelInterface $model
+     * @param CategoryInterface $category
+     */
+    public function __construct(ModelInterface $model, CategoryInterface $category)
+    {
+        $this->model = $model;
+        $this->category = $category;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +41,7 @@ class ModelController extends Controller
      */
     public function index()
     {
-        // get models list
-        $models = Models::getList();
+        $models = $this->model->all();
 
         return view('dashboard.models.index', compact('models'));
     }
@@ -31,13 +53,13 @@ class ModelController extends Controller
      */
     public function create()
     {
-        // get categories
-        if( ! $categories = Category::getList()) {
+        if( ! $categories = $this->category->all()) {
 
             Alert::error('Could not find categories in database')->flash();
 
             return back();
         }
+
         return view('dashboard.models.create', compact('categories'));
     }
 
@@ -49,18 +71,16 @@ class ModelController extends Controller
      */
     public function store(ModelCreate $request)
     {
-        $data = $request->all();
+        $data = $request->only(['name', 'category_id']);
 
-        // check category
-        if(! $category = Category::getById($data['category_id'])){
+        if(! $category = $this->category->find($data['category_id'])){
 
             Alert::error('Could not find category from database')->flash();
 
             return back()->withInput();
         }
 
-        // create model
-        if( ! Models::createModel($data)) {
+        if( ! $this->model->create($data)) {
 
             Alert::error('Could not create model')->flash();
 
@@ -78,7 +98,7 @@ class ModelController extends Controller
      * @param  int  $id
      * @return mixed
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -89,17 +109,23 @@ class ModelController extends Controller
      * @param  int  $id
      * @return mixed
      */
-    public function edit($id)
+    public function edit(int $id)
     {
-        // get model
-        if( ! $model = Models::getById($id)) {
+        if( ! $model = $this->model->find($id)) {
 
             Alert::error('Could not find model in database')->flash();
 
             return back();
         }
 
-        return view('dashboard.models.edit', compact('model'));
+        if( ! $categories = $this->category->all()) {
+
+            Alert::error('Could not find categories in database')->flash();
+
+            return back();
+        }
+
+        return view('dashboard.models.edit', compact('model', 'categories'));
     }
 
     /**
@@ -109,28 +135,25 @@ class ModelController extends Controller
      * @param  int  $id
      * @return mixed
      */
-    public function update(ModelUpdate $request, $id)
+    public function update(ModelUpdate $request, int $id)
     {
-        // get model
-        if( ! $model = Models::getById($id)) {
+        if( ! $model = $this->model->find($id)) {
 
             Alert::error('Could not find model from database')->flash();
 
             return back()->withInput();
         }
 
-        $data = $request->all();
+        $data = $request->only(['name', 'category_id']);
 
-        // check category
-        if(! $category = Category::getById($data['category_id'])){
+        if( ! $category = $this->category->find($data['category_id'])){
 
             Alert::error('Could not find category from database')->flash();
 
             return back()->withInput();
         }
 
-        // update model
-        if( ! Models::updateModel($model, $data)) {
+        if( ! $this->model->update($data, $model->id)) {
 
             Alert::error('Could not update model')->flash();
 
@@ -148,18 +171,16 @@ class ModelController extends Controller
      * @param  int  $id
      * @return mixed
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        // get model
-        if( ! $model = Models::getById($id)) {
+        if( ! $model = $this->model->find($id)) {
 
             Alert::error('Could not find model from database')->flash();
 
             return back()->withInput();
         }
 
-        // delete model
-        if( ! Models::deleteModel($model)) {
+        if( ! $this->model->delete($model->id)) {
 
             Alert::error('Could not delete model')->flash();
 

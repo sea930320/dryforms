@@ -5,11 +5,25 @@ namespace App\Http\Controllers\Backend;
 use App\Models\Team;
 use App\Http\Requests\Teams\TeamCreate;
 use App\Http\Requests\Teams\TeamUpdate;
+use App\Repositories\Contracts\TeamInterface;
 use Prologue\Alerts\Facades\Alert;
 use App\Http\Controllers\Controller;
 
 class TeamController extends Controller
 {
+    /**
+     * @var Team
+     */
+    private $team;
+
+    /**
+     * @param TeamInterface $team
+     */
+    public function __construct(TeamInterface $team)
+    {
+        $this->team = $team;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +31,7 @@ class TeamController extends Controller
      */
     public function index()
     {
-        // get teams
-        $teams = Team::getList();
+        $teams = $this->team->all(['id', 'name']);
 
         return view('dashboard.teams.index', compact('teams'));
     }
@@ -42,11 +55,9 @@ class TeamController extends Controller
      */
     public function store(TeamCreate $request)
     {
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['name']);
 
-        // create team
-        if( ! $team = Team::createTeam($data)) {
+        if( ! $team = $this->team->create($data)) {
 
             Alert::error('Could not create team')->flash();
 
@@ -64,7 +75,7 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -75,10 +86,9 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
-        // get team
-        if( ! $team = Team::getById($id)) {
+        if( ! $team = $this->team->find($id)) {
 
             Alert::error('Could not get team with id ' . $id . ' from database')->flash();
 
@@ -95,21 +105,18 @@ class TeamController extends Controller
      * @param  int  $id
      * @return mixed
      */
-    public function update(TeamUpdate $request, $id)
+    public function update(TeamUpdate $request, int $id)
     {
-        // get team
-        if( ! $team = Team::getById($id)) {
+        if( ! $team = $this->team->find($id)) {
 
             Alert::error('Could not get team with id ' . $id . ' from database')->flash();
 
             return back()->withInput();
         }
 
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['name']);
 
-        // update team
-        if( ! $update = Team::updateTeam($data, $team)) {
+        if( ! $update = $this->team->update($data, $team->id)) {
 
             Alert::error('Could not update team')->flash();
 
@@ -127,18 +134,16 @@ class TeamController extends Controller
      * @param  int  $id
      * @return mixed
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        // get team
-        if( ! $team = Team::getById($id)) {
+        if( ! $team = $this->team->find($id)) {
 
             Alert::error('Could not find team in database')->flash();
 
             return back();
         }
 
-        // delete team
-        if( ! $delete = Team::deleteTeam($team)) {
+        if( ! $delete = $this->team->delete($team->id)) {
 
             Alert::error('Could not delete team from database')->flash();
 

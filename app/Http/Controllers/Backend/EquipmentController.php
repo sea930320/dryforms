@@ -8,6 +8,11 @@ use App\Models\Equipment;
 use App\Models\Models;
 use App\Models\Status;
 use App\Models\Team;
+use App\Repositories\Contracts\CategoryInterface;
+use App\Repositories\Contracts\EquipmentInterface;
+use App\Repositories\Contracts\ModelInterface;
+use App\Repositories\Contracts\StatusInterface;
+use App\Repositories\Contracts\TeamInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\Equipments\EquipmentCreate;
 use Illuminate\Http\Response;
@@ -16,23 +21,57 @@ use Prologue\Alerts\Facades\Alert;
 class EquipmentController extends Controller
 {
     /**
+     * @var Equipment
+     */
+    private $equipment;
+    /**
+     * @var Category
+     */
+    private $category;
+    /**
+     * @var Models
+     */
+    private $model;
+    /**
+     * @var Team
+     */
+    private $team;
+    /**
+     * @var Status
+     */
+    private $status;
+
+    /**
+     * EquipmentController constructor.
+     *
+     * @param EquipmentInterface $equipment
+     * @param CategoryInterface  $category
+     * @param StatusInterface    $status
+     * @param TeamInterface      $team
+     * @param ModelInterface     $model
+     */
+    public function __construct(EquipmentInterface $equipment, CategoryInterface $category, StatusInterface $status,
+                                TeamInterface $team, ModelInterface $model) {
+
+        $this->equipment = $equipment;
+        $this->category = $category;
+        $this->model = $model;
+        $this->status = $status;
+        $this->team = $team;
+    }
+
+
+    /**
      * Display summarized equipments info.
      *
      * @return \Illuminate\Http\Response
      */
     public function summarized()
     {
-        // get categories
-        $categories = Category::getList();
-
-        // get models
-        $models = Models::getList();
-
-        // get teams
-        $teams = Team::getList();
-
-        // get statuses
-        $statuses = Status::getList();
+        $categories = $this->category->all();
+        $models = $this->model->all();
+        $teams = $this->team->all();
+        $statuses = $this->status->all();
 
         return view('dashboard.equipments.summarized', compact('categories','models', 'teams', 'statuses'));
     }
@@ -44,21 +83,17 @@ class EquipmentController extends Controller
      *
      * @return mixed
      */
-    public function index($id)
+    public function index(int $id)
     {
-        // check model
-        if( ! $model = Models::getById($id)) {
+        if( ! $model = $this->model->find($id)) {
 
             Alert::error('Could not find model')->flash();
 
             return back()->withInput();
         }
 
-        // get teams
-        $teams = Team::getList();
-
-        // get statuses
-        $statuses = Status::getList();
+        $teams = $this->team->all();
+        $statuses = $this->status->all();
 
         return view('dashboard.equipments.index', compact('model', 'teams', 'statuses'));
     }
@@ -81,35 +116,31 @@ class EquipmentController extends Controller
      */
     public function store(EquipmentCreate $request)
     {
-        // get request data
         $data = $request->all();
 
         // check category
-        if( ! $category = Category::getById($data['category'])) {
+        if( ! $category = $this->category->find($data['category'])) {
 
             Alert::error('Could not find category')->flash();
 
             return back()->withInput();
         }
 
-        // check model
-        if( ! $model = Models::getById($data['model'])) {
+        if( ! $model = $this->model->find($data['model'])) {
 
             Alert::error('Could not find model')->flash();
 
             return back()->withInput();
         }
 
-        // check team
-        if( ! $team = Models::getById($data['team'])) {
+        if( ! $team = $this->team->find($data['team'])) {
 
             Alert::error('Could not find team')->flash();
 
             return back()->withInput();
         }
 
-        // check team
-        if( ! $status = Status::getById($data['status'])) {
+        if( ! $status = $this->status->find($data['status'])) {
 
             Alert::error('Could not find status')->flash();
 
@@ -123,7 +154,7 @@ class EquipmentController extends Controller
             $serial = '#' . $category->prefix . str_pad($i, 4, '0', STR_PAD_LEFT);
 
 
-            if ( ! Equipment::createEquipment(['model_id' => $model->id, 'team_id' => $team->id, 'serial' => $serial, 'status_id' => $status->id])) {
+            if ( ! $this->equipment->create(['model_id' => $model->id, 'team_id' => $team->id, 'serial' => $serial, 'status_id' => $status->id])) {
 
                 Alert::error('Could not create equipment with serial ' . $serial)->flash();
 
@@ -131,8 +162,7 @@ class EquipmentController extends Controller
             }
         }
 
-        // update model
-        Models::updateEquipmentsCount($data['quantity'], $model);
+        $this->model->update(['quantity' => $data['quantity']], $model->id);
 
         return redirect()->route('equipments.summarized');
     }
@@ -143,7 +173,7 @@ class EquipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -154,7 +184,7 @@ class EquipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         //
     }
@@ -166,7 +196,7 @@ class EquipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //
     }
@@ -177,7 +207,7 @@ class EquipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }
@@ -191,35 +221,29 @@ class EquipmentController extends Controller
      */
     public function changeTeam(Request $request)
     {
-        // check request
         if( ! $request->ajax()) {
 
             return response(['status' => 'error', 'message' => 'You don\'t have permission to view this page']);
         }
 
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['equipment_id', 'team_id']);
 
-        // check request data
         if( ! isset($data['equipment_id']) || ! isset($data['team_id'])) {
 
             return response(['status' => 'error', 'message' => 'Requested data is not full']);
         }
 
-        // get equipment
-        if( ! $equipment = Equipment::getById($data['equipment_id'])) {
+        if( ! $equipment = $this->equipment->find($data['equipment_id'])) {
 
             return response(['status' => 'error', 'message' => 'Could not find equipment in database']);
         }
 
-        // get team
-        if( ! Team::getById($data['team_id'])) {
+        if( ! $this->team->find($data['team_id'])) {
 
             return response(['status' => 'error', 'message' => 'Could not find team in database']);
         }
 
-        // update equipment`s team
-        if( ! $equipment = Equipment::updateTeam($equipment, $data['team_id'])) {
+        if( ! $this->equipment->update(['team_id' => $data['team_id']], $equipment->id)) {
 
             return response(['status' => 'error', 'message' => 'Could not update team for equipment in database']);
         }
@@ -236,40 +260,34 @@ class EquipmentController extends Controller
      */
     public function changeStatus(Request $request)
     {
-        // check request
         if( ! $request->ajax()) {
 
             return response(['status' => 'error', 'message' => 'You don\'t have permission to view this page']);
         }
 
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['equipment_id', 'status_id']);
 
-        // check request data
         if( ! isset($data['equipment_id']) || ! isset($data['status_id'])) {
 
             return response(['status' => 'error', 'message' => 'Requested data is not full']);
         }
 
-        // get equipment
-        if( ! $equipment = Equipment::getById($data['equipment_id'])) {
+        if( ! $equipment = $this->equipment->find($data['equipment_id'])) {
 
             return response(['status' => 'error', 'message' => 'Could not find equipment in database']);
         }
 
-        // get team
-        if( ! $status = Status::getById($data['status_id'])) {
+        if( ! $status = $this->status->find($data['status_id'])) {
 
             return response(['status' => 'error', 'message' => 'Could not find status in database']);
         }
 
-        // update equipment`s team
-        if( ! $equipment = Equipment::updateStatus($equipment, $data['status_id'])) {
+        if( ! $this->equipment->update(['status_id' => $data['status_id']], $equipment->id)) {
 
             return response(['status' => 'error', 'message' => 'Could not update status for equipment in database']);
         }
 
-
+        // hide location input field depend of status
         $hideLocation = $status->name == 'Set' || $status->name == 'Loan' ? false : true;
 
         return response(['status' => 'success', 'message' => 'The equipment with serial ' . $equipment->serial . ' updated successfully',
@@ -285,29 +303,24 @@ class EquipmentController extends Controller
      */
     public function changeLocation(Request $request)
     {
-        // check request
         if( ! $request->ajax()) {
 
             return response(['status' => 'error', 'message' => 'You don\'t have permission to view this page']);
         }
 
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['equipment_id', 'location']);
 
-        // check request data
         if( ! isset($data['equipment_id'])) {
 
             return response(['status' => 'error', 'message' => 'Requested data is not full']);
         }
 
-        // get equipment
-        if( ! $equipment = Equipment::getById($data['equipment_id'])) {
+        if( ! $equipment = $this->equipment->find($data['equipment_id'])) {
 
             return response(['status' => 'error', 'message' => 'Could not find equipment in database']);
         }
 
-        // update equipment`s team
-        if( ! $equipment = Equipment::updateLocation($equipment, $data['location'])) {
+        if( ! $this->equipment->update(['location' => $data['location']], $equipment->id)) {
 
             return response(['status' => 'error', 'message' => 'Could not update location for equipment in database']);
         }
@@ -324,23 +337,19 @@ class EquipmentController extends Controller
      */
     public function bulkDelete(Request $request)
     {
-        // check request
         if( ! $request->ajax()) {
 
             return response(['status' => 'error', 'message' => 'You don\'t have permission to view this page']);
         }
 
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['ids']);
 
-        // check request data
         if(empty($data['ids'])) {
 
             return response(['status' => 'error', 'message' => 'Requested data is not full']);
         }
 
-        // delete equipments
-        if( ! Equipment::bulkDelete($data['ids'])) {
+        if( ! $this->equipment->bulkDelete($data['ids'])) {
 
             return response(['status' => 'error', 'message' => 'Could not delete equipments']);
         }
@@ -357,23 +366,19 @@ class EquipmentController extends Controller
      */
     public function getModels(Request $request)
     {
-        // check request
         if( ! $request->ajax()) {
 
             return response(['status' => 'error', 'message' => 'You don\'t have permission to view this page']);
         }
 
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['id']);
 
-        // check request data
         if(empty($data['id'])) {
 
             return response(['status' => 'error', 'message' => 'Requested data is not full']);
         }
 
-        // get category
-        if( ! $category = Category::getById($data['id'])) {
+        if( ! $category = $this->category->find($data['id'])) {
 
             return response(['status' => 'error', 'message' => 'Could not find category in database']);
         }

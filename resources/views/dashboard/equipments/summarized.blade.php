@@ -12,10 +12,6 @@
     </section>
 @endsection
 
-@section('after_scripts')
-    <script src="{{ asset('js') }}/dashboard.js"></script>
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -36,7 +32,7 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th style="width: 300px;">Make\Model</th>
+                                    <th class="model-th">Make\Model</th>
                                     <th>Total</th>
                                     @foreach($statuses as $status)
                                         <th>{{$status->name}}</th>
@@ -92,9 +88,8 @@
                             {{Form::label('category', 'Category')}}
                             <div class="col-xs-12">
                                 <div class="row">
-                                    {{Form::select('category', $categories->pluck('name', 'id')->toArray(), null, ['class' => 'form-control',
-                                     'style' => 'width: calc(100% - 79px);float: left;'])}}
-                                    <a href="{{route('categories.create')}}" style="border-radius: 0;" class="btn btn-success">Add New</a>
+                                    {{Form::select('category', $categories->pluck('name', 'id')->toArray(), null, ['class' => 'form-control'])}}
+                                    <a href="{{route('categories.create')}}" class="btn btn-success add-new">Add New</a>
                                 </div>
                             </div>
                             @if($errors->has('category'))
@@ -105,9 +100,8 @@
                             {{Form::label('model', 'Make\Model')}}
                             <div class="col-xs-12">
                                 <div class="row">
-                                    {{Form::select('model', [], null, ['class' => 'form-control',
-                                     'style' => 'width: calc(100% - 79px);float: left;'])}}
-                                    <a href="{{route('models.create')}}" style="border-radius: 0;" class="btn btn-success">Add New</a>
+                                    {{Form::select('model', [], null, ['class' => 'form-control'])}}
+                                    <a href="{{route('models.create')}}" class="btn btn-success add-new">Add New</a>
                                 </div>
                             </div>
                             @if($errors->has('model'))
@@ -118,9 +112,8 @@
                             {{Form::label('team', 'Team')}}
                             <div class="col-xs-12">
                                 <div class="row">
-                                    {{Form::select('team', $teams->pluck('name', 'id')->toArray(), null, ['class' => 'form-control',
-                                     'style' => 'width: calc(100% - 79px);float: left;'])}}
-                                    <a href="{{route('teams.create')}}" style="border-radius: 0;" class="btn btn-success">Add New</a>
+                                    {{Form::select('team', $teams->pluck('name', 'id')->toArray(), null, ['class' => 'form-control'])}}
+                                    <a href="{{route('teams.create')}}" class="btn btn-success add-new">Add New</a>
                                 </div>
                             </div>
                             @if($errors->has('team'))
@@ -131,12 +124,11 @@
                             {{Form::label('status', 'Status')}}
                             <div class="col-xs-12">
                                 <div class="row">
-                                    {{Form::select('status', $statuses->pluck('name', 'id')->toArray(), null, ['class' => 'form-control',
-                                     'style' => 'width: calc(100% - 79px);float: left;'])}}
-                                    <a href="{{route('statuses.create')}}" style="border-radius: 0;" class="btn btn-success">Add New</a>
+                                    {{Form::select('status', $statuses->pluck('name', 'id')->toArray(), null, ['class' => 'form-control'])}}
+                                    <a href="{{route('statuses.create')}}" class="btn btn-success add-new">Add New</a>
                                 </div>
                             </div>
-                            @if($errors->has('team'))
+                            @if($errors->has('status'))
                                 <span class="text-danger">{{ $errors->first('status') }}</span>
                             @endif
                         </div>

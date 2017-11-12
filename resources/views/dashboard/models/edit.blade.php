@@ -25,7 +25,7 @@
                     <div class="box-title">Edit Model</div>
                 </div>
 
-                <div class="box-body">
+                <div id="edit-model"  class="box-body">
                     {{ Form::model($model, ['route' => ['models.update', $model->id]]) }}
                         {{Form::hidden('_method', 'PUT')}}
                         <div class="form-group">
@@ -33,6 +33,18 @@
                             {{Form::text('name', $model->name, ['class' => 'form-control'])}}
                             @if($errors->has('name'))
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
+                            @endif
+                        </div>
+                        <div class="form-group">
+                            {{Form::label('category', 'Category')}}
+                            <div class="col-xs-12">
+                                <div class="row">
+                                    {{Form::select('category_id', $categories->pluck('name', 'id')->toArray(), null, ['class' => 'form-control'])}}
+                                    <a href="{{route('categories.create')}}" class="btn btn-success add-new">Add New</a>
+                                </div>
+                            </div>
+                            @if($errors->has('category'))
+                                <span class="text-danger">{{ $errors->first('category') }}</span>
                             @endif
                         </div>
                         <div class="form-actions">

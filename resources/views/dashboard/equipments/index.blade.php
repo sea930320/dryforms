@@ -12,10 +12,6 @@
     </section>
 @endsection
 
-@section('after_scripts')
-    <script src="{{ asset('js') }}/dashboard.js"></script>
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -27,8 +23,8 @@
                 <div class="box-body">
 
                     @if($model->equipments->count())
-                        <button id="select-all-equipments" class="btn btn-success pull-right" style="margin-left:20px;margin-bottom: 20px;">Select all</button>
-                        <button id="bulk-delete-button" class="btn btn-danger pull-right" disabled="disabled" style="margin-bottom: 20px;">Delete selected</button>
+                        <button id="select-all-equipments" class="btn btn-success pull-right">Select all</button>
+                        <button id="bulk-delete-button" class="btn btn-danger pull-right" disabled="disabled">Delete selected</button>
                         <table id="model-equipments" class="table table-bordered table-hover">
                             <thead>
                             <tr>
@@ -49,9 +45,9 @@
                                         {{Form::select('team', $teams->pluck('name', 'id')->toArray(), $equipment->team->id, ['class' => 'form-control'])}}
                                     </td>
                                     <td class="location-wrapper">
-                                        <input style="width: calc(100% - 71px);float:left;" class="form-control" type="text" name="location" value="{{$equipment->location}}" data-equipment-id="{{ $equipment->id }}"
+                                        <input class="form-control" type="text" name="location" value="{{$equipment->location}}" data-equipment-id="{{ $equipment->id }}"
                                                {{$equipment->status->name == "Set" || $equipment->status->name == "Loan" ? '' : 'disabled'}}/>
-                                        <button style="border-radius: 0;" class="change-location btn btn-success"
+                                        <button class="change-location btn btn-success"
                                                 {{$equipment->status->name == "Set" || $equipment->status->name == "Loan" ? '' : 'disabled'}}>Change</button>
                                     </td>
                                     <td>

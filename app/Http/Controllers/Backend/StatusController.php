@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Models\Status;
+use App\Repositories\Contracts\StatusInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Statuses\StatusCreate;
@@ -12,14 +13,26 @@ use Prologue\Alerts\Facades\Alert;
 class StatusController extends Controller
 {
     /**
+     * @var Status
+     */
+    private $status;
+
+    /**
+     * @param StatusInterface $status
+     */
+    public function __construct(StatusInterface $status)
+    {
+        $this->status = $status;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // get statuses list
-        $statuses = Status::getList();
+        $statuses = $this->status->all(['id', 'name']);
 
         return view('dashboard.statuses.index', compact('statuses'));
     }
@@ -43,11 +56,10 @@ class StatusController extends Controller
      */
     public function store(StatusCreate $request)
     {
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['name']);
 
         // create status
-        if( ! $status = Status::createStatus($data)) {
+        if( ! $status = $this->status->create($data)) {
 
             Alert::error('Could not create status')->flash();
 
@@ -65,7 +77,7 @@ class StatusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -76,10 +88,9 @@ class StatusController extends Controller
      * @param  int  $id
      * @return mixed
      */
-    public function edit($id)
+    public function edit(int $id)
     {
-        // get status
-        if( ! $status = Status::getById($id)) {
+        if( ! $status = $this->status->find($id)) {
 
             Alert::error('Could not get status with id ' . $id . ' from database')->flash();
 
@@ -96,21 +107,18 @@ class StatusController extends Controller
      * @param  int  $id
      * @return mixed
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        // get status
-        if( ! $status = Status::getById($id)) {
+        if( ! $status = $this->status->find($id)) {
 
             Alert::error('Could not get status with id ' . $id . ' from database')->flash();
 
             return back()->withInput();
         }
 
-        // get request data
-        $data = $request->all();
+        $data = $request->only(['name']);
 
-        // update status
-        if( ! $update = Status::updateStatus($data, $status)) {
+        if( ! $update = $this->status->update($data, $status->id)) {
 
             Alert::error('Could not update status')->flash();
 
@@ -128,18 +136,16 @@ class StatusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        // get status
-        if( ! $status = Status::getById($id)) {
+        if( ! $status = $this->status->find($id)) {
 
             Alert::error('Could not get status with id ' . $id . ' from database')->flash();
 
             return back();
         }
 
-        // delete status
-        if( ! $delete = Status::deleteStatus($status)) {
+        if( ! $delete = $this->status->delete($status->id)) {
 
             Alert::error('Could not delete status')->flash();
 

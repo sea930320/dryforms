@@ -25,7 +25,7 @@
                     <div class="box-title">Create Model</div>
                 </div>
 
-                <div class="box-body">
+                <div id="create-model" class="box-body">
                     {{ Form::open(['route' => 'models.store']) }}
                     <div class="form-group">
                         {{Form::label('name', 'Name')}}
@@ -34,13 +34,12 @@
                             <span class="text-danger">{{ $errors->first('name') }}</span>
                         @endif
                     </div>
-                    <div class="form-group" style="overflow: hidden">
+                    <div class="form-group">
                         {{Form::label('category', 'Category')}}
                         <div class="col-xs-12">
                             <div class="row">
-                                {{Form::select('category_id', $categories->pluck('name', 'id')->toArray(), null, ['class' => 'form-control',
-                                 'style' => 'width: calc(100% - 79px);float: left;'])}}
-                                <a href="{{route('categories.create')}}" style="border-radius: 0;" class="btn btn-success">Add New</a>
+                                {{Form::select('category_id', $categories->pluck('name', 'id')->toArray(), null, ['class' => 'form-control'])}}
+                                <a href="{{route('categories.create')}}" class="btn btn-success add-new">Add New</a>
                             </div>
                         </div>
                         @if($errors->has('category'))

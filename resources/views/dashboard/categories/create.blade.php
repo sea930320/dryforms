@@ -13,7 +13,6 @@
     </section>
 @endsection
 
-
 @section('content')
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -37,7 +36,7 @@
                     <div class="form-group">
                         {{Form::label('prefix', 'Prefix')}}
                         {{Form::text('prefix', null, ['class' => 'form-control'])}}
-                        @if($errors->has('name'))
+                        @if($errors->has('prefix'))
                             <span class="text-danger">{{ $errors->first('prefix') }}</span>
                         @endif
                     </div>
