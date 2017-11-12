@@ -16,7 +16,7 @@ class CreateModelsTable extends Migration
         Schema::create('equipment_models', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('category_id')->unsigned()->index();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('equipment_categories')->onDelete('cascade');
             $table->integer('equipments_count')->default(0);
             $table->string('name');
             $table->timestamps();
