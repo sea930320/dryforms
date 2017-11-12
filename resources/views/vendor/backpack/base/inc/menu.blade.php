@@ -4,7 +4,11 @@
         <!-- ========== Top menu items (ordered left) ========== -->
         <!-- =================================================== -->
 
-        <!-- <li><a href="{{ url('/') }}"><i class="fa fa-home"></i> <span>Home</span></a></li> -->
+        <li><a href="#"><span>Projects</span></a></li>
+        <li><a href="#"><span>Settings</span></a></li>
+        <li><a href="#"><span>Standards</span></a></li>
+        <li><a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/summarized-equipments') }}"><span>Equipment</span></a></li>
+        <li><a href="#"><span>Training</span></a></li>
 
         <!-- ========== End of top menu left items ========== -->
     </ul>

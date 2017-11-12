@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
+use Backpack\CRUD\CrudTrait;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Cashier\Billable;
 
+
 class User extends Authenticatable
 {
-    use Notifiable, Billable;
+    use Notifiable, Billable, CrudTrait, HasRoles;
 
     /**
      * The attributes that are mass assignable.
