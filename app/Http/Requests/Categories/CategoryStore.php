@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Http\Requests\Categories;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class CategoryCreate extends FormRequest
+class CategoryStore extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +23,7 @@ class CategoryCreate extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:equipment_categories,name',
             'prefix' => 'required|string'
         ];
     }
