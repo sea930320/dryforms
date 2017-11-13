@@ -60,13 +60,28 @@ class EquipmentCategoriesController extends ApiController
         return $this->respond(['message' => 'Category successfully created', 'category' => $category]);
     }
 
+    /**
+     * @param CategoryUpdate $request
+     *
+     * @return JsonResponse
+     */
     public function update(CategoryUpdate $request): JsonResponse
     {
-        //TODO implement update
+        $category = $this->category->find($request->input('category_id'));
+        $category->update($request->validatedOnly());
+
+        return $this->respond(['message' => 'Category successfully updated', 'category' => $category]);
     }
 
-    public function destroy(): JsonResponse
+    /**
+     * @param int $id
+     *
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
     {
-        //TODO implement destroy
+        $this->category->findOrFail($id)->delete();
+
+        return $this->respond(['message' => 'Category successfully deleted']);
     }
 }
