@@ -14,9 +14,9 @@ class ModelsTableSeeder extends Seeder
     public function run()
     {
         // get categories
-        $airMover = Category::getByName('Air Mover');
-        $dehumidifier = Category::getByName('Dehumidifier');
-        $airscrubber = Category::getByName('Air Scrubber');
+        $airMover =  DB::table('equipment_categories')->where('name', 'Air Mover')->select(['id'])->first();
+        $dehumidifier = DB::table('equipment_categories')->where('name', 'Dehumidifier')->select(['id'])->first();
+        $airscrubber = DB::table('equipment_categories')->where('name', 'Air Scrubber')->select(['id'])->first();
 
         $models = [
             [
