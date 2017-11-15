@@ -13,3 +13,7 @@ yarn-error.log
 /public/js/*
 /public/css/*
 .env.js
+/tests/_data/*
+/tests/_output/*
+/tests/_support/_generated/*
+codeception.yml

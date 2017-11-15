@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var cssmin = require('gulp-cssmin');
@@ -64,19 +65,31 @@ gulp.task('scripts', function () {
         .pipe(notify("Scripts compiled"));
 });
 
-gulp.task('styles', function () {
-    return gulp.src(cssFile)
+gulp.task('styles-backend', function () {
+    return gulp.src('./resources/assets/backend/sass/**/*.scss')
+        .pipe(sass().on('error', sass.logError))
         .pipe(cssmin())
-        .pipe(concat('app.min.css'))
-        .pipe(gulp.dest('public/assets/css/'))
+        .pipe(concat('backend.min.css'))
+        .pipe(gulp.dest('public/css/'))
+        .pipe(notify("Styles compiled"));
+});
+
+gulp.task('styles-front', function () {
+    return gulp.src('./resources/assets/frontend/sass/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(cssmin())
+        .pipe(concat('frontend.min.css'))
+        .pipe(gulp.dest('public/css/'))
         .pipe(notify("Styles compiled"));
 });
 
 gulp.task('watch', function () {
     gulp.watch('./resources/assets/js/**/*.js', ['scripts']);
-    gulp.watch('./resources/assets/views/**/*.html', ['views']);
+    gulp.watch('./resources/assets/js/**/*.js', ['scripts']);
+    gulp.watch('./resources/assets/backend/sass/**/*.scss', ['styles-backend']);
+    gulp.watch('./resources/assets/frontend/sass/**/*.scss', ['styles-front']);
     gulp.watch(cssFile, ['styles']);
 });
 
 gulp.task('vendor', ['vendor-js', 'vendor-css', 'fonts']);
-gulp.task('default', ['views', 'scripts', 'styles']);
+gulp.task('default', ['views', 'scripts', 'styles-backend', 'styles-front']);

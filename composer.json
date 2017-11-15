@@ -18,7 +18,9 @@
     },
     "require-dev": {
         "backpack/generators": "^1.1",
+        "codeception/codeception": "^2.3",
         "filp/whoops": "~2.0",
+        "flow/jsonpath": "^0.3.4",
         "fzaninotto/faker": "~1.4",
         "laracasts/generators": "dev-master",
         "mockery/mockery": "0.9.*",
