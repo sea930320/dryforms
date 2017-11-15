@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Teams;;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
+use Illuminate\Validation\Rule;
 
-class TeamUpdate extends FormRequest
+class TeamUpdate extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,12 @@ class TeamUpdate extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string'
+            'team_id' => 'exists:equipment_teams,id',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('equipment_teams')->ignore($this->input('team_id'), 'id')
+            ],
         ];
     }
 }

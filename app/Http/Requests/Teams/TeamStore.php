@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Teams;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class TeamCreate extends FormRequest
+class TeamStore extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class TeamCreate extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string'
+            'name' => 'required|string|unique:equipment_models,name',
         ];
     }
 }

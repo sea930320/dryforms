@@ -19,7 +19,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function() {
     Route::resource('users', 'Backend\UsersController');
     Route::resource('plans', 'Backend\PlansController');
     Route::resource('coupons', 'Backend\CouponsController');
-    Route::resource('categories', 'Backend\CategoryController');
     Route::resource('statuses', 'Backend\StatusController');
     Route::resource('teams', 'Backend\TeamController');
     Route::resource('models', 'Backend\ModelController');

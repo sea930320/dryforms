@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,8 +47,14 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
+    //TODO extend handler for api
     public function render($request, Exception $exception)
     {
+        //TODO refactor and make builder
+        if ($request->bearerToken() && $exception instanceof ValidationException) {
+            return response()->json($exception->validator->getMessageBag());
+        }
+
         return parent::render($request, $exception);
     }
 }

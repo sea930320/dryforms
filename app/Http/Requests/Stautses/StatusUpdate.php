@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Statuses;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
+use Illuminate\Validation\Rule;
 
-class StatusUpdate extends FormRequest
+class StatusUpdate extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,12 @@ class StatusUpdate extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string'
+            'status_id' => 'exists:equipment_statuses,id',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('equipment_models')->ignore($this->input('model_id'), 'id')
+            ],
         ];
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Equipments;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class EquipmentUpdate extends FormRequest
+class EquipmentUpdate extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,10 @@ class EquipmentUpdate extends FormRequest
     public function rules()
     {
         return [
-            //
+            'equipment_id' => 'exists:equipments,id',
+            'status_id' => 'exists:equipment_statuses,id',
+            'team_id' => 'exists:equipment_teams,id',
+            'location' => 'sometimes|string',
         ];
     }
 }
