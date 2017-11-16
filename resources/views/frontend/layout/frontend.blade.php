@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-ng-app="dryForms">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -30,6 +30,7 @@
     <!-- BackPack Base CSS -->
     <link rel="stylesheet" href="{{ asset('vendor/backpack/backpack.base.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('css/vendor/vendor.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/frontend.min.css') }}">
 @yield('after_styles')
 
@@ -40,7 +41,8 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-black-light sidebar-mini">
+<body class="hold-transition skin-black-light sidebar-mini" data-ng-controller="MainController as mc">
+<toast></toast>
 <script type="text/javascript">
     /* Recover sidebar state */
     (function () {
@@ -113,6 +115,9 @@
 <script src="{{ asset('vendor/adminlte') }}/plugins/fastclick/fastclick.js"></script>
 <script src="{{ asset('vendor/adminlte') }}/dist/js/app.min.js"></script>
 
+<script src="{{ asset('js/vendor/vendor.min.js') }}"></script>
+<script src="{{ asset('js/frontend/frontend.min.js') }}"></script>
+
 <!-- page script -->
 <script type="text/javascript">
     /* Store sidebar state */
@@ -167,7 +172,7 @@
 
 @yield('after_scripts')
 
-<script src="{{ asset('js') }}/dashboard.js"></script>
+{{--<script src="{{ asset('js') }}/dashboard.js"></script>--}}
 
 <!-- JavaScripts -->
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

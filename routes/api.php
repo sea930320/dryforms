@@ -14,18 +14,14 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['middleware' => 'api'], function ($router) {
-    Route::post('login', 'Auth\ApiAuthController@login');
+    Route::post('login', ['uses' => 'Auth\ApiLoginController@login', 'as' => 'api.login']);
     Route::post('logout', 'Auth\ApiAuthController@logout');
     Route::post('refresh', 'Auth\ApiAuthController@refresh');
     Route::post('me', 'Auth\ApiAuthController@me');
 });
 
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 //TODO authentification middleware
-Route::namespace('Api')->middleware(['api'])->group(function() {
+Route::namespace('Api')->middleware(['auth:api'])->group(function() {
     Route::resource('categories', 'EquipmentCategoriesController');
 });

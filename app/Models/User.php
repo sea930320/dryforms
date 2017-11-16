@@ -5,15 +5,16 @@ namespace App\Models;
 use Backpack\PermissionManager\app\Models\Permission;
 use Illuminate\Notifications\Notifiable;
 use Backpack\CRUD\CrudTrait;
+use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Cashier\Billable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
-    use Notifiable, Billable, CrudTrait, HasRoles;
+    use Notifiable, Billable, CrudTrait, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -41,25 +42,5 @@ class User extends Authenticatable implements JWTSubject
     public function getCreatedAtAttribute($value)
     {
         return date("m/d/Y H:m", strtotime($value));
-    }
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
     }
 }

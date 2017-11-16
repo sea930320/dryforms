@@ -25,19 +25,27 @@ function swallowError (error) {
 
 gulp.task('vendor-js', function () {
     return gulp.src([
-
+        './node_modules/lodash/lodash.js',
+        './node_modules/angular/angular.js',
+        './node_modules/angular-animate/angular-animate.js',
+        './node_modules/angular-resource/angular-resource.js',
+        './node_modules/angular-sanitize/angular-sanitize.js',
+        './node_modules/ng-toast/dist/ngToast.js',
     ])
         .pipe(concat('vendor.min.js'))
         .pipe(gulpif(isProduction(), uglify({mangle: false, output: {
             max_line_len: 5000000
         }})))
-        .pipe(gulp.dest('public/assets/'));
+        .pipe(gulp.dest('public/js/vendor/'));
 });
 
 gulp.task('vendor-css', function () {
-    return gulp.src([])
+    return gulp.src([
+        './node_modules/ng-toast/dist/ngToast.css',
+        './node_modules/ng-toast/dist/ngToast-animations.css'
+    ])
         .pipe(concat('vendor.min.css'))
-        .pipe(gulp.dest('public/assets/'));
+        .pipe(gulp.dest('public/css/vendor/'));
 });
 
 gulp.task('fonts', function () {
@@ -55,13 +63,13 @@ gulp.task('views', function () {
 
 gulp.task('scripts', function () {
     return gulp.src([
-        './resources/assets/js/**/*.js'
+        './resources/assets/frontend/js/**/*.js'
     ])
-        .pipe(concat('app.min.js'))
+        .pipe(concat('frontend.min.js'))
         .pipe(gulpif(!isProduction(), babel({ compact: false})))
         .on('error', swallowError)
         .pipe(gulpif(isProduction(), babel({ compact: true})))
-        .pipe(gulp.dest('public/assets/'))
+        .pipe(gulp.dest('public/js/frontend/'))
         .pipe(notify("Scripts compiled"));
 });
 
@@ -84,7 +92,7 @@ gulp.task('styles-front', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('./resources/assets/js/**/*.js', ['scripts']);
+    gulp.watch('./resources/assets/frontend/js/**/*.js', ['scripts']);
     gulp.watch('./resources/assets/js/**/*.js', ['scripts']);
     gulp.watch('./resources/assets/backend/sass/**/*.scss', ['styles-backend']);
     gulp.watch('./resources/assets/frontend/sass/**/*.scss', ['styles-front']);
