@@ -33,6 +33,30 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
+     * Relation with employees.
+     */
+    public function employee()
+    {
+        return $this->hasOne(CompanyEmployee::class, 'user_id');
+    }
+
+    /**
+     * Relation with companies.
+     */
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'user_id');
+    }
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_users');
+    }
+
+    /**
      * @param string $value
      *
      * @return string

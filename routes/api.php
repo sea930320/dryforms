@@ -31,7 +31,9 @@ Route::namespace('Api')->middleware(['auth:api'])->group(function() {
     Route::resource('teams', 'EquipmentTeamsController');
     Route::resource('statuses', 'EquipmentStatusesController');
     Route::resource('equipments', 'EquipmentsController');
-
     Route::delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
     Route::get('get-models/{id}', 'EquipmentCategoriesController@getModels');
+    Route::resource('companies', 'CompaniesController');
+    Route::resource('employee-statuses', 'EmployeeStatusesController');
+    Route::resource('company-employees', 'CompanyEmployeesController');
 });

@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class CompanyEmployee extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = "roles";
+    protected $table = 'company_employees';
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +19,7 @@ class Role extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'level'
+        'user_id', 'company_id', 'status_id'
     ];
 
     /**
@@ -28,5 +28,21 @@ class Role extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relation with company.
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * Relation with status.
+     */
+    public function status()
+    {
+        return $this->belongsTo(EmployeeStatus::class);
     }
 }
