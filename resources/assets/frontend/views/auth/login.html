@@ -1,6 +1,3 @@
-@extends('frontend.layout.frontend')
-
-@section('content')
 <div class="container" data-ng-controller="LoginController as vm">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -9,14 +6,12 @@
 
                 <div class="panel-body">
                     <form class="form-horizontal">
-                        {{ csrf_field() }}
-
                         <div class="form-group">
                             <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email"
-                                       value="{{ old('email') }}" required autofocus ng-model="vm.user.email">
+                                       required autofocus ng-model="vm.user.email">
                             </div>
                         </div>
 
@@ -34,7 +29,7 @@
                                     Login
                                 </button>
 
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                <a class="btn btn-link" href="">
                                     Forgot Your Password?
                                 </a>
                             </div>
@@ -45,4 +40,3 @@
         </div>
     </div>
 </div>
-@endsection

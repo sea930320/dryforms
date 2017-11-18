@@ -3,9 +3,13 @@ angular
         'ngAnimate',
         'ngResource',
         'ngSanitize',
-        'ngToast'
+        'ngToast',
+        'angular-jwt',
+        'ui.router',
+        'ngRoute',
+        'LocalStorageModule'
     ])
-    .config(['$httpProvider', $httpProvider => {
+    .config(['$httpProvider', 'jwtOptionsProvider', ($httpProvider, jwtOptionsProvider) => {
         $httpProvider.interceptors.push(() => {
             return {
                 'response': (response) => {
@@ -32,11 +36,36 @@ angular
                 }
             }
         });
+        jwtOptionsProvider.config({
+            tokenGetter: function (jwtHelper, $window) {
+                let token = window.localStorage.getItem("apiToken");
+                // if user has expired authToken then we need to regenerate it.
+                // regeneration occurs at login page
+                if (token === null) {
+                    $window.location.href = '/auth/logout';
+                }
+                return window.localStorage.getItem("apiToken");
+            },
+            // whiteListedDomains: ['[A-Za-z-.]+.statscore.com', '[A-Za-z-.]+.softnetsport.com']
+        });
+        $httpProvider.interceptors.push('jwtInterceptor');
         $httpProvider.defaults.headers.common['Accept'] = 'application/json';
-        $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('apiToken');
+        // $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + window.localStorage.getItem('apiToken');
     }])
     .config(['ngToastProvider', function (ngToastProvider) {
         ngToastProvider.configure({
             animation: 'slide' // or 'fade'
         });
-    }]);
+    }])
+    .config(function ($locationProvider) {
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+        });
+    })
+    .config(function (localStorageServiceProvider) {
+        localStorageServiceProvider
+            .setPrefix('dryForms')
+            .setStorageType('sessionStorage')
+            .setNotify(true, true)
+    });

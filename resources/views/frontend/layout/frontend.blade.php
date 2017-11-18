@@ -32,16 +32,16 @@
 
     <link rel="stylesheet" href="{{ asset('css/vendor/vendor.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/frontend.min.css') }}">
-@yield('after_styles')
+    @yield('after_styles')
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-black-light sidebar-mini" data-ng-controller="MainController as mc">
+<body class="hold-transition skin-black-light sidebar-mini" data-ng-controller="MainController as mc" ng-cloak>
 <toast></toast>
 <script type="text/javascript">
     /* Recover sidebar state */
@@ -54,7 +54,7 @@
 </script>
 <div class="wrapper">
     <header class="main-header">
-        <a href="{{ url('') }}" class="logo">
+        <a href="/" class="logo">
             <span class="logo-mini">{!! config('backpack.base.logo_mini') !!}</span>
             <span class="logo-lg">{!! config('backpack.base.logo_lg') !!}</span>
         </a>
@@ -65,39 +65,28 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            @include('frontend.layout._top-menu')
+            <top-nav></top-nav>
         </nav>
     </header>
 
     <!-- =============================================== -->
 
-@include('frontend.layout._left-sidebar')
+    <left-sidebar data-ng-if="mc.userAuthenticated()"></left-sidebar>
 
 <!-- =============================================== -->
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-    @yield('header')
-    @include('backpack::inc.modals')
-
-    <!-- Main content -->
         <section class="content">
 
-            @yield('content')
+            <ui-view></ui-view>
 
         </section>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-    @include('frontend.layout._right-sidebar')
+
+    <right-sidebar data-ng-if="mc.userAuthenticated()"></right-sidebar>
 
     <footer class="main-footer">
-        @if (config('backpack.base.show_powered_by'))
-            <div class="pull-right hidden-xs">
-                {{ trans('backpack::base.powered_by') }} <a target="_blank" href="http://backpackforlaravel.com?ref=panel_footer_link">Backpack for Laravel</a>
-            </div>
-        @endif
         {{ trans('backpack::base.handcrafted_by') }} <a target="_blank" href="{{ config('backpack.base.developer_link') }}">{{ config('backpack.base.developer_name') }}</a>.
     </footer>
 </div>

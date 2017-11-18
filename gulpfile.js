@@ -31,6 +31,10 @@ gulp.task('vendor-js', function () {
         './node_modules/angular-resource/angular-resource.js',
         './node_modules/angular-sanitize/angular-sanitize.js',
         './node_modules/ng-toast/dist/ngToast.js',
+        './node_modules/angular-jwt/dist/angular-jwt.js',
+        './node_modules/angular-ui-router/release/angular-ui-router.js',
+        './node_modules/angular-route/angular-route.js',
+        './node_modules/angular-local-storage/dist/angular-local-storage.js'
     ])
         .pipe(concat('vendor.min.js'))
         .pipe(gulpif(isProduction(), uglify({mangle: false, output: {
@@ -55,10 +59,10 @@ gulp.task('fonts', function () {
 
 gulp.task('views', function () {
     return gulp.src([
-        './resources/assets/views/**/*.html'
+        './resources/assets/frontend/views/**/*.html'
     ])
         .pipe(htmlmin({collapseWhitespace: true}))
-        .pipe(gulp.dest('public/assets/views/'));
+        .pipe(gulp.dest('public/frontend/views/'));
 });
 
 gulp.task('scripts', function () {
@@ -96,6 +100,7 @@ gulp.task('watch', function () {
     gulp.watch('./resources/assets/js/**/*.js', ['scripts']);
     gulp.watch('./resources/assets/backend/sass/**/*.scss', ['styles-backend']);
     gulp.watch('./resources/assets/frontend/sass/**/*.scss', ['styles-front']);
+    gulp.watch('./resources/assets/frontend/views/**/*.html', ['views']);
     gulp.watch(cssFile, ['styles']);
 });
 
