@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['middleware' => 'api'], function ($router) {
-    Route::post('login', ['uses' => 'Auth\ApiLoginController@login', 'as' => 'api.login']);
+    Route::post('login', ['uses' => 'Auth\ApiAuthController@login', 'as' => 'api.login']);
     Route::post('logout', 'Auth\ApiAuthController@logout');
     Route::post('refresh', 'Auth\ApiAuthController@refresh');
 });

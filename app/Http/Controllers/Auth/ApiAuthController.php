@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth;
 
-class ApiLoginController extends LoginController
+class ApiAuthController extends LoginController
 {
     /**
      * @var User
@@ -57,6 +57,21 @@ class ApiLoginController extends LoginController
 
         return response()->json([
             'token' => $token,
+        ]);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        return response()->json([
+            'message' => 'Success',
         ]);
     }
 

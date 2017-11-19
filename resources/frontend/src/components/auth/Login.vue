@@ -17,12 +17,15 @@
             </form>
         </div>
         <div class="card-footer text-muted">
-            <button class="btn btn-primary">Log In</button>
+            <button class="btn btn-primary" v-on:click="login()">Log In</button>
         </div>
     </div>
 </template>
 
 <script type="text/babel">
+    import axios from 'axios'
+    import apiAuth from '../../api/auth'
+
     export default {
         name: 'Login',
         data() {
@@ -31,6 +34,20 @@
                     email: null,
                     password: null
                 }
+            }
+        },
+        methods: {
+            login() {
+                apiAuth.login(this.user)
+                    .then(response => {
+                        this.$session.start()
+                        this.$session.set('apiToken', response.data.token)
+                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
+                        this.$router.push('/')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             }
         }
     }

@@ -8,11 +8,14 @@
         <b-navbar-nav class="ml-auto">
             <b-nav-item><router-link to="/login">Login</router-link></b-nav-item>
             <b-nav-item>Register</b-nav-item>
-            <b-nav-item><i class="fa fa-sign-out"></i> Logout</b-nav-item>
+            <b-nav-item v-on:click="logout()"><i class="fa fa-sign-out"></i> Logout</b-nav-item>
         </b-navbar-nav>
     </b-navbar>
 </template>
 <script type="text/babel">
+    import axios from 'axios'
+    import apiAuth from '../../api/auth'
+
     export default {
         data() {
             return {
@@ -38,6 +41,14 @@
                         route: '/training'
                     }
                 ]
+            }
+        },
+        methods: {
+            logout() {
+                apiAuth.logout()
+                axios.defaults.headers.common['Authorization'] = null
+                this.$session.destroy()
+                this.$router.push('/login')
             }
         }
     }
