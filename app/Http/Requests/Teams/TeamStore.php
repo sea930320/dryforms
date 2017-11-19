@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Models;
+namespace App\Http\Requests\Teams;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class ModelCreate extends FormRequest
+class TeamStore extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class ModelCreate extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'category_id' => 'required|numeric'
+            'name' => 'required|string|unique:equipment_models,name',
         ];
     }
 }

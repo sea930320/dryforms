@@ -1,11 +1,10 @@
 <?php
-
-namespace App\Http\Requests\Teams;;
+namespace App\Http\Requests\EmployeeStatuses;
 
 use App\Http\Requests\BaseRequest;
 use Illuminate\Validation\Rule;
 
-class TeamUpdate extends BaseRequest
+class EmployeeStatusUpdate extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +24,26 @@ class TeamUpdate extends BaseRequest
     public function rules()
     {
         return [
-            'team_id' => 'exists:equipment_teams,id',
+            'id' => 'exists:employees_statuses,id',
             'name' => [
                 'required',
                 'string',
-                Rule::unique('equipment_teams')->ignore($this->input('team_id'), 'id')
+                Rule::unique('employees_statuses')->ignore($this->input('id'), 'id')
             ],
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function validationData()
+    {
+        $this->merge(
+            [
+                'category_id' => $this->route('category')
+            ]
+        );
+
+        return parent::validationData();
     }
 }

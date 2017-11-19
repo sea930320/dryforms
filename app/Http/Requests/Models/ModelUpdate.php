@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Models;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
+use Illuminate\Validation\Rule;
 
-class ModelUpdate extends FormRequest
+class ModelUpdate extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +25,13 @@ class ModelUpdate extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'category_id' => 'required|numeric'
+            'model_id' => 'exists:equipment_models,id',
+            'category_id' => 'exists:equipment_categories,id',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('equipment_models')->ignore($this->input('model_id'), 'id')
+            ],
         ];
     }
 }

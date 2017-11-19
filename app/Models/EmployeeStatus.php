@@ -3,16 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
-class Category extends Model
+class EmployeeStatus extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'equipment_categories';
+    protected $table = 'employees_statuses';
 
     /**
      * The attributes that are mass assignable.
@@ -20,14 +19,14 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'prefix'
+        'name'
     ];
 
     /**
-     * Relation with models.
+     * Relation with employees.
      */
-    public function models()
+    public function employees()
     {
-        return $this->hasMany(Models::class, 'category_id');
+        return $this->hasMany(CompanyEmployee::class, 'status_id');
     }
 }

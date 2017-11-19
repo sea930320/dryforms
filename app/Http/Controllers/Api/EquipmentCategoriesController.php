@@ -84,4 +84,18 @@ class EquipmentCategoriesController extends ApiController
 
         return $this->respond(['message' => 'Category successfully deleted']);
     }
+
+    /**
+     * Get models by category id
+     *
+     * @param int $id
+     *
+     * @return  JsonResponse
+     */
+    public function getModels(int $id): JsonResponse
+    {
+        $category = $this->category->findOrFail($id);
+
+        return $this->respond(['models' => $category->models]);
+    }
 }

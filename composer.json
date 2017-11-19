@@ -1,6 +1,6 @@
 {
     "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
+    "description": "DryForms",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",

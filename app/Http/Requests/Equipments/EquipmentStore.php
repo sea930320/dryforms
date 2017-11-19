@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Equipments;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class EquipmentCreate extends FormRequest
+class EquipmentStore extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,10 @@ class EquipmentCreate extends FormRequest
     public function rules()
     {
         return [
-            'category' => 'required|numeric',
-            'model' => 'required|numeric',
-            'team' => 'required|numeric',
+            'category_id' => 'exists:equipment_categories,id',
+            'status_id' => 'exists:equipment_statuses,id',
+            'model_id' => 'exists:equipment_models,id',
+            'team_id' => 'exists:equipment_teams,id',
             'quantity' => 'required|numeric',
         ];
     }

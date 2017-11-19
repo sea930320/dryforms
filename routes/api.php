@@ -23,4 +23,13 @@ Route::group(['middleware' => 'api'], function ($router) {
 //TODO authentification middleware
 Route::namespace('Api')->middleware(['jwt.auth'])->group(function() {
     Route::resource('categories', 'EquipmentCategoriesController');
+    Route::resource('models', 'EquipmentModelsController');
+    Route::resource('teams', 'EquipmentTeamsController');
+    Route::resource('statuses', 'EquipmentStatusesController');
+    Route::resource('equipments', 'EquipmentsController');
+    Route::delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
+    Route::get('get-models/{id}', 'EquipmentCategoriesController@getModels');
+    Route::resource('companies', 'CompaniesController');
+    Route::resource('employee-statuses', 'EmployeeStatusesController');
+    Route::resource('company-employees', 'CompanyEmployeesController');
 });

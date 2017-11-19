@@ -1,10 +1,9 @@
 <?php
+namespace App\Http\Requests\EmployeeStatuses;
 
-namespace App\Http\Requests\Teams;
+use App\Http\Requests\BaseRequest;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class TeamCreate extends FormRequest
+class EmployeeStatusStore extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +23,7 @@ class TeamCreate extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string'
+            'name' => 'required|string|unique:employees_statuses,name',
         ];
     }
 }
