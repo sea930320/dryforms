@@ -54,4 +54,10 @@
     nav {
         margin-bottom: 20px;
     }
+    .btn-xs {
+        font-size: 11px;
+        padding: 2px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
 </style>

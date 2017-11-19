@@ -67,7 +67,7 @@ class TeamsController extends ApiController
      */
     public function update(TeamUpdate $request): JsonResponse
     {
-        $team = $this->team->find($request->input('team_id'));
+        $team = $this->team->findOrFail($request->input('team_id'));
         $team->update($request->validatedOnly());
 
         return $this->respond(['message' => 'Team successfully updated', 'team' => $team]);

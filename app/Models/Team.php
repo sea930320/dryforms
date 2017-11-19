@@ -24,6 +24,15 @@ class Team extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $visible = [
+        'id',
+        'name',
+        'description'
+    ];
+
+    /**
      * Relation with equipments.
      */
     public function equipments()

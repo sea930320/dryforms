@@ -20,7 +20,7 @@ class TeamStore extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:equipment_models,name',
+            'name' => 'required|string|unique:teams,name',
             'description' => 'nullable|string',
         ];
     }

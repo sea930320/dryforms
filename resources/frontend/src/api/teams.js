@@ -8,5 +8,11 @@ export default {
     },
     store (data) {
         return axios.post(teamsRoute, data)
+    },
+    patch (id, data) {
+        return axios.patch(teamsRoute + '/' + id, data)
+    },
+    show(id) {
+        return axios.get(teamsRoute + '/' + id)
     }
 }

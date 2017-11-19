@@ -25,13 +25,27 @@ class TeamUpdate extends BaseRequest
     public function rules()
     {
         return [
-            'team_id' => 'exists:equipment_teams,id',
+            'team_id' => 'exists:teams,id',
             'name' => [
                 'required',
                 'string',
-                Rule::unique('equipment_teams')->ignore($this->input('team_id'), 'id')
+                Rule::unique('teams')->ignore($this->input('team_id'), 'id')
             ],
             'description' => 'nullable|string',
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function validationData()
+    {
+        $this->merge(
+            [
+                'team_id' => $this->route('team')
+            ]
+        );
+
+        return parent::validationData();
     }
 }

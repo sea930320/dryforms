@@ -4,7 +4,7 @@
 
         <div class="card-header">
             {{ $route.meta.title }}
-            <b-btn v-b-modal.createTeam :class="'btn btn-sm btn-success pull-right'"><i class="fa fa-plus"></i> </b-btn>
+            <button class="btn btn-xs btn-success pull-right" @click="openCreateModal()"><i class="fa fa-plus"></i> Create</button>
         </div>
         <div class="card-body text-left p-0">
             <table class="table table-sm table-bordered table-striped table-hover no-margin text-center">
@@ -19,7 +19,14 @@
                 <tr v-for="team in teams">
                     <td>{{ team.name }}</td>
                     <td>{{ team.description }}</td>
-                    <td></td>
+                    <td class="text-center">
+                        <button class="btn btn-xs btn-default" @click="openEditModal(team.id)">
+                            <i class="fa fa-pencil"></i> Edit
+                        </button>
+                        <button class="btn btn-xs btn-danger">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -58,7 +65,13 @@
                         this.teams = response.data.data
                     })
             },
-            createTeamModal() {
+            openCreateModal() {
+                this.$emit('openCreateModal')
+            },
+            openEditModal(id) {
+                this.$emit('openEditModal', {
+                    id: id
+                })
             }
         }
     }
