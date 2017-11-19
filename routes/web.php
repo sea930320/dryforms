@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Auth::routes();
 
 Route::middleware(['auth'])->prefix('admin')->group(function() {
     Route::resource('users', 'Backend\UsersController');
@@ -32,4 +30,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function() {
 //    Route::post('change-location', 'Backend\EquipmentController@changeLocation')->name('equipments.change.location');
 //    Route::post('delete-equipment', 'Backend\EquipmentController@bulkDelete')->name('equipments.delete');
 //    Route::post('get-models-by-category', 'Backend\EquipmentController@getModels')->name('equipments.get.models');
+});
+
+Route::middleware([])->namespace('Frontend')->group(function() {
+    Route::get('/', ['uses' => 'HomeController@index', 'as' => 'main.index']);
 });

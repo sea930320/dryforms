@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Backpack\PermissionManager\app\Models\Permission;
 use Illuminate\Notifications\Notifiable;
 use Backpack\CRUD\CrudTrait;
 use Spatie\Permission\Traits\HasRoles;

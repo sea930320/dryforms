@@ -1,103 +1,86 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Tymon\JWTAuth\JWT;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\JWTAuth;
 
-class ApiAuthController extends Controller
+class ApiAuthController extends LoginController
 {
     /**
-     * @var JWT
+     * @var User
      */
-    private $jwt;
+    private $user;
 
     /**
-     * ApiAuthController constructor.
-     *
-     * @param JWT $jwt
+     * @var JWTAuth
      */
-    public function __construct(JWT $jwt)
+    private $jwtAuth;
+
+    /**
+     * ApiLoginController constructor.
+     *
+     * @param User $user
+     * @param JWTAuth $jwtAuth
+     */
+    public function __construct(User $user, JWTAuth $jwtAuth)
     {
-        $this->jwt = $jwt;
-        $this->middleware('auth:api', ['except' => ['login']]);
+        parent::__construct();
+        $this->user = $user;
+        $this->jwtAuth = $jwtAuth;
     }
 
     /**
-     * Get a JWT token via given credentials.
-     *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only(['email', 'password']);
 
-        if ($this->guard()->attempt($credentials)) {
-            $token = $this->jwt->fromUser(auth()->user());
-            return $this->respondWithToken($token);
+        try {
+            $token = $this->jwtAuth->attempt($credentials);
+
+            if (!$token) {
+                return response()->json([
+                    'message' => 'Invalid credentials'
+                ], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json([
+                'message' => 'Failed to create token'
+            ], 401);
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
-    }
-
-    /**
-     * Get the authenticated User
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        return response()->json($this->guard()->user());
-    }
-
-    /**
-     * Log the user out (Invalidate the token)
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function logout()
-    {
-        $this->guard()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
-    }
-
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken($this->guard()->refresh());
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => $this->jwt->factory()->getTTL() * 60
+            'token' => $token,
         ]);
     }
 
     /**
-     * Get the guard to be used during authentication.
+     * Log the user out of the application.
      *
-     * @return \Illuminate\Contracts\Auth\Guard
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function guard()
+    public function logout(Request $request)
     {
-        return Auth::guard();
+        $this->guard()->logout();
+
+        return response()->json([
+            'message' => 'Success',
+        ]);
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAuthUser(){
+        $user = $this->jwtAuth->toUser();
+
+        return response()->json(['result' => $user]);
     }
 }

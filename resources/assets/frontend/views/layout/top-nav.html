@@ -1,0 +1,18 @@
+<div class="navbar-custom-menu pull-left">
+    <ul class="nav navbar-nav" data-ng-if="vm.userAuthenticated()">
+        <li><a href="/projects"><span>Projects</span></a></li>
+        <li><a href="/settings"><span>Settings</span></a></li>
+        <li><a href="/standards"><span>Standards</span></a></li>
+        <li><a href="/equipment"><span>Equipment</span></a></li>
+        <li><a href="/training"><span>Training</span></a></li>
+
+    </ul>
+</div>
+
+<div class="navbar-custom-menu">
+    <ul class="nav navbar-nav">
+        <li><a href="/login" data-ng-if="!vm.userAuthenticated()">Login</a></li>
+        <li><a href="/register" data-ng-if="!vm.userAuthenticated()">Register</a></li>
+        <li><a href="/logout" data-ng-if="vm.userAuthenticated()"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
+    </ul>
+</div>

@@ -12,4 +12,9 @@ yarn-error.log
 .env
 /public/js/*
 /public/css/*
+/public/frontend/views/*
 .env.js
+/tests/_data/*
+/tests/_output/*
+/tests/_support/_generated/*
+codeception.yml
