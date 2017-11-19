@@ -2,22 +2,22 @@
     namespace App\Repositories\Eloquent;
 
     use App\Repositories\Contracts\ModelInterface;
-    use App\Models\Models;
+    use App\Models\EquipmentModel;
 
 
     class ModelRepository implements ModelInterface
     {
         /**
-         * @var Models
+         * @var EquipmentModel
          */
         public $model;
 
         /**
          * ModelRepository constructor.
          *
-         * @param Models $model
+         * @param EquipmentModel $model
          */
-        function __construct(Models $model)
+        function __construct(EquipmentModel $model)
         {
             $this->model = $model;
         }

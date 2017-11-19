@@ -43,6 +43,6 @@ class Equipment extends Model
      */
     public function model()
     {
-        return $this->belongsTo(Models::class);
+        return $this->belongsTo(EquipmentModel::class);
     }
 }

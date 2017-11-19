@@ -3,22 +3,22 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Models\ModelStore;
 use App\Http\Requests\Models\ModelUpdate;
-use App\Models\Models;
+use App\Models\EquipmentModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EquipmentModelsController extends ApiController
 {
     /**
-     * @var Models
+     * @var EquipmentModel
      */
     private $model;
 
     /**
      * EquipmentCategoriesController constructor.
      *
-     * @param Models $model
+     * @param EquipmentModel $model
      */
-    public function __construct(Models $model)
+    public function __construct(EquipmentModel $model)
     {
         $this->model = $model;
     }
@@ -28,7 +28,7 @@ class EquipmentModelsController extends ApiController
      */
     public function index(): JsonResponse
     {
-        $models = $this->model->paginate(20);
+        $models = $this->model->with(['category'])->paginate(20);
 
         return $this->respond($models);
     }

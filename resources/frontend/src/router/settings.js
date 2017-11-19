@@ -12,6 +12,10 @@ const leftLinks = [
         name: 'Users'
     },
     {
+        path: '/settings/teams',
+        name: 'Teams'
+    },
+    {
         path: '/settings/invoices',
         name: 'Invoices'
     }
@@ -46,6 +50,20 @@ const routes = (configRoute) => [
         },
         component: resolve => {
             require(['../components/settings/Company.vue'], resolve)
+        }
+    },
+    {
+        path: '/settings/teams',
+        name: 'Teams',
+        props: {title: 'Teams'},
+        meta: {
+            title: 'Manage Your Teams',
+            roles: ['customer'],
+            leftLinks: leftLinks,
+            rightLinks: rightLinks
+        },
+        component: resolve => {
+            require(['../components/settings/Teams.vue'], resolve)
         }
     }
 ]

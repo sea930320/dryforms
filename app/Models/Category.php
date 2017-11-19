@@ -28,6 +28,6 @@ class Category extends Model
      */
     public function models()
     {
-        return $this->hasMany(Models::class, 'category_id');
+        return $this->hasMany(EquipmentModel::class, 'category_id');
     }
 }

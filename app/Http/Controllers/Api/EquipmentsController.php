@@ -5,7 +5,7 @@ use App\Http\Requests\Equipments\EquipmentStore;
 use App\Http\Requests\Equipments\EquipmentUpdate;
 use App\Models\Category;
 use App\Models\Equipment;
-use App\Models\Models;
+use App\Models\EquipmentModel;
 use App\Models\Status;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class EquipmentsController extends ApiController
      */
     private $team;
     /**
-     * @var Models
+     * @var EquipmentModel
      */
     private $models;
     /**
@@ -38,11 +38,11 @@ class EquipmentsController extends ApiController
      * EquipmentCategoriesController constructor.
      *
      * @param Equipment $equipment
-     * @param Models    $models
+     * @param EquipmentModel    $models
      * @param Status    $status
      * @param Category  $category
      */
-    public function __construct(Equipment $equipment, Models $models, Status $status, Category $category, Team $team)
+    public function __construct(Equipment $equipment, EquipmentModel $models, Status $status, Category $category, Team $team)
     {
         $this->equipment = $equipment;
         $this->models = $models;

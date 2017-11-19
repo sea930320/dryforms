@@ -24,7 +24,7 @@ Route::group(['middleware' => 'api'], function ($router) {
 Route::namespace('Api')->middleware(['jwt.auth'])->group(function() {
     Route::resource('categories', 'EquipmentCategoriesController');
     Route::resource('models', 'EquipmentModelsController');
-    Route::resource('teams', 'EquipmentTeamsController');
+    Route::resource('teams', 'TeamsController');
     Route::resource('statuses', 'EquipmentStatusesController');
     Route::resource('equipments', 'EquipmentsController');
     Route::delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');

@@ -4,7 +4,7 @@
             {{ $route.meta.title }}
         </div>
         <div class="card-body text-left p-0">
-            <table class="table table-bordered table-striped table-hover no-margin">
+            <table class="table table-sm table-bordered table-striped table-hover no-margin text-center">
                 <thead>
                     <tr>
                         <th>Description</th>
@@ -17,10 +17,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="category in categories">
-                        <td>{{ category.name }}</td>
-                        <td></td>
-                        <td></td>
+                    <tr v-for="model in models">
+                        <td>{{ model.category.name }}</td>
+                        <td>{{ model.name }}</td>
+                        <td>{{ model.total }}</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -36,13 +36,13 @@
 </template>
 
 <script type="text/babel">
-    import apiCategories from '../../api/equipment-categories'
+    import apiModels from '../../api/equipment-models'
 
     export default {
         name: 'Settings',
         data() {
             return {
-                categories: []
+                models: []
             }
         },
         created() {
@@ -52,9 +52,9 @@
         },
         methods: {
             getList() {
-                apiCategories.index()
+                apiModels.index()
                     .then(response => {
-                        this.categories = response.data.data
+                        this.models = response.data.data
                     })
             }
         }

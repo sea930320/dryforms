@@ -4,26 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Models extends Model
+class EquipmentModel extends Model
 {
     /**
-     * The database table used by the model.
-     *
      * @var string
      */
-    protected $table = "equipment_models";
+    protected $table = 'equipment_models';
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
-        'name', 'category_id'
+        'name', 'category_id', 'total'
     ];
 
     /**
-     * Relation with categories.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function category()
     {
@@ -31,7 +27,7 @@ class Models extends Model
     }
 
     /**
-     * Relation with equipments.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function equipments()
     {

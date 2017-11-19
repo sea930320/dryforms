@@ -11,7 +11,7 @@ class Team extends Model
      *
      * @var string
      */
-    protected $table = "equipment_teams";
+    protected $table = 'teams';
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +19,8 @@ class Team extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
+        'description'
     ];
 
     /**

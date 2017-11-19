@@ -6,7 +6,7 @@ use App\Http\Requests\Teams\TeamUpdate;
 use App\Models\Team;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class EquipmentTeamsController extends ApiController
+class TeamsController extends ApiController
 {
     /**
      * @var Team
@@ -53,7 +53,8 @@ class EquipmentTeamsController extends ApiController
     public function store(TeamStore $request): JsonResponse
     {
         $team = $this->team->create([
-            'name' => $request->get('name')
+            'name' => $request->get('name'),
+            'description' => $request->get('description'),
         ]);
 
         return $this->respond(['message' => 'Team successfully created', 'team' => $team]);
