@@ -1,13 +1,7 @@
 <template>
-    <b-list-group>
-        <b-list-group-item active>
-            Awesome list
-        </b-list-group-item>
-        <b-list-group-item href="#">
-            Action links are easy
-        </b-list-group-item>
-        <b-list-group-item>
-            This is a text only item
+    <b-list-group class="text-center">
+        <b-list-group-item v-for="link in $route.meta.leftLinks" :key="link.name">
+            <router-link :to="link.path" class="pointer">{{ link.name }}</router-link>
         </b-list-group-item>
     </b-list-group>
 </template>

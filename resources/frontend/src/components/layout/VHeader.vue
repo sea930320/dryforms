@@ -2,7 +2,9 @@
     <b-navbar toggleable="md" type="light" variant="light">
         <b-navbar-brand href="#">DryForms</b-navbar-brand>
         <b-navbar-nav>
-            <b-nav-item v-for="item in menuItems" :href="item.route" :key="item.route">{{ item.name }}</b-nav-item>
+            <b-nav-item v-for="item in menuItems" :key="item.route">
+                 <router-link :to="item.route" class="pointer">{{ item.name }}</router-link>
+            </b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
@@ -26,7 +28,7 @@
                     },
                     {
                         name: 'Settings',
-                        route: '/settings'
+                        route: '/settings/account'
                     },
                     {
                         name: 'Standards',

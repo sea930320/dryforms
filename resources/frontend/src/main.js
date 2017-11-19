@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 import VueSession from 'vue-session'
 import App from './components/layout/Main'
 import router from './router'
@@ -28,4 +29,13 @@ new Vue({
             Authorization: 'Basic YXBpOnBhc3N3b3Jk'
         }
     }
+})
+
+axios.interceptors.request.use(config => {
+    config.headers['Authorization'] = 'Bearer ' + Vue.prototype.$session.get('apiToken')
+
+    return config
+}, error => {
+    // Do something with request error
+    return Promise.reject(error)
 })

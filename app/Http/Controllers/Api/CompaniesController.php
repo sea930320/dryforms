@@ -78,7 +78,7 @@ class CompaniesController extends ApiController
         $company = $this->company->find($request->input('company_id'));
         $company->update($request->validatedOnly());
 
-        return $this->respond(['message' => 'Company successfully updated', 'category' => $company]);
+        return $this->respond(['message' => 'Company successfully updated', 'company' => $company]);
     }
 
     /**
