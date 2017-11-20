@@ -18,7 +18,7 @@ const bus = new Vue()
 Vue.prototype.$bus = bus
 
 /* eslint-disable no-new */
-new Vue({
+const vue = new Vue({
     el: '#app',
     router,
     template: '<App/>',
@@ -36,6 +36,14 @@ axios.interceptors.request.use(config => {
 
     return config
 }, error => {
-    // Do something with request error
     return Promise.reject(error)
+})
+
+axios.interceptors.response.use(response => {
+    return response
+}, error => {
+    if (!Vue.prototype.$session.get('apiToken')) {
+        vue.$router.push('/logout')
+    }
+    return Promise.reject(error.response)
 })

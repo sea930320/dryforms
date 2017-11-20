@@ -1,5 +1,5 @@
 <template>
-    <b-list-group>
+    <b-list-group class="text-center">
         <b-list-group-item v-for="link in $route.meta.rightLinks" :key="link.name">
             <router-link :to="link.path" class="pointer">{{ link.name }}</router-link>
         </b-list-group-item>

@@ -1,7 +1,7 @@
 <template>
     <div class="card text-center">
-        <create-team-modal></create-team-modal>
-        <delete-team-modal></delete-team-modal>
+        <create-modal></create-modal>
+        <delete-modal></delete-modal>
 
         <div class="card-header">
             {{ $route.meta.title }}
@@ -12,19 +12,21 @@
                 <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Category</th>
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="team in teams">
-                    <td>{{ team.name }}</td>
-                    <td>{{ team.description }}</td>
+                <tr v-for="model in models">
+                    <td>{{ model.name }}</td>
+                    <td>{{ model.category.name }}</td>
+                    <td>{{ model.description }}</td>
                     <td class="text-center">
-                        <button class="btn btn-xs btn-default" @click="openEditModal(team.id)">
+                        <button class="btn btn-xs btn-default" @click="openEditModal(model.id)">
                             <i class="fa fa-pencil"></i> Edit
                         </button>
-                        <button class="btn btn-xs btn-danger" @click="openDeleteModal(team.id)">
+                        <button class="btn btn-xs btn-danger" @click="openDeleteModal(model.id)">
                             <i class="fa fa-trash"></i> Delete
                         </button>
                     </td>
@@ -39,19 +41,19 @@
 </template>
 
 <script type="text/babel">
-    import apiTeams from '../../api/teams'
-    import CreateTeamModal from './modals/CreateTeamModal'
-    import DeleteTeamModal from './modals/DeleteTeamModal'
+    import apiModels from '../../../api/models'
+    import CreateModal from './modals/CreateModal'
+    import DeleteModal from './modals/DeleteModal'
 
     export default {
-        name: 'Teams',
+        name: 'Models',
         data() {
             return {
-                teams: [],
+                models: [],
                 modal: null
             }
         },
-        components: {CreateTeamModal, DeleteTeamModal},
+        components: {CreateModal, DeleteModal},
         created() {
             this.$nextTick(() => {
                 this.getList()
@@ -62,9 +64,9 @@
         },
         methods: {
             getList() {
-                apiTeams.index()
+                apiModels.index()
                     .then(response => {
-                        this.teams = response.data.data
+                        this.models = response.data.data
                     })
             },
             openCreateModal() {

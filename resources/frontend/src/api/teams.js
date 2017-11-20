@@ -14,5 +14,8 @@ export default {
     },
     show(id) {
         return axios.get(teamsRoute + '/' + id)
+    },
+    delete(id) {
+        return axios.delete(teamsRoute + '/' + id)
     }
 }

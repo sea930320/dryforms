@@ -5,7 +5,7 @@ const leftLinks = [
     },
     {
         path: '/settings/company',
-        name: 'Comany'
+        name: 'Company'
     },
     {
         path: '/settings/users',

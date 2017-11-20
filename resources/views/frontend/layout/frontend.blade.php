@@ -41,7 +41,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition skin-black-light sidebar-mini" data-ng-controller="MainController as mc" ng-cloak>
+<body class="hold-transition skin-black-light sidebar-mini">
 <toast></toast>
 <script type="text/javascript">
     /* Recover sidebar state */
