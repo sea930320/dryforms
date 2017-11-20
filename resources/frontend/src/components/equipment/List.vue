@@ -28,6 +28,39 @@
                     </tr>
                 </tbody>
             </table>
+
+            <table class="table table-sm table-bordered table-striped table-hover no-margin text-center"
+                v-for="category in equipment">
+                <thead>
+                    <tr class="table-active">
+                        <th colspan="6">{{ category.name }}</th>
+                    </tr>
+                    <tr>
+                        <th colspan="6"></th>
+                    </tr>
+                    <tr>
+                        <th>No.</th>
+                        <th>Make/Model</th>
+                        <th>Equipment #</th>
+                        <th>Crew/Team</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody v-if="category.models.length === 0">
+                    <tr><td colspan="6">No equipment available</td></tr>
+                </tbody>
+                <tbody v-if="category.models.length > 0" v-for="model in category.models">
+                    <tr v-for="item in model.equipment">
+                        <td></td>
+                        <td>{{ item.model.name }}</td>
+                        <td>{{ item.serial }}</td>
+                        <td>{{ item.team.name }}</td>
+                        <td>{{ item.location }}</td>
+                        <td>{{ item.status.name }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div class="card-footer text-muted">
 
@@ -37,24 +70,34 @@
 
 <script type="text/babel">
     import apiModels from '../../api/equipment-models'
+    import apiEquipment from '../../api/equipment'
 
     export default {
         name: 'Settings',
         data() {
             return {
-                models: []
+                models: [],
+                equipment: []
             }
         },
         created() {
             this.$nextTick(() => {
-                this.getList()
+                this.initData()
             })
         },
         methods: {
-            getList() {
-                apiModels.index()
+            initData() {
+                let data = [
+                    apiModels.index(),
+                    apiEquipment.index()
+                ]
+
+                return Promise.all(data)
                     .then(response => {
-                        this.models = response.data.data
+                        this.models = response[0].data.data
+                        this.equipment = response[1].data
+
+                        return response
                     })
             }
         }

@@ -17,35 +17,45 @@ class EquipmentsController extends ApiController
      * @var Equipment
      */
     private $equipment;
+
     /**
      * @var Status
      */
     private $status;
+
     /**
      * @var Team
      */
     private $team;
+
     /**
      * @var EquipmentModel
      */
-    private $models;
+    private $model;
+
     /**
      * @var Category
      */
     private $category;
 
     /**
-     * EquipmentCategoriesController constructor.
+     * EquipmentsController constructor.
      *
      * @param Equipment $equipment
-     * @param EquipmentModel    $models
-     * @param Status    $status
-     * @param Category  $category
+     * @param EquipmentModel $model
+     * @param Status $status
+     * @param Category $category
+     * @param Team $team
      */
-    public function __construct(Equipment $equipment, EquipmentModel $models, Status $status, Category $category, Team $team)
-    {
+    public function __construct(
+        Equipment $equipment,
+        EquipmentModel $model,
+        Status $status,
+        Category $category,
+        Team $team
+    ) {
         $this->equipment = $equipment;
-        $this->models = $models;
+        $this->model = $model;
         $this->status = $status;
         $this->category = $category;
         $this->team = $team;
@@ -56,21 +66,15 @@ class EquipmentsController extends ApiController
      */
     public function index(): JsonResponse
     {
-        $response = [];
-        $categories = $this->category->get();
-        $statuses = $this->status->get();
+        $categories = $this->category->with([
+            'models',
+            'models.equipment',
+            'models.equipment.team',
+            'models.equipment.model',
+            'models.equipment.status',
+        ])->get();
 
-        foreach ($categories as $category) {
-            foreach ($category->models as $model) {
-                $response[$category->name][$model->name]['id'] = $model->id;
-                $response[$category->name][$model->name]['total'] = $model->equipments->count();
-                foreach ($statuses as $status) {
-                    $response[$category->name][$model->name][$status->name] = $model->equipments->where('status_id', $status->id)->count();
-                }
-            }
-        }
-
-        return $this->respond($response);
+        return $this->respond($categories);
     }
 
     /**
@@ -80,7 +84,7 @@ class EquipmentsController extends ApiController
      */
     public function show(int $id): JsonResponse
     {
-        $model = $this->models->findOrFail($id);
+        $model = $this->model->findOrFail($id);
 
         return $this->respond($model->equipments);
     }
@@ -93,7 +97,7 @@ class EquipmentsController extends ApiController
     public function store(EquipmentStore $request): JsonResponse
     {
         $category = $this->category->findOrFail($request->get('category_id'));
-        $model = $this->models->findOrFail($request->get('model_id'));
+        $model = $this->model->findOrFail($request->get('model_id'));
         $quantity = $request->get('quantity');
 
         $response = [];

@@ -15,7 +15,7 @@ class EquipmentModel extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'category_id', 'total'
+        'name', 'category_id', 'total', 'description'
     ];
 
     /**
@@ -29,7 +29,7 @@ class EquipmentModel extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function equipments()
+    public function equipment()
     {
         return $this->hasMany(Equipment::class, 'model_id');
     }

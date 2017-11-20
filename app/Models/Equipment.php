@@ -7,15 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Equipment extends Model
 {
     /**
-     * The database table used by the model.
-     *
      * @var string
      */
-    protected $table = "equipments";
+    protected $table = 'equipments';
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
@@ -23,7 +19,7 @@ class Equipment extends Model
     ];
 
     /**
-     * Relation with statuses.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function status()
     {
@@ -31,7 +27,7 @@ class Equipment extends Model
     }
 
     /**
-     * Relation with teams.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function team()
     {
@@ -39,7 +35,7 @@ class Equipment extends Model
     }
 
     /**
-     * Relation with model.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function model()
     {

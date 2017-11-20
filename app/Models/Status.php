@@ -6,16 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = "equipment_statuses";
+    const AVAILABLE = 1;
+    const OOC = 2;
+    const SET = 3;
+    const LOAN = 4;
 
     /**
-     * The attributes that are mass assignable.
-     *
+     * @var string
+     */
+    protected $table = 'equipment_statuses';
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -23,7 +24,7 @@ class Status extends Model
     ];
 
     /**
-     * Relation with equipments.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function equipments()
     {

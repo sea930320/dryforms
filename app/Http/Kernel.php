@@ -5,6 +5,7 @@ namespace App\Http;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Tymon\JWTAuth\Http\Middleware\Authenticate;
 use Tymon\JWTAuth\Http\Middleware\AuthenticateAndRenew;
+use Tymon\JWTAuth\Http\Middleware\RefreshToken;
 
 class Kernel extends HttpKernel
 {

@@ -61,6 +61,8 @@
 </template>
 
 <script type="text/babel">
+    import apiCompanies from '../../api/companies'
+
     export default {
         name: 'Company',
         data() {
@@ -75,6 +77,21 @@
                     email: null,
                     cloudLink: null
                 }
+            }
+        },
+        created() {
+
+        },
+        methods: {
+            update() {},
+            initData() {
+                apiCompanies.get()
+                    .then(response => {
+
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
             }
         }
     }

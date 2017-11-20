@@ -16,20 +16,18 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'api'], function ($router) {
     Route::post('login', ['uses' => 'Auth\ApiAuthController@login', 'as' => 'api.login']);
     Route::post('logout', 'Auth\ApiAuthController@logout');
-    Route::post('refresh', 'Auth\ApiAuthController@refresh');
+    Route::get('refresh', 'Auth\ApiAuthController@refresh');
 });
 
 
 //TODO authentification middleware
 Route::namespace('Api')->middleware(['jwt.auth'])->group(function() {
+    Route::resource('companies', 'CompaniesController');
     Route::resource('categories', 'EquipmentCategoriesController');
     Route::resource('models', 'EquipmentModelsController');
     Route::resource('teams', 'TeamsController');
     Route::resource('statuses', 'EquipmentStatusesController');
-    Route::resource('equipments', 'EquipmentsController');
+    Route::resource('equipment', 'EquipmentsController');
     Route::delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
     Route::get('get-models/{id}', 'EquipmentCategoriesController@getModels');
-    Route::resource('companies', 'CompaniesController');
-    Route::resource('employee-statuses', 'EmployeeStatusesController');
-    Route::resource('company-employees', 'CompanyEmployeesController');
 });

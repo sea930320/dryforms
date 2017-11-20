@@ -32,6 +32,21 @@ class ModelUpdate extends BaseRequest
                 'string',
                 Rule::unique('equipment_models')->ignore($this->input('model_id'), 'id')
             ],
+            'description' => 'nullable|string',
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function validationData()
+    {
+        $this->merge(
+            [
+                'model_id' => $this->route('model')
+            ]
+        );
+
+        return parent::validationData();
     }
 }

@@ -30,7 +30,8 @@ class CategoryUpdate extends BaseRequest
                 'string',
                 Rule::unique('equipment_categories')->ignore($this->input('category_id'), 'id')
             ],
-            'prefix' => 'required|string'
+            'prefix' => 'required|string',
+            'description' => 'nullable|string',
         ];
     }
 

@@ -24,7 +24,8 @@ class CategoryStore extends BaseRequest
     {
         return [
             'name' => 'required|string|unique:equipment_categories,name',
-            'prefix' => 'required|string'
+            'prefix' => 'required|string',
+            'description' => 'nullable|string',
         ];
     }
 }

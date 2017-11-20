@@ -9,7 +9,7 @@
         <div class="form-group">
             <label>Category:</label>
             <select class="form-control" v-model="model.category_id">
-                <option>-- Please select --</option>
+                <option :value="null">-- Please select --</option>
                 <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
             </select>
         </div>
@@ -29,6 +29,7 @@
     export default {
         name: 'create-model-modal',
         created() {
+            this.initData()
             this.$parent.$on('openCreateModal', () => {
                 this.model = {
                     id: null,
@@ -39,8 +40,16 @@
                 this.show = true
             })
             this.$parent.$on('openEditModal', (payload) => {
+                let self = this
                 this.model.id = payload.id
-                this.initData()
+                apiModels.show(this.model.id)
+                    .then(response => {
+                        self.model = response.data
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
+
                 this.show = true
             })
         },
@@ -83,18 +92,12 @@
             },
             initData() {
                 let self = this
-                const data = [
-                    apiModels.show(this.model.id),
-                    apiCategories.index()
-                ]
-
-                return Promise.all(data)
+                apiCategories.index()
                     .then(response => {
-                        self.model = response[0].data
-                        self.categories = response[1].data.data
+                        self.categories = response.data.data
                     })
                     .catch(error => {
-                        console.log(error)
+                        console.log(error.response)
                     })
             }
         }

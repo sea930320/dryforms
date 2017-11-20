@@ -45,5 +45,21 @@ axios.interceptors.response.use(response => {
     if (!Vue.prototype.$session.get('apiToken')) {
         vue.$router.push('/logout')
     }
+    if (error.response.data.message === 'Token has expired' && Vue.prototype.$session.get('apiToken')) {
+        axios.get('/api/refresh')
+            .then(response => {
+                Vue.prototype.$session.remove('apiToken')
+                Vue.prototype.$session.set('apiToken', response.data.token)
+            })
+            .catch(() => {
+                Vue.prototype.$session.remove('apiToken')
+                vue.$router.push('/logout')
+            })
+    }
+    if (error.response.data.message === 'The token has been blacklisted') {
+        Vue.prototype.$session.remove('apiToken')
+        vue.$router.push('/logout')
+    }
+
     return Promise.reject(error.response)
 })

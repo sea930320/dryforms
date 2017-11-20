@@ -8,19 +8,15 @@ use Illuminate\Support\Facades\DB;
 class Category extends Model
 {
     /**
-     * The database table used by the model.
-     *
      * @var string
      */
     protected $table = 'equipment_categories';
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
-        'name', 'prefix'
+        'name', 'prefix', 'description'
     ];
 
     /**
@@ -29,5 +25,13 @@ class Category extends Model
     public function models()
     {
         return $this->hasMany(EquipmentModel::class, 'category_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function equipments()
+    {
+        return $this->hasManyThrough(Equipment::class, EquipmentModel::class);
     }
 }

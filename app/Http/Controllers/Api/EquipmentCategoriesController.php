@@ -54,7 +54,8 @@ class EquipmentCategoriesController extends ApiController
     {
         $category = $this->category->create([
             'name' => $request->get('name'),
-            'prefix' => $request->get('prefix')
+            'prefix' => $request->get('prefix'),
+            'description' => $request->get('description'),
         ]);
 
         return $this->respond(['message' => 'Category successfully created', 'category' => $category]);

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class StatusesTableSeeder extends Seeder
 {
@@ -12,6 +13,9 @@ class StatusesTableSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+        DB::table('equipment_statuses')->truncate();
+
         $statuses = [
             [
                 'name' => 'Available'
@@ -28,5 +32,7 @@ class StatusesTableSeeder extends Seeder
         ];
 
         DB::table('equipment_statuses')->insert($statuses);
+
+        Schema::enableForeignKeyConstraints();
     }
 }

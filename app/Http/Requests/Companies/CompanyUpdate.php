@@ -45,7 +45,7 @@ class CompanyUpdate extends BaseRequest
     {
         $this->merge(
             [
-                'category_id' => $this->route('category')
+                'company_id' => $this->route('company')
             ]
         );
 

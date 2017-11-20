@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth;
 
@@ -53,6 +54,24 @@ class ApiAuthController extends LoginController
             return response()->json([
                 'message' => 'Failed to create token'
             ], 401);
+        }
+
+        return response()->json([
+            'token' => $token,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh(Request $request)
+    {
+        try {
+            $token = $this->jwtAuth->parseToken()->refresh();
+        } catch (JWTException $e) {
+            throw new UnauthorizedHttpException('jwt-auth', $e->getMessage(), $e, $e->getCode());
         }
 
         return response()->json([
