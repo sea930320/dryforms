@@ -32,7 +32,7 @@
                            placeholder="Enter email" v-model="emailData.newEmail">
                 </div>
 
-                <button class="btn btn-sm btn-primary" v-on:click="">Submit</button>
+                <button class="btn btn-sm btn-primary" v-on:click="changeEmail()">Submit</button>
             </form>
         </div>
         <div class="card-footer text-muted">
@@ -42,6 +42,8 @@
 </template>
 
 <script type="text/babel">
+    import apiAccount from '../../api/account'
+
     export default {
         name: 'Settings',
         data() {
@@ -55,6 +57,20 @@
                     oldEmail: null,
                     newEmail: null
                 }
+            }
+        },
+        methods: {
+            changeEmail() {
+                apiAccount.changeEmail(this.emailData)
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
+            },
+            changePassword() {
+
             }
         }
     }

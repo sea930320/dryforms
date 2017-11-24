@@ -149,6 +149,21 @@ const webpackConfig = merge(baseWebpackConfig, {
                 from: path.resolve(__dirname, '../node_modules/font-awesome/css/font-awesome.css'),
                 to: config.build.assetsSubDirectory + '/vendor/',
                 ignore: ['.*']
+            },
+            {
+                from: path.resolve(__dirname, '../node_modules/font-awesome/fonts/fontawesome-webfont.woff'),
+                to: config.build.assetsSubDirectory + '/fonts/',
+                ignore: ['.*']
+            },
+            {
+                from: path.resolve(__dirname, '../node_modules/font-awesome/fonts/fontawesome-webfont.woff2'),
+                to: config.build.assetsSubDirectory + '/fonts/',
+                ignore: ['.*']
+            },
+            {
+                from: path.resolve(__dirname, '../node_modules/font-awesome/fonts/fontawesome-webfont.ttf'),
+                to: config.build.assetsSubDirectory + '/fonts/',
+                ignore: ['.*']
             }
         ])
     ]

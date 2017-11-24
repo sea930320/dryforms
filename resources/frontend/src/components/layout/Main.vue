@@ -45,7 +45,6 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-    @import 'bootstrap-vue/dist/bootstrap-vue.css';
     #app {
         padding-left: 0;
         padding-right: 0;

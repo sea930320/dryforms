@@ -30,4 +30,8 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function() {
     Route::resource('equipment', 'EquipmentsController');
     Route::delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
     Route::get('get-models/{id}', 'EquipmentCategoriesController@getModels');
+
+    /** Account */
+    Route::post('account/password/change', ['uses' => 'AccountController@changePassword', 'as' => 'account.password.change']);
+    Route::post('account/email/change', ['uses' => 'AccountController@changeEmail', 'as' => 'account.email.change']);
 });
