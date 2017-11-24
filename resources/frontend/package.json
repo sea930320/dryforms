@@ -11,7 +11,8 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "build-dev": "node build/build-dev.js"
   },
   "dependencies": {
     "axios": "^0.17.1",
@@ -79,6 +80,7 @@
     "portfinder": "^1.0.13",
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",
+    "progress-bar-webpack-plugin": "^1.10.0",
     "rimraf": "^2.6.0",
     "sass-loader": "^6.0.6",
     "selenium-server": "^3.0.1",
