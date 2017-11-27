@@ -5,6 +5,7 @@ import BootstrapVue from 'bootstrap-vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import VueSession from 'vue-session'
+import Notifications from 'vue-notification'
 import App from './components/layout/Main'
 import router from './router'
 
@@ -13,6 +14,7 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(Vuex)
 Vue.use(VueSession)
+Vue.use(Notifications)
 
 const bus = new Vue()
 Vue.prototype.$bus = bus
@@ -42,9 +44,9 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => {
     return response
 }, error => {
-    if (!Vue.prototype.$session.get('apiToken')) {
-        vue.$router.push('/logout')
-    }
+    // if (!Vue.prototype.$session.get('apiToken')) {
+    //     vue.$router.push('/logout')
+    // }
     if (error.response.data.message === 'Token has expired' && Vue.prototype.$session.get('apiToken')) {
         axios.get('/api/refresh')
             .then(response => {

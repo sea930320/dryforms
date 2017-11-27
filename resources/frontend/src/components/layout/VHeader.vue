@@ -9,7 +9,7 @@
 
         <b-navbar-nav class="ml-auto">
             <b-nav-item v-if="!$session.get('apiToken')"><router-link to="/login">Login</router-link></b-nav-item>
-            <b-nav-item v-if="!$session.get('apiToken')">Register</b-nav-item>
+            <b-nav-item v-if="!$session.get('apiToken')"><router-link to="/register">Register</router-link></b-nav-item>
             <b-nav-item  v-if="$session.get('apiToken')" v-on:click="logout()"><i class="fa fa-sign-out"></i> Logout</b-nav-item>
         </b-navbar-nav>
     </b-navbar>

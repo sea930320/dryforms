@@ -1,7 +1,8 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Events\UserRegistered;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -59,6 +60,17 @@ class ApiAuthController extends LoginController
         return response()->json([
             'token' => $token,
         ]);
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        $user = $this->user->create($request->validatedOnly());
+        event(new UserRegistered($user));
+
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
     }
 
     /**

@@ -7,6 +7,7 @@
         <div class="col-md-8">
 
             <section role="main" class="content">
+                <notifications/>
                 <router-view></router-view>
             </section>
 

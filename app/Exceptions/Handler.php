@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
     {
         //TODO refactor and make builder
         if ($request->bearerToken() && $exception instanceof ValidationException) {
-            return response()->json($exception->validator->getMessageBag());
+            return response()->json($exception->validator->getMessageBag(), 422);
         }
 
         return parent::render($request, $exception);

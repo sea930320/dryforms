@@ -14,24 +14,25 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['middleware' => 'api'], function ($router) {
-    Route::post('login', ['uses' => 'Auth\ApiAuthController@login', 'as' => 'api.login']);
-    Route::post('logout', 'Auth\ApiAuthController@logout');
-    Route::get('refresh', 'Auth\ApiAuthController@refresh');
+    $router->post('login', ['uses' => 'Auth\ApiAuthController@login', 'as' => 'api.login']);
+    $router->post('register', ['uses' => 'Auth\ApiAuthController@register', 'as' => 'api.register']);
+    $router->post('logout', 'Auth\ApiAuthController@logout');
+    $router->get('refresh', 'Auth\ApiAuthController@refresh');
 });
 
 
 //TODO authentification middleware
-Route::namespace('Api')->middleware(['jwt.auth'])->group(function() {
-    Route::resource('companies', 'CompaniesController');
-    Route::resource('categories', 'EquipmentCategoriesController');
-    Route::resource('models', 'EquipmentModelsController');
-    Route::resource('teams', 'TeamsController');
-    Route::resource('statuses', 'EquipmentStatusesController');
-    Route::resource('equipment', 'EquipmentsController');
-    Route::delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
-    Route::get('get-models/{id}', 'EquipmentCategoriesController@getModels');
+Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
+    $router->resource('companies', 'CompaniesController');
+    $router->resource('categories', 'EquipmentCategoriesController');
+    $router->resource('models', 'EquipmentModelsController');
+    $router->resource('teams', 'TeamsController');
+    $router->resource('statuses', 'EquipmentStatusesController');
+    $router->resource('equipment', 'EquipmentsController');
+    $router->delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
+    $router->get('get-models/{id}', 'EquipmentCategoriesController@getModels');
 
     /** Account */
-    Route::post('account/password/change', ['uses' => 'AccountController@changePassword', 'as' => 'account.password.change']);
-    Route::post('account/email/change', ['uses' => 'AccountController@changeEmail', 'as' => 'account.email.change']);
+    $router->post('account/password/change', ['uses' => 'AccountController@changePassword', 'as' => 'account.password.change']);
+    $router->post('account/email/change', ['uses' => 'AccountController@changeEmail', 'as' => 'account.email.change']);
 });
