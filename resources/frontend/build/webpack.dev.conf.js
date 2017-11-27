@@ -60,6 +60,12 @@ const webpackConfig = merge(baseWebpackConfig, {
             sourceMap: config.build.productionSourceMap,
             parallel: true
         }),
+        //import lodash globally
+        new webpack.ProvidePlugin({
+            * : 'lodash-aliases',
+            _ : 'lodash'
+
+        })
         // extract css into its own file
         new ExtractTextPlugin({
             filename: utils.assetsPath('css/[name].css'),
