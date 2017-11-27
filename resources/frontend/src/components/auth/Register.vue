@@ -78,10 +78,11 @@
                         this.$router.push('/')
                     })
                     .catch(error => {
+                        console.log(error)
                         let messages = null
-//                        _.each(error.data, (message) => {
-//                            messages += message[0]
-//                        })
+                        _.each(error.data, (message) => {
+                            messages += message[0]
+                        })
                         this.$notify({
                             type: 'error',
                             title: 'Important message',
