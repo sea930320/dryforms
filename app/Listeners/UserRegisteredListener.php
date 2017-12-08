@@ -9,21 +9,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class UserRegisteredListener
 {
-    const REDIRECT = '/callback';
-
-    /**
-     * @var ClientRepository
-     */
-    private $clientRepository;
-
     /**
      * UserRegisteredListener constructor.
-     *
-     * @param ClientRepository $clientRepository
      */
-    public function __construct(ClientRepository $clientRepository)
+    public function __construct()
     {
-        $this->clientRepository = $clientRepository;
     }
 
     /**
@@ -31,9 +21,6 @@ class UserRegisteredListener
      */
     public function handle(UserRegistered $event)
     {
-        $user = $event->getUser();
-        $this->clientRepository->create(
-            $user->id, $user->name, static::REDIRECT
-        );
+
     }
 }

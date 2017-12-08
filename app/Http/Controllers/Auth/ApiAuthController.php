@@ -62,15 +62,23 @@ class ApiAuthController extends LoginController
         ]);
     }
 
+    /**
+     * @param RegisterRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(RegisterRequest $request)
     {
         $user = $this->user->create($request->validatedOnly());
         event(new UserRegistered($user));
+        $token = $this->jwtAuth->fromUser($user);
 
         $this->guard()->login($user);
 
-        return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
+        return response()->json([
+            'message' => 'Welcome to DryForms!',
+            'token' => $token,
+        ]);
     }
 
     /**

@@ -11,11 +11,7 @@
                 </div>
                 <div class="form-group">
                     <label>First Name</label>
-                    <input type="text" class="form-control" v-model="user.lastName">
-                </div>
-                <div class="form-group">
-                    <label>Street Address</label>
-                    <input type="text" class="form-control" v-model="user.address">
+                    <input type="text" class="form-control" v-model="user.last_name">
                 </div>
                 <div class="form-group">
                     <label>Street Address</label>
@@ -35,7 +31,7 @@
                 </div>
                 <div class="form-group">
                     <label>Phone</label>
-                    <input type="text" class="form-control" v-model="user.phone">
+                    <input type="text" class="form-control" placeholder="555-123-1223" v-model="user.phone">
                 </div>
                 <div class="form-group">
                     <label>Email address</label>
@@ -47,7 +43,7 @@
                 </div>
                 <div class="form-group">
                     <label>Password Confirmation</label>
-                    <input type="password" class="form-control" placeholder="Password" v-model="user.passwordConfirmation">
+                    <input type="password" class="form-control" placeholder="Password" v-model="user.password_confirmation">
                 </div>
             </form>
         </div>
@@ -76,16 +72,16 @@
                         this.$session.set('apiToken', response.data.token)
                         axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
                         this.$router.push('/')
+                        location.reload()
                     })
                     .catch(error => {
-                        console.log(error)
-                        let messages = null
-                        _.each(error.data, (message) => {
-                            messages += message[0]
-                        })
+                        let messages = ''
+                        for (let message in error.data) {
+                            messages += error.data[message][0] + '<br>'
+                        }
                         this.$notify({
                             type: 'error',
-                            title: 'Important message',
+                            title: error.statusText,
                             text: messages
                         })
                     })

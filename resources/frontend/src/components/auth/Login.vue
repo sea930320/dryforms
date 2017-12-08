@@ -44,6 +44,7 @@
                         this.$session.set('apiToken', response.data.token)
                         axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
                         this.$router.push('/')
+                        location.reload()
                     })
                     .catch(error => {
                         console.log(error)
