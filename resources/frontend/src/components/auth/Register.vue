@@ -57,8 +57,11 @@
     import axios from 'axios'
     import apiAuth from '../../api/auth'
 
+    import errorHandler from '../../mixins/error-handler'
+
     export default {
         name: 'Register',
+        mixins: [errorHandler],
         data() {
             return {
                 user: {}
@@ -74,17 +77,7 @@
                         this.$router.push('/')
                         location.reload()
                     })
-                    .catch(error => {
-                        let messages = ''
-                        for (let message in error.data) {
-                            messages += error.data[message][0] + '<br>'
-                        }
-                        this.$notify({
-                            type: 'error',
-                            title: error.statusText,
-                            text: messages
-                        })
-                    })
+                    .catch(this.handleErrorResponse)
             }
         }
     }

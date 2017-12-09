@@ -25,9 +25,11 @@
 <script type="text/babel">
     import axios from 'axios'
     import apiAuth from '../../api/auth'
+    import errorHandler from '../../mixins/error-handler'
 
     export default {
         name: 'Login',
+        mixins: [errorHandler],
         data() {
             return {
                 user: {
@@ -46,9 +48,7 @@
                         this.$router.push('/')
                         location.reload()
                     })
-                    .catch(error => {
-                        console.log(error)
-                    })
+                    .catch(this.handleErrorResponse)
             }
         }
     }
