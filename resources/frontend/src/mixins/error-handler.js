@@ -3,7 +3,7 @@ export default {
         return {}
     },
     methods: {
-        //TODO refactor with lodash
+        // TODO refactor with lodash
         handleErrorResponse(error) {
             let messages = ''
             if (error.data.message) {
