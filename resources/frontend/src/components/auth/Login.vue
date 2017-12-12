@@ -23,11 +23,11 @@
 </template>
 
 <script type="text/babel">
-    import axios from 'axios'
-    import apiAuth from '../../api/auth'
+    import authorization from '../../mixins/authorization'
 
     export default {
         name: 'Login',
+        mixins: [authorization],
         data() {
             return {
                 user: {
@@ -36,21 +36,7 @@
                 }
             }
         },
-        methods: {
-            login() {
-                apiAuth.login(this.user)
-                    .then(response => {
-                        this.$session.start()
-                        this.$session.set('apiToken', response.data.token)
-                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
-                        this.$router.push('/')
-                        location.reload()
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            }
-        }
+        methods: {}
     }
 </script>
 
