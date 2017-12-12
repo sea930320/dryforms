@@ -54,32 +54,17 @@
 </template>
 
 <script type="text/babel">
-    import axios from 'axios'
-    import apiAuth from '../../api/auth'
-
-    import errorHandler from '../../mixins/error-handler'
+    import authorization from '../../mixins/authorization'
 
     export default {
         name: 'Register',
-        mixins: [errorHandler],
+        mixins: [authorization],
         data() {
             return {
                 user: {}
             }
         },
-        methods: {
-            register() {
-                apiAuth.register(this.user)
-                    .then(response => {
-                        this.$session.start()
-                        this.$session.set('apiToken', response.data.token)
-                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
-                        this.$router.push('/')
-                        location.reload()
-                    })
-                    .catch(this.handleErrorResponse)
-            }
-        }
+        methods: {}
     }
 </script>
 

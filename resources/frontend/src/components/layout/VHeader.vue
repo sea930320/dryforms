@@ -14,11 +14,12 @@
         </b-navbar-nav>
     </b-navbar>
 </template>
+
 <script type="text/babel">
-    import axios from 'axios'
-    import apiAuth from '../../api/auth'
+    import authorization from '../../mixins/authorization'
 
     export default {
+        mixins: [authorization],
         data() {
             return {
                 menuItems: [
@@ -45,14 +46,7 @@
                 ]
             }
         },
-        methods: {
-            logout() {
-                apiAuth.logout()
-                axios.defaults.headers.common['Authorization'] = null
-                this.$session.destroy()
-                this.$router.push('/login')
-            }
-        }
+        methods: {}
     }
 </script>
 
