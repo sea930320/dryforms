@@ -6,6 +6,10 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import VueSession from 'vue-session'
 import Notifications from 'vue-notification'
+import vueSignature from 'vue-signature'
+import lodash from 'lodash'
+import VueLodash from 'vue-lodash'
+import VueLoading from 'vue2-loading'
 import App from './components/layout/Main'
 import router from './router'
 
@@ -15,6 +19,14 @@ Vue.use(BootstrapVue)
 Vue.use(Vuex)
 Vue.use(VueSession)
 Vue.use(Notifications)
+Vue.use(vueSignature)
+Vue.use(VueLodash, lodash)
+Vue.use(VueLoading, {
+    text: 'Here I come...',
+    bg: 'rgba(230, 233, 236, 0.8)',
+    textColor: '#000',
+    spinnerClass: 'fa fa-spin fa-spinner fa-3x'
+})
 
 const bus = new Vue()
 Vue.prototype.$bus = bus
