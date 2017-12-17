@@ -1,15 +1,14 @@
 <template>
 	<b-row>
-    <b-col>
+    <b-col class="text-left">
       <img src="" alt="Company Logo">
     </b-col>
-    <b-col></b-col>
     <b-col class="text-right">
-      <h5 style="margin:0;">{{ title }}</h5>
-      <p style="margin:0;">{{ street }}</p>
-      <p style="margin:0;">{{ city }} {{ state }} {{ zipcode }}</p>
-      <p style="margin:0;">{{ phone }}</p>
-      <p style="margin:0;">{{ email }}</p>
+      <h5 class="m-0">{{ title }}</h5>
+      <p class="m-0">{{ street }}</p>
+      <p class="m-0">{{ city }} {{ state }} {{ zipcode }}</p>
+      <p class="m-0">{{ phone }}</p>
+      <p class="m-0">{{ email }}</p>
     </b-col>
   </b-row>
 </template>
@@ -30,5 +29,5 @@
   }
 </script>
 
-<style type="text/css" scoped>
+<style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
 </style>

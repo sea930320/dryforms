@@ -5,7 +5,7 @@
 			<h4 class="mb-2">{{ $route.meta.title }}</h4>
 			<div class="dropdown-divider"></div>
 			<form-banner></form-banner>
-			<table class="text-xs-center" style="width:100%;">
+			<table class="text-xs-center">
 				<tr><th colspan="2" class="bg-grey">Bedroom 1</th></tr>
 				<tr>
 					<td class="w-50 bg-grey">Overall Square Feet</td>
@@ -34,6 +34,7 @@
 		padding: 3px;
 	}
 	table {
+		width: 100%;
 		input {
 			text-align:center;
 			width: 100%;

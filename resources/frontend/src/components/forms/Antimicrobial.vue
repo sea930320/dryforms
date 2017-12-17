@@ -6,8 +6,8 @@
       <div class="dropdown-divider"></div>
       <form-banner class="mt-2"></form-banner>
       <div class="dropdown-divider"></div>
-      <div v-html="acceptContent" style="min-height: 300px;"></div>
-      <div v-html="declineContent" style="min-height: 300px;"></div>
+      <div v-html="acceptContent"></div>
+      <div v-html="declineContent"></div>
       <notes class="mt-3"></notes>
       <footer-text class="mt-3"></footer-text>
       <signature class="mt-3"></signature>

@@ -94,7 +94,7 @@ const rightLinks = [
     icon: 'fa-floppy-o'
   },
   {
-    path: 'areas',
+    path: '/forms/areas',
     name: 'Affected Areas',
     icon: 'fa-bullseye',
     mt: true
@@ -268,6 +268,20 @@ const routes = (configRoute) => [
     },
     component: resolve => {
       require(['../components/forms/Certificate.vue'], resolve)
+    }
+  },
+  {
+    path: '/forms/areas',
+    name: 'Areas',
+    props: {title: 'Areas'},
+    meta: {
+      title: 'Affected Areas',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/forms/Areas.vue'], resolve)
     }
   }
 ]

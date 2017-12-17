@@ -6,7 +6,7 @@
       <div class="dropdown-divider"></div>
       <form-banner class="mt-2"></form-banner>
       <div class="dropdown-divider"></div>
-      <div v-html="authContent" style="min-height: 500px;"></div>
+      <div v-html="authContent"></div>
       <notes class="mt-3"></notes>
       <footer-text class="mt-3"></footer-text>
       <signature class="mt-3"></signature>

@@ -5,7 +5,7 @@
 		</div>
 		<div class="card-body">
 			<b-list-group>
-				<draggable v-model="forms">
+				<draggable v-model="forms" :options="{group:'people'}" @update="updateOrder()">
 					<transition-group name="list-complete">						
 						<b-list-group-item v-for="item in forms" :key="item.name" class="mb-3 list-complete-item">{{ item.name }}</b-list-group-item>						
 					</transition-group>
@@ -23,35 +23,23 @@
     data () {
       return {
         forms: [
-          {
-            name: 'Project Scope',
-            icon: 'fa-newspaper-o'
-          },
-          {
-            name: 'Work Authorization',
-            icon: 'fa-pencil'
-          },
-          {
-            name: 'Anti-Microbial',
-            icon: 'fa-certificate'
-          },
-          {
-            name: 'Customer Responsibility',
-            icon: 'fa-hand-grab-o'
-          },
-          {
-            name: 'Release from Liability',
-            icon: 'fa-chain-broken'
-          },
-          {
-            name: 'Work Stoppage',
-            icon: 'fa-hand-paper-o'
-          },
-          {
-            name: 'Certificate of Completion',
-            icon: 'fa-trophy'
-          }
+          { name: 'Call Report', icon: '' },
+          { name: 'Project Scope', icon: 'fa-newspaper-o' },
+          { name: 'Daily Log', icon: '' },
+          { name: 'Work Authorization', icon: 'fa-pencil' },
+          { name: 'Anti-Microbial', icon: 'fa-certificate' },
+          { name: 'Customer Responsibility', icon: 'fa-hand-grab-o' },
+          { name: 'Moisture Map', icon: '' },
+          { name: 'Psychometric Report', icon: '' },
+          { name: 'Release from Liability', icon: 'fa-chain-broken' },
+          { name: 'Work Stoppage', icon: 'fa-hand-paper-o' },
+          { name: 'Certificate of Completion', icon: 'fa-trophy' }
         ]
+      }
+    },
+    methods: {
+      updateOrder: function () {
+        console.log(this.forms)
       }
     }
   }

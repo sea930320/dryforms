@@ -1,5 +1,5 @@
 <template>
-	<div class="card">
+	<div class="card mb-3">
 		<div class="card-body text-center">
 			<form-header></form-header>
 			<h4 class="mb-2">{{ $route.meta.title }}</h4>
@@ -59,6 +59,7 @@
 <script type="text/babel">
   import FormHeader from './FormHeader'
   import Notes from './Notes'
+
   export default {
     components: { FormHeader, Notes },
     data () {

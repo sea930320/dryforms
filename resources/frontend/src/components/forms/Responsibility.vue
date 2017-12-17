@@ -1,5 +1,5 @@
 <template>
-  <div class="card" style="min-height: 100vh;">
+  <div class="card">
     <div class="card-body text-center">
       <form-header></form-header> 
       <h4 class="mb-2">{{ $route.meta.title }}</h4>
@@ -9,7 +9,7 @@
       <b-row v-for="item in equipments" :key="item.name">
         <b-col class="text-left">
           <p>
-            <span style="font-weight:bold;">{{ item.name }}: </span>
+            <span><strong>{{ item.name }}: </strong></span>
             <span>&nbsp;-&nbsp;{{ item.info }}</span>
           </p>
         </b-col>        
