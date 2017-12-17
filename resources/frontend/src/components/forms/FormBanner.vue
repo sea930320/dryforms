@@ -1,13 +1,13 @@
 <template>
-	<b-row>
-		<b-col cols="6" class="text-left">
-			<p>Owner/Insured: {{ ownerName }}</p>
-			<p>Job Address: {{ jobAddress }}</p>
-		</b-col>
-		<b-col cols="6" class="text-right">
-			<p>Claim# {{ claimNumber }}</p>
-		</b-col>
-	</b-row>
+  <b-row>
+    <b-col cols="6" class="text-left">
+      <p>Owner/Insured: {{ ownerName }}</p>
+      <p>Job Address: {{ jobAddress }}</p>
+    </b-col>
+    <b-col cols="6" class="text-right">
+      <p>Claim# {{ claimNumber }}</p>
+    </b-col>
+  </b-row>
 </template>
 
 <script type="text/babel">

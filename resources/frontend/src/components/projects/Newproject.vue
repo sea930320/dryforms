@@ -1,11 +1,11 @@
 <template>
-	<b-modal id="selectForm" :title="$route.meta.title" v-model="showModal">
-		<b-form-checkbox-group stacked v-model="selelctedForm" :options="forms">			
-		</b-form-checkbox-group>		
-		<div slot="modal-footer" class="w-100">
+  <b-modal id="selectForm" :title="$route.meta.title" v-model="showModal">
+    <b-form-checkbox-group stacked v-model="selelctedForm" :options="forms">      
+    </b-form-checkbox-group>    
+    <div slot="modal-footer" class="w-100">
       <b-btn variant="primary" class="float-right" @click="saveForm()">Save</b-btn>
     </div>
-	</b-modal>
+  </b-modal>
 </template>
 
 <script type="text/babel">

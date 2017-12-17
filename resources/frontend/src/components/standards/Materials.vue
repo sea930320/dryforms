@@ -1,40 +1,40 @@
 <template>
-	<div class="card">
-		<div class="card-header">
-			{{ $route.meta.title }}
-		</div>
-		<div class="card-body">
-			<b-row>
-				<div class="col-md-6">
-					<label>Manually added materials</label>
-					<b-table :fields="manualAreasHeader" :items="manualAreas" class="text-center">
-						<template slot="no" slot-scope="data">
-							{{ data.index + 1 }}
-						</template>
-						<template slot="add_to_favorite" slot-scope="data">
-							<i class="fa fa-trash text-danger" @click="deleteArea()"></i>							
-							<i class="fa fa-star-o warning text-warning ml-4" v-if="addFavoriteFromManual.indexOf(data.index) < 0" @click="manualToFavorite(data.index)"></i>
-							<i class="fa fa-star warning text-warning ml-4" v-else @click="favoriteToManual(data.index)"></i>
-						</template>				
-					</b-table>
-					<label>Add material:</label>
-					<input type="text" class="form-control">
-				</div>
-				<div class="col-md-6">
-					<label>Provided materials</label>
-					<b-table :fields="manualAreasHeader" :items="providedAreas" class="text-center">
-						<template slot="no" slot-scope="data">
-							{{ data.index + 1 }}
-						</template>
-						<template slot="add_to_favorite" slot-scope="data">
-							<i class="fa fa-star-o warning text-warning" v-if="addFavoriteFromProvide.indexOf(data.index) < 0" @click="provideToFavorite(data.index)"></i>
-							<i class="fa fa-star warning text-warning" v-else @click="favoriteToProvide(data.index)"></i>
-						</template>
-					</b-table>
-				</div>
-			</b-row>			
-		</div>
-	</div>
+  <div class="card">
+    <div class="card-header">
+      {{ $route.meta.title }}
+    </div>
+    <div class="card-body">
+      <b-row>
+        <div class="col-md-6">
+          <label>Manually added materials</label>
+          <b-table :fields="manualAreasHeader" :items="manualAreas" class="text-center">
+            <template slot="no" slot-scope="data">
+              {{ data.index + 1 }}
+            </template>
+            <template slot="add_to_favorite" slot-scope="data">
+              <i class="fa fa-trash text-danger" @click="deleteArea()"></i>             
+              <i class="fa fa-star-o warning text-warning ml-4" v-if="addFavoriteFromManual.indexOf(data.index) < 0" @click="manualToFavorite(data.index)"></i>
+              <i class="fa fa-star warning text-warning ml-4" v-else @click="favoriteToManual(data.index)"></i>
+            </template>       
+          </b-table>
+          <label>Add material:</label>
+          <input type="text" class="form-control">
+        </div>
+        <div class="col-md-6">
+          <label>Provided materials</label>
+          <b-table :fields="manualAreasHeader" :items="providedAreas" class="text-center">
+            <template slot="no" slot-scope="data">
+              {{ data.index + 1 }}
+            </template>
+            <template slot="add_to_favorite" slot-scope="data">
+              <i class="fa fa-star-o warning text-warning" v-if="addFavoriteFromProvide.indexOf(data.index) < 0" @click="provideToFavorite(data.index)"></i>
+              <i class="fa fa-star warning text-warning" v-else @click="favoriteToProvide(data.index)"></i>
+            </template>
+          </b-table>
+        </div>
+      </b-row>      
+    </div>
+  </div>
 </template>
 
 <script type="text/babel">

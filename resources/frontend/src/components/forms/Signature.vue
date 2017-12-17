@@ -1,50 +1,50 @@
 <template>
 
-	<b-container>
+  <b-container>
 
-		<b-row>
-			<b-col cols="3" class="text-left pt-4">
-				<h6>Owner/Occupant:</h6>
-				<p>{{ ownerName }}</p>
-			</b-col>
-			<b-col cols="6">
-				<b-row>
-					<b-col cols="2" class="text-right">
-						<i class="fa fa-times" @click="clearOwner"></i>
-					</b-col>
-					<b-col cols="8">						
-						<vueSignature ref="ownerSignature" :h="'80px'" class="signature"></vueSignature>
-					</b-col>					
-				</b-row>				
-			</b-col>
-			<b-col cols="3" class="text-right pt-4">
-				<h6>Date: {{ date }}</h6>
-				<p>{{ time }}</p>
-			</b-col>
-		</b-row>
+    <b-row>
+      <b-col cols="3" class="text-left pt-4">
+        <h6>Owner/Occupant:</h6>
+        <p>{{ ownerName }}</p>
+      </b-col>
+      <b-col cols="6">
+        <b-row>
+          <b-col cols="2" class="text-right">
+            <i class="fa fa-times" @click="clearOwner"></i>
+          </b-col>
+          <b-col cols="8">            
+            <vueSignature ref="ownerSignature" :h="'80px'" class="signature"></vueSignature>
+          </b-col>          
+        </b-row>        
+      </b-col>
+      <b-col cols="3" class="text-right pt-4">
+        <h6>Date: {{ date }}</h6>
+        <p>{{ time }}</p>
+      </b-col>
+    </b-row>
 
-		<b-row>
-			<b-col cols="3" class="text-left pt-4">
-				<h6>Company:</h6>
-				<p>{{ companyName }}</p>
-			</b-col>
-			<b-col cols="6">
-				<b-row>
-					<b-col cols="2" class="text-right">
-						<i class="fa fa-times" @click="clearCompany"></i>
-					</b-col>
-					<b-col cols="8">						
-						<vueSignature ref="companySignature" :h="'80px'" class="signature"></vueSignature>
-					</b-col>					
-				</b-row>				
-			</b-col>
-			<b-col cols="3" class="text-right pt-4">
-				<h6>Date: {{ date }}</h6>
-				<p>{{ time }}</p>
-			</b-col>
-		</b-row>
-		
-	</b-container>
+    <b-row>
+      <b-col cols="3" class="text-left pt-4">
+        <h6>Company:</h6>
+        <p>{{ companyName }}</p>
+      </b-col>
+      <b-col cols="6">
+        <b-row>
+          <b-col cols="2" class="text-right">
+            <i class="fa fa-times" @click="clearCompany"></i>
+          </b-col>
+          <b-col cols="8">            
+            <vueSignature ref="companySignature" :h="'80px'" class="signature"></vueSignature>
+          </b-col>          
+        </b-row>        
+      </b-col>
+      <b-col cols="3" class="text-right pt-4">
+        <h6>Date: {{ date }}</h6>
+        <p>{{ time }}</p>
+      </b-col>
+    </b-row>
+    
+  </b-container>
 
 </template>
 
@@ -84,7 +84,7 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
-	.signature {
-		border-bottom: 1px solid black;
-	}	
+  .signature {
+    border-bottom: 1px solid black;
+  } 
 </style>

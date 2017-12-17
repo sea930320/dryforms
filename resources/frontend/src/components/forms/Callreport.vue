@@ -1,59 +1,59 @@
 <template>
-	<div class="card mb-3">
-		<div class="card-body text-center">
-			<form-header></form-header>
-			<h4 class="mb-2">{{ $route.meta.title }}</h4>
-			<div class="dropdown-divider"></div>
-			<b-row>
-				<b-col class="text-left">
-					<b-row>
-						<b-col class="text-center"><h5>Job Site</h5></b-col>
-					</b-row>					
-					<b-form-checkbox-group v-model="selectedCustomerType" class="mt-3 mb-3">
-						<b-row>
-							<b-col v-for="item in customerTypes" :key="item.value" class="col-md-6" >
-								<b-form-checkbox :value="item.value">{{ item.text }}</b-form-checkbox>
-							</b-col>
-						</b-row>
-					</b-form-checkbox-group>
-					<div v-for="item in inputGroup1" :key="item.label">
-						<label >{{ item.label }}</label>
-						<b-form-input v-model="formModel1[item.model]"></b-form-input>
-					</div>
-					<b-form-checkbox-group v-model="selectedJobType" class="mt-3 mb-3">
-						<b-row>
-							<b-col v-for="item in jobTypes" :key="item.value" class="col-md-6" >
-								<b-form-checkbox :value="item.value">{{ item.text }}</b-form-checkbox>
-							</b-col>
-						</b-row>
-					</b-form-checkbox-group>
-					<div v-for="item in inputGroup2" :key="item.label">
-						<label >{{ item.label }}</label>
-						<b-form-input v-model="formModel2[item.model]"></b-form-input>
-					</div>
-				</b-col>
-				<b-col class="text-left">
-					<b-row class="mt-2">
-						<b-col class="text-center"><h5>Owner/Insured Information</h5></b-col>
-					</b-row>
-					<div v-for="item in inputGroup3" :key="item.label">
-						<label >{{ item.label }}</label>
-						<b-form-checkbox v-model="sameJobAddress" v-if="item.model == 'address'">Same as job address</b-form-checkbox>
-            <b-form-checkbox v-model="sameContactName" v-if="item.model == 'ownerName'">Same as contact name</b-form-checkbox>						
-						<b-form-input v-model="formModel3[item.model]"></b-form-input>
-					</div>
-					<b-row>
-						<b-col class="text-center"><h5>Insurance Information</h5></b-col>
-					</b-row>
-					<div v-for="item in inputGroup4" :key="item.label">
-						<label >{{ item.label }}</label>
-						<b-form-input v-model="formModel4[item.model]"></b-form-input>
-					</div>					
-				</b-col>
-			</b-row>
-			<notes></notes>
-		</div>
-	</div>
+  <div class="card mb-3">
+    <div class="card-body text-center">
+      <form-header></form-header>
+      <h4 class="mb-2">{{ $route.meta.title }}</h4>
+      <div class="dropdown-divider"></div>
+      <b-row>
+        <b-col class="text-left">
+          <b-row>
+            <b-col class="text-center"><h5>Job Site</h5></b-col>
+          </b-row>          
+          <b-form-checkbox-group v-model="selectedCustomerType" class="mt-3 mb-3">
+            <b-row>
+              <b-col v-for="item in customerTypes" :key="item.value" class="col-md-6" >
+                <b-form-checkbox :value="item.value">{{ item.text }}</b-form-checkbox>
+              </b-col>
+            </b-row>
+          </b-form-checkbox-group>
+          <div v-for="item in inputGroup1" :key="item.label">
+            <label >{{ item.label }}</label>
+            <b-form-input v-model="formModel1[item.model]"></b-form-input>
+          </div>
+          <b-form-checkbox-group v-model="selectedJobType" class="mt-3 mb-3">
+            <b-row>
+              <b-col v-for="item in jobTypes" :key="item.value" class="col-md-6" >
+                <b-form-checkbox :value="item.value">{{ item.text }}</b-form-checkbox>
+              </b-col>
+            </b-row>
+          </b-form-checkbox-group>
+          <div v-for="item in inputGroup2" :key="item.label">
+            <label >{{ item.label }}</label>
+            <b-form-input v-model="formModel2[item.model]"></b-form-input>
+          </div>
+        </b-col>
+        <b-col class="text-left">
+          <b-row class="mt-2">
+            <b-col class="text-center"><h5>Owner/Insured Information</h5></b-col>
+          </b-row>
+          <div v-for="item in inputGroup3" :key="item.label">
+            <label >{{ item.label }}</label>
+            <b-form-checkbox v-model="sameJobAddress" v-if="item.model == 'address'">Same as job address</b-form-checkbox>
+            <b-form-checkbox v-model="sameContactName" v-if="item.model == 'ownerName'">Same as contact name</b-form-checkbox>            
+            <b-form-input v-model="formModel3[item.model]"></b-form-input>
+          </div>
+          <b-row>
+            <b-col class="text-center"><h5>Insurance Information</h5></b-col>
+          </b-row>
+          <div v-for="item in inputGroup4" :key="item.label">
+            <label >{{ item.label }}</label>
+            <b-form-input v-model="formModel4[item.model]"></b-form-input>
+          </div>          
+        </b-col>
+      </b-row>
+      <notes></notes>
+    </div>
+  </div>
 </template>
 
 <script type="text/babel">

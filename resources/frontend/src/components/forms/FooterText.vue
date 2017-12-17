@@ -1,7 +1,7 @@
 <template>
-	<b-row>
-		<b-col v-html="footerText" class="text-center"></b-col>
-	</b-row>
+  <b-row>
+    <b-col v-html="footerText" class="text-center"></b-col>
+  </b-row>
 </template>
 
 <script type="text/babel">
