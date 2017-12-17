@@ -6,6 +6,9 @@ import Register from '@/components/auth/Register'
 
 import settings from './settings'
 import equipment from './equipment'
+import projects from './projects'
+import standards from './standards'
+import forms from './forms'
 
 Vue.use(Router)
 
@@ -26,7 +29,10 @@ export default new Router({
             name: 'Register',
             component: Register
         },
+        ...projects(),
         ...settings(),
-        ...equipment()
+        ...equipment(),
+        ...standards(),
+        ...forms()
     ]
 })
