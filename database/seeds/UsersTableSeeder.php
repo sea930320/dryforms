@@ -14,7 +14,7 @@ class UsersTableSeeder extends Seeder
     {
         // careate super admin
         $superAdmin = \App\Models\User::create([
-            'name' => 'Super Admin',
+            'first_name' => 'Super Admin',
             'email' => 'superadmin@gmail.com',
             'password' => \Illuminate\Support\Facades\Hash::make('qwerty123')
         ]);
@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
 
         // create admin
         $admin = \App\Models\User::create([
-            'name' => 'Admin',
+            'first_name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => \Illuminate\Support\Facades\Hash::make('qwerty123')
         ]);
@@ -47,7 +47,7 @@ class UsersTableSeeder extends Seeder
 
         // create user
         $user = \App\Models\User::create([
-            'name' => 'User',
+            'first_name' => 'User',
             'email' => 'user@gmail.com',
             'password' => \Illuminate\Support\Facades\Hash::make('qwerty123')
         ]);
