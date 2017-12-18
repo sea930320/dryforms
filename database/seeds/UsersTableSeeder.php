@@ -12,6 +12,12 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+
+        DB::table('users')->truncate();
+
+        Schema::enableForeignKeyConstraints();
+
         // careate super admin
         $superAdmin = \App\Models\User::create([
             'first_name' => 'Super Admin',
