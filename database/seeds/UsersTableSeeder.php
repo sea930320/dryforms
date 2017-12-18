@@ -15,8 +15,8 @@ class UsersTableSeeder extends Seeder
         // careate super admin
         $superAdmin = \App\Models\User::create([
             'name' => 'Super Admin',
-            'email' => 'sincityprivate.super.admin@gmail.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('9P}\bwE9')
+            'email' => 'superadmin@gmail.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('qwerty123')
         ]);
 
         // add role
@@ -31,8 +31,8 @@ class UsersTableSeeder extends Seeder
         // create admin
         $admin = \App\Models\User::create([
             'name' => 'Admin',
-            'email' => 'sincityprivate.admin@gmail.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('9P}\bwE9')
+            'email' => 'admin@gmail.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('qwerty123')
         ]);
 
         // add role
@@ -48,8 +48,8 @@ class UsersTableSeeder extends Seeder
         // create user
         $user = \App\Models\User::create([
             'name' => 'User',
-            'email' => 'sincityprivate.user@gmail.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('9P}\bwE9')
+            'email' => 'user@gmail.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('qwerty123')
         ]);
 
         // add role
