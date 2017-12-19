@@ -2,63 +2,63 @@ const leftLinks = [
   {
     path: '/forms/select',
     name: 'Forms',
-    icon: 'fa-files-o',
+    icon: require('../assets/icon-forms.png'),
     mb: true
   },
   {
     path: '/forms/callreport',
     name: 'Call Report',
-    icon: 'phone'
+    icon: require('../assets/icon-callreport.png')
   },
   {
     path: '/forms/scope',
     name: 'Project Scope',
-    icon: 'fa-newspaper-o'
+    icon: require('../assets/icon-scope.png')
   },
   {
     path: '/forms/dailylog',
     name: 'Daily Log',
-    icon: 'chat'
+    icon: require('../assets/icon-dailylog.png')
   },
   {
     path: '/forms/authorization',
     name: 'Work Authorization',
-    icon: 'fa-pencil'
+    icon: require('../assets/icon-workauth.png')
   },
   {
     path: '/forms/antimicrobial',
     name: 'Anti-Microbial',
-    icon: 'fa-certificate'
+    icon: require('../assets/icon-antimicrobial.png')
   },
   {
     path: '/forms/responsibility',
     name: 'Customer Responsibility',
-    icon: 'fa-hand-grab-o'
+    icon: require('../assets/icon-customer.png')
   },
   {
     path: '/forms/moisturemap',
     name: 'Moisture Map',
-    icon: 'fa-tint'
+    icon: require('../assets/icon-moisture.png')
   },
   {
     path: '/forms/psyreport',
     name: 'Psychometric Report',
-    icon: 'fa-flag'
+    icon: require('../assets/icon-psychometric.png')
   },
   {
     path: '/forms/liability',
     name: 'Release from Liability',
-    icon: 'fa-chain-broken'
+    icon: require('../assets/icon-release.png')
   },
   {
     path: '/forms/stoppage',
     name: 'Work Stoppage',
-    icon: 'fa-hand-paper-o'
+    icon: require('../assets/icon-workstop.png')
   },
   {
     path: '/forms/certificate',
     name: 'Certificate of Completion',
-    icon: 'fa-trophy'
+    icon: require('../assets/icon-complete.png')
   }
 ]
 
@@ -66,37 +66,37 @@ const rightLinks = [
   {
     path: 'support',
     name: 'Suggestion/Support',
-    icon: 'fa-ticket'
+    icon: require('../assets/icon-support.png')
   },
   {
     path: 'calendar',
     name: 'Calendar',
-    icon: 'fa-calendar-o'
+    icon: require('../assets/icon-calendar.png')
   },
   {
     path: 'preview',
     name: 'Preview',
-    icon: 'fa-eye'
+    icon: require('../assets/icon-preview.png')
   },
   {
     path: 'email',
     name: 'Email',
-    icon: 'fa-envelope-o'
+    icon: require('../assets/icon-email.png')
   },
   {
     path: 'print',
     name: 'Print',
-    icon: 'fa-print'
+    icon: require('../assets/icon-print.png')
   },
   {
     path: 'save',
     name: 'Save',
-    icon: 'fa-floppy-o'
+    icon: require('../assets/icon-save.png')
   },
   {
     path: '/forms/areas',
     name: 'Affected Areas',
-    icon: 'fa-bullseye',
+    icon: '',
     mt: true
   }
 ]
@@ -282,6 +282,20 @@ const routes = (configRoute) => [
     },
     component: resolve => {
       require(['../components/forms/Areas.vue'], resolve)
+    }
+  },
+  {
+    path: '/forms/email',
+    name: 'Email',
+    props: {title: 'Email'},
+    meta: {
+      title: 'Email',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/forms/Email.vue'], resolve)
     }
   }
 ]

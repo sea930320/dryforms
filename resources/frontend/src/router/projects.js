@@ -2,7 +2,8 @@ const leftLinks = [
   {
     path: '/projects/new',
     name: 'New Project',
-    icon: 'fa-file'
+    icon: require('../assets/icon-forms.png'),
+    mb: true
   }
 ]
 
@@ -10,12 +11,12 @@ const rightLinks = [
   {
     path: 'support',
     name: 'Suggestion/Support',
-    icon: 'fa-ticket'
+    icon: require('../assets/icon-support.png')
   },
   {
     path: 'calendar',
     name: 'Calendar',
-    icon: 'fa-calendar-o'
+    icon: require('../assets/icon-calendar.png')
   }
 ]
 
