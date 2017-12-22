@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    const SUPER_ADMIN = 1;
+    const ADMIN = 2;
+    const USER = 3;
+
     /**
      * The database table used by the model.
      *
@@ -18,9 +22,7 @@ class Role extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'slug', 'level'
-    ];
+    protected $fillable = ['name'];
 
     /**
      * Relation with user.

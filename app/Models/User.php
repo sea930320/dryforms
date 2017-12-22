@@ -42,6 +42,27 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $visible = [
+        'first_name',
+        'last_name',
+        'address',
+        'city',
+        'state',
+        'zip',
+        'phone',
+        'email',
+        'password',
+        'company_id',
+
+        'company',
+        'roles'
+    ];
+
+    /**
      * Relation with companies.
      */
     public function company()

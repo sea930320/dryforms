@@ -16,8 +16,13 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'prefix', 'description'
+        'name', 'prefix', 'description', 'company_id'
     ];
+
+    /**
+     * @var array
+     */
+    protected $visible = ['name', 'prefix', 'description', 'company_id', 'company', 'equipments', 'models'];
 
     /**
      * Relation with models.
@@ -33,5 +38,13 @@ class Category extends Model
     public function equipments()
     {
         return $this->hasManyThrough(Equipment::class, EquipmentModel::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

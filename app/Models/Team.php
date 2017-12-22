@@ -20,7 +20,8 @@ class Team extends Model
      */
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'company_id'
     ];
 
     /**
@@ -29,7 +30,10 @@ class Team extends Model
     protected $visible = [
         'id',
         'name',
-        'description'
+        'description',
+        'company_id',
+
+        'company'
     ];
 
     /**
@@ -38,5 +42,13 @@ class Team extends Model
     public function equipments()
     {
         return $this->hasMany(Equipment::class, 'team_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }
