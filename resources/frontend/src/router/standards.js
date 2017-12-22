@@ -2,64 +2,64 @@ const leftLinks = [
   {
     path: '/standards/formorder',
     name: 'Forms Order',
-    icon: 'reorder',
+    icon: require('../assets/icon-forms.png'),
     mb: true
   },
   {
     path: '/standards/scope',
     name: 'Project Scope',
-    icon: 'fa-newspaper-o'
+    icon: require('../assets/icon-scope.png')
   },
   {
     path: '/standards/authorization',
     name: 'Work Authorization',
-    icon: 'fa-pencil'
+    icon: require('../assets/icon-workauth.png')
   },
   {
     path: '/standards/antimicrobial',
     name: 'Anti-Microbial',
-    icon: 'fa-certificate'
+    icon: require('../assets/icon-antimicrobial.png')
   },
   {
     path: '/standards/responsibility',
     name: 'Customer Responsibility',
-    icon: 'fa-hand-grab-o'
+    icon: require('../assets/icon-customer.png')
   },
   {
     path: '/standards/liability',
     name: 'Release from Liability',
-    icon: 'fa-chain-broken'
+    icon: require('../assets/icon-release.png')
   },
   {
     path: '/standards/stoppage',
     name: 'Work Stoppage',
-    icon: 'fa-hand-paper-o'
+    icon: require('../assets/icon-workstop.png')
   },
   {
     path: '/standards/certificate',
     name: 'Certificate of Completion',
-    icon: 'fa-trophy',
-    mb: true
+    icon: require('../assets/icon-complete.png')
   },
   {
     path: '/standards/areas',
     name: 'Affected Areas',
-    icon: 'fa-bullseye'
+    icon: require('../assets/icon-antimicrobial.png'),
+    mt: true
   },
   {
     path: '/standards/crews',
     name: 'Crews / Teams',
-    icon: 'fa-users'
+    icon: require('../assets/icon-callreport.png')
   },
   {
     path: '/standards/structures',
     name: 'Structures',
-    icon: 'fa-cubes'
+    icon: require('../assets/icon-structure.png')
   },
   {
     path: '/standards/materials',
     name: 'Materials',
-    icon: 'fa-cogs'
+    icon: require('../assets/icon-moisture.png')
   }
 ]
 
@@ -67,17 +67,17 @@ const rightLinks = [
   {
     path: 'support',
     name: 'Suggestions/Support',
-    icon: 'fa-ticket'
+    icon: require('../assets/icon-support.png')
   },
   {
     path: 'calendar',
     name: 'Calendar',
-    icon: 'fa-calendar-o'
+    icon: require('../assets/icon-calendar.png')
   },
   {
     path: '/standards/createform',
     name: 'Create Form',
-    icon: 'fa-file-text',
+    icon: '',
     mt: true
   }
 ]
