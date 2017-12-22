@@ -15,7 +15,22 @@ class Equipment extends Model
      * @var array
      */
     protected $fillable = [
-        'model_id', 'category_id', 'status_id', 'team_id', 'serial', 'location'
+        'model_id', 'category_id', 'status_id', 'team_id', 'serial', 'location', 'company_id'
+    ];
+
+    protected $visible = [
+        'model_id',
+        'category_id',
+        'status_id',
+        'team_id',
+        'serial',
+        'location',
+        'company_id',
+
+        'status',
+        'category',
+        'team',
+        'company'
     ];
 
     /**
@@ -40,5 +55,13 @@ class Equipment extends Model
     public function model()
     {
         return $this->belongsTo(EquipmentModel::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

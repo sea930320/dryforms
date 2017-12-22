@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class StatusesTableSeeder extends Seeder
+class StatusesSeeder extends Seeder
 {
     /**
      * Run the database seeds.

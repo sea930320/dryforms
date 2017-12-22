@@ -15,7 +15,14 @@ class EquipmentModel extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'category_id', 'total', 'description'
+        'name', 'category_id', 'total', 'description', 'company_id'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $visible = [
+        'name', 'category_id', 'total', 'description', 'company_id', 'company', 'category'
     ];
 
     /**
@@ -32,5 +39,13 @@ class EquipmentModel extends Model
     public function equipment()
     {
         return $this->hasMany(Equipment::class, 'model_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }
