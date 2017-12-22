@@ -15,7 +15,7 @@
             <b-nav-item v-if="!$session.get('apiToken')"><router-link to="/login">Login</router-link></b-nav-item>
             <b-nav-item v-if="!$session.get('apiToken')"><router-link to="/register">Register</router-link></b-nav-item>
             <b-nav-item v-if="$session.get('apiToken')" class="dashboard text-center pt-3">
-                <router-link to="/dashboard"><img :src="dashbordImg"></router-link>
+                <a href="/admin"><img :src="dashbordImg"></a>
             </b-nav-item>
             <b-nav-item v-if="$session.get('apiToken')" v-on:click="logout()" class="logout">
                 <div class="text-right version">Version 1.00</div>

@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use Backpack\PermissionManager\app\Models\Permission;
 use Illuminate\Notifications\Notifiable;
 use Backpack\CRUD\CrudTrait;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Cashier\Billable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -13,7 +11,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, Billable, CrudTrait, HasRoles;
+    use Notifiable, Billable, CrudTrait;
 
     /**
      * The attributes that are mass assignable.

@@ -177,9 +177,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-
-        Backpack\PermissionManager\PermissionManagerServiceProvider::class
+        App\Providers\RouteServiceProvider::class
     ],
 
     /*
@@ -230,7 +228,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
-
     ],
 
 ];
