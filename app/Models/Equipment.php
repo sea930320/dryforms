@@ -27,6 +27,7 @@ class Equipment extends Model
         'location',
         'company_id',
 
+        'model',
         'status',
         'category',
         'team',

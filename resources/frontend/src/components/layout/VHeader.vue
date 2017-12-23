@@ -4,15 +4,14 @@
             <img :src="logoImg" alt="Logo">
         </b-navbar-brand>
         <b-navbar-nav class="left-nav">
-            <b-nav-item v-for="item in menuItems" :key="item.route" v-if="$session.get('apiToken')">
-                <router-link :to="item.route" class="pointer text-center">
-                    <p class="mb-0"><img :src="item.img" alt="Logo"></p>
-                    <p class="text-white font-weight-bold text-uppercase mb-0">{{ item.name }}</p>
-                </router-link>
-            </b-nav-item>
+             <router-link :to="item.route" class="nav-link pointer text-center"
+                          v-for="item in menuItems" :key="item.route" v-if="$session.get('apiToken')">
+                 <p class="mb-0"><img :src="item.img" alt="Logo"></p>
+                 <p class="text-white font-weight-bold text-uppercase mb-0">{{ item.name }}</p>
+             </router-link>
         </b-navbar-nav>
         <b-navbar-nav class="right-nav ml-auto">
-            <b-nav-item v-if="!$session.get('apiToken')"><router-link to="/login">Login</router-link></b-nav-item>
+            <b-nav-item v-if="!$session.get('apiToken')"><router-link v-if="!$session.get('apiToken')" to="/login">Login</router-link></b-nav-item>
             <b-nav-item v-if="!$session.get('apiToken')"><router-link to="/register">Register</router-link></b-nav-item>
             <b-nav-item v-if="$session.get('apiToken')" class="dashboard text-center pt-3" href="/admin">
                 <img :src="dashbordImg">
@@ -76,10 +75,10 @@
             padding-bottom: 23px;
         }
         .left-nav {
-            .nav-item {
+            .nav-link {
                 width: 120px;
                 border-left: 1px solid #898c93;
-                &:hover {
+                &:hover, &.router-link-active {
                     background: linear-gradient(rgba(255, 255, 255, 0), rgba(17, 103, 179, 1));
                 }
             }

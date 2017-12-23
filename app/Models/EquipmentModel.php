@@ -22,7 +22,7 @@ class EquipmentModel extends Model
      * @var array
      */
     protected $visible = [
-        'name', 'category_id', 'total', 'description', 'company_id', 'company', 'category'
+        'name', 'category_id', 'total', 'description', 'company_id', 'company', 'category', 'equipment'
     ];
 
     /**
