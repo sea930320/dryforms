@@ -67,12 +67,10 @@ class EquipmentsController extends ApiController
     public function index(): JsonResponse
     {
         $categories = $this->category->with([
-            'models',
-            'models.equipment',
-            'models.equipment.team',
-            'models.equipment.model',
-            'models.equipment.status',
-        ])->get();
+            'equipments.model',
+            'equipments.team',
+            'equipments.status',
+        ])->paginate(20);
 
         return $this->respond($categories);
     }
@@ -84,9 +82,13 @@ class EquipmentsController extends ApiController
      */
     public function show(int $id): JsonResponse
     {
-        $model = $this->model->findOrFail($id);
+        $equipment = $this->equipment->with([
+            'model.category',
+            'team',
+            'status'
+        ])->findOrFail($id);
 
-        return $this->respond($model->equipments);
+        return $this->respond($equipment);
     }
 
     /**
@@ -96,28 +98,18 @@ class EquipmentsController extends ApiController
      */
     public function store(EquipmentStore $request): JsonResponse
     {
-        $category = $this->category->findOrFail($request->get('category_id'));
-        $model = $this->model->findOrFail($request->get('model_id'));
-        $quantity = $request->get('quantity');
+        $categoryPrefix = $this->category->find($request->get('category_id'))->prefix;
+        $equipment = $this->equipment->create([
+            'model_id' => $request->get('model_id'),
+            'team_id' => $request->get('model_id'),
+            'serial' => $categoryPrefix . ' ' . $request->get('serial'),
+            'status_id' => $request->get('status_id'),
+            'company_id' => $request->get('company_id'),
+        ]);
 
-        $response = [];
+        $equipment->load(['model.category', 'status', 'team']);
 
-        for($i = $model->equipments_count; $i < $quantity + $model->equipments_count; $i++) {
-
-            // generate serial
-            $serial = '#' . $category->prefix . str_pad($i, 4, '0', STR_PAD_LEFT);
-
-
-            $response[] = $this->equipment->create([
-                'model_id' =>  $request->get('model_id'),
-                'team_id' => $request->get('model_id'),
-                'serial' => $serial,
-                'status_id' => $request->get('status_id'),
-            ]);
-
-        }
-
-        return $this->respond(['message' => 'Equipments successfully created', 'equipments' => $response]);
+        return $this->respond(['message' => 'Equipments successfully created', 'equipment' => $equipment]);
     }
 
     /**
@@ -129,6 +121,7 @@ class EquipmentsController extends ApiController
     {
         $equipment = $this->equipment->find($request->input('equipment_id'));
         $equipment->update($request->validatedOnly());
+        $equipment->load(['model.category', 'status', 'team']);
 
         return $this->respond(['message' => 'Equipment successfully updated', 'equipment_id' => $equipment]);
     }

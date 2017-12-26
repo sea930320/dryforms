@@ -46,7 +46,12 @@ class Category extends Model
      */
     public function equipments()
     {
-        return $this->hasManyThrough(Equipment::class, EquipmentModel::class);
+        return $this->hasManyThrough(
+            Equipment::class,
+            EquipmentModel::class,
+            'category_id',
+            'model_id'
+            );
     }
 
     /**

@@ -27,8 +27,10 @@ class EquipmentStore extends BaseRequest
             'category_id' => 'exists:equipment_categories,id',
             'status_id' => 'exists:equipment_statuses,id',
             'model_id' => 'exists:equipment_models,id',
-            'team_id' => 'exists:equipment_teams,id',
+            'team_id' => 'exists:teams,id',
             'quantity' => 'required|numeric',
+            'serial' => 'nullable|string',
+            'company_id' => 'required|exists:companies,id'
         ];
     }
 }

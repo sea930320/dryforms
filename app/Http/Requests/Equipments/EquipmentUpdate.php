@@ -26,8 +26,25 @@ class EquipmentUpdate extends BaseRequest
         return [
             'equipment_id' => 'exists:equipments,id',
             'status_id' => 'exists:equipment_statuses,id',
-            'team_id' => 'exists:equipment_teams,id',
             'location' => 'sometimes|string',
+            'team_id' => 'exists:teams,id',
+            'quantity' => 'required|numeric',
+            'serial' => 'nullable|string',
+            'company_id' => 'required|exists:companies,id'
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function validationData()
+    {
+        $this->merge(
+            [
+                'equipment_id' => $this->route('equipment')
+            ]
+        );
+
+        return parent::validationData();
     }
 }
