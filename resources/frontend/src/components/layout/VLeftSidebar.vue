@@ -2,7 +2,7 @@
     <b-list-group class="text-left p-0">
         <b-list-group-item v-for="link in $route.meta.leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
             <router-link :to="link.path" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
-                <p class="m-0"><img v-if="link.icon != ''" :src="link.icon"> {{ link.name }}</p>
+                <p class="m-0"><img v-if="link.icon !== ''" :src="link.icon"> {{ link.name }}</p>
             </router-link>
         </b-list-group-item>
     </b-list-group>

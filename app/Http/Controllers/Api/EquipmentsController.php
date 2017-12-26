@@ -144,16 +144,4 @@ class EquipmentsController extends ApiController
 
         return $this->respond(['message' => 'Equipment successfully deleted']);
     }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function bulkDestroy(Request $request): JsonResponse
-    {
-        $this->equipment->whereIn('id', $request->get('ids'))->delete();
-
-        return $this->respond(['message' => 'Equipments successfully deleted']);
-    }
 }

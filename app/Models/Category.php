@@ -22,7 +22,16 @@ class Category extends Model
     /**
      * @var array
      */
-    protected $visible = ['name', 'prefix', 'description', 'company_id', 'company', 'equipments', 'models'];
+    protected $visible = [
+        'id',
+        'name',
+        'prefix',
+        'description',
+        'company_id',
+        'company',
+        'equipments',
+        'models'
+    ];
 
     /**
      * Relation with models.
