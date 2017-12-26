@@ -31,7 +31,7 @@ class TeamUpdate extends BaseRequest
                 'string',
                 Rule::unique('teams')->ignore($this->input('team_id'), 'id')
             ],
-            'description' => 'nullable|string',
+            'company_id' => 'required|exists:companies,id'
         ];
     }
 

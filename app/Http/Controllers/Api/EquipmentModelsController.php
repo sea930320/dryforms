@@ -56,6 +56,7 @@ class EquipmentModelsController extends ApiController
             'name' => $request->get('name'),
             'category_id' => $request->get('category_id'),
             'description' => $request->get('description'),
+            'company_id' => $request->get('company_id')
         ]);
 
         return $this->respond(['message' => 'Model successfully created', 'model' => $model]);

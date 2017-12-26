@@ -33,6 +33,7 @@ class ModelUpdate extends BaseRequest
                 Rule::unique('equipment_models')->ignore($this->input('model_id'), 'id')
             ],
             'description' => 'nullable|string',
+            'company_id' => 'required|exists:companies,id'
         ];
     }
 

@@ -54,7 +54,7 @@ class TeamsController extends ApiController
     {
         $team = $this->team->create([
             'name' => $request->get('name'),
-            'description' => $request->get('description'),
+            'company_id' => $request->get('company_id'),
         ]);
 
         return $this->respond(['message' => 'Team successfully created', 'team' => $team]);

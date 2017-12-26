@@ -26,6 +26,7 @@ class CategoryStore extends BaseRequest
             'name' => 'required|string|unique:equipment_categories,name',
             'prefix' => 'required|string',
             'description' => 'nullable|string',
+            'company_id' => 'required|exists:companies,id'
         ];
     }
 }

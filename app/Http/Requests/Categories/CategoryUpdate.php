@@ -32,6 +32,7 @@ class CategoryUpdate extends BaseRequest
             ],
             'prefix' => 'required|string',
             'description' => 'nullable|string',
+            'company_id' => 'required|exists:companies,id'
         ];
     }
 

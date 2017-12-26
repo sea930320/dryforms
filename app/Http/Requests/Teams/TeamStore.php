@@ -21,7 +21,7 @@ class TeamStore extends BaseRequest
     {
         return [
             'name' => 'required|string|unique:teams,name',
-            'description' => 'nullable|string',
+            'company_id' => 'required|exists:companies,id'
         ];
     }
 }

@@ -25,14 +25,14 @@ class CompanyStore extends BaseRequest
         return [
             'user_id' => 'required|numeric|exists:users,id',
             'name' => 'required|string|unique:companies,name',
-            'logo' => 'sometimes|string',
+            'logo' => 'nullable|string',
             'email' => 'required|email|unique:users,email',
             'street' => 'required|string',
             'city' => 'required|string',
             'state' => 'required|string',
             'zip' => 'required|string',
             'phone' => 'required|string',
-            'cloud_link' => 'sometimes|string',
+            'cloud_link' => 'nullable|string',
         ];
     }
 }

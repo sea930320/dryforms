@@ -27,6 +27,7 @@ class ModelStore extends BaseRequest
             'name' => 'required|string|unique:equipment_models,name',
             'category_id' => 'exists:equipment_categories,id',
             'description' => 'nullable|string',
+            'company_id' => 'required|exists:companies,id'
         ];
     }
 }
