@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterEquipmentModelsTable extends Migration
+class AlterEquipmentModelsTableAddTotal extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AlterEquipmentModelsTable extends Migration
     public function up()
     {
         Schema::table('equipment_models', function ($table) {
-            $table->string('prefix')->nullable()->default(null)->after('name');
+            $table->dropColumn('equipments_count');
+            $table->integer('total')->after('name')->unsigned()->default(0);
         });
     }
 
@@ -26,7 +27,8 @@ class AlterEquipmentModelsTable extends Migration
     public function down()
     {
         Schema::table('equipment_models', function ($table) {
-            $table->dropColumn('prefix');
+            $table->dropColumn('total');
+            $table->integer('equipments_count')->after('name')->unsigned()->default(0);
         });
     }
 }
