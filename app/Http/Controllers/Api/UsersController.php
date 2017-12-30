@@ -10,12 +10,28 @@ use Illuminate\Contracts\Hashing\Hasher;
 
 class UsersController extends ApiController
 {
+    /**
+     * @var User
+     */
     private $user;
 
+    /**
+     * @var Team
+     */
     private $team;
 
+    /**
+     * @var Hasher
+     */
     private $hasher;
 
+    /**
+     * UsersController constructor.
+     *
+     * @param User $user
+     * @param Team $team
+     * @param Hasher $hasher
+     */
     public function __construct(User $user, Team $team, Hasher $hasher)
     {
         $this->user = $user;
