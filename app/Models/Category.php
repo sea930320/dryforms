@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Category extends Model
 {
+    use BelongsToCompany;
+
     /**
      * @var string
      */

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 
@@ -51,6 +52,9 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         //TODO refactor and make builder
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json(['message' => 'Not Found'], 404);
+        }
         if ($request->bearerToken() && $exception instanceof ValidationException) {
             return response()->json($exception->validator->getMessageBag(), 422);
         }

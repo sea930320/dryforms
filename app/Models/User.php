@@ -28,6 +28,7 @@ class User extends Authenticatable implements JWTSubject
         'phone',
         'email',
         'password',
+        'role_id'
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $visible = [
+        'id',
         'first_name',
         'last_name',
         'address',
@@ -55,9 +57,11 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'company_id',
+        'role_id',
 
         'company',
-        'roles'
+        'role',
+        'teams'
     ];
 
     /**
@@ -68,12 +72,21 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Company::class, 'user_id');
     }
 
+
     /**
-     * The roles that belong to the user.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function roles()
+    public function role()
     {
-        return $this->belongsToMany(Role::class, 'role_users');
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'users_teams');
     }
 
     /**

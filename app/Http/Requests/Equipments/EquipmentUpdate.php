@@ -26,7 +26,7 @@ class EquipmentUpdate extends BaseRequest
         return [
             'equipment_id' => 'exists:equipments,id',
             'status_id' => 'exists:equipment_statuses,id',
-            'location' => 'sometimes|string',
+            'location' => 'nullable|string',
             'team_id' => 'exists:teams,id',
             'quantity' => 'required|numeric',
             'serial' => 'nullable|string',

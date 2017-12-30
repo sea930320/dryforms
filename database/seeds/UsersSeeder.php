@@ -19,6 +19,7 @@ class UsersSeeder extends Seeder
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     const COMPANY_ID = 'company_id';
+    const ROLE_ID = 'role_id';
 
     /**
      * Run the database seeds.
@@ -30,7 +31,6 @@ class UsersSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
         DB::table('users')->truncate();
-        DB::table('role_users')->truncate();
 
         DB::table('users')->insert([
             [
@@ -47,6 +47,7 @@ class UsersSeeder extends Seeder
                 static::CREATED_AT => '2017-01-01 10:00:00',
                 static::UPDATED_AT => '2017-01-01 10:00:00',
                 static::COMPANY_ID => 1,
+                static::ROLE_ID => \App\Models\Role::SUPER_ADMIN,
             ],
             [
                 static::ID => 2,
@@ -62,6 +63,7 @@ class UsersSeeder extends Seeder
                 static::CREATED_AT => '2017-01-01 10:00:00',
                 static::UPDATED_AT => '2017-01-01 10:00:00',
                 static::COMPANY_ID => 2,
+                static::ROLE_ID => \App\Models\Role::ADMIN,
             ],
             [
                 static::ID => 3,
@@ -77,6 +79,7 @@ class UsersSeeder extends Seeder
                 static::CREATED_AT => '2017-01-01 10:00:00',
                 static::UPDATED_AT => '2017-01-01 10:00:00',
                 static::COMPANY_ID => 2,
+                static::ROLE_ID => \App\Models\Role::USER,
             ],
             [
                 static::ID => 4,
@@ -92,25 +95,7 @@ class UsersSeeder extends Seeder
                 static::CREATED_AT => '2017-01-01 10:00:00',
                 static::UPDATED_AT => '2017-01-01 10:00:00',
                 static::COMPANY_ID => 2,
-            ]
-        ]);
-
-        DB::table('role_users')->insert([
-            [
-                'role_id' => \App\Models\Role::SUPER_ADMIN,
-                'user_id' => 1,
-            ],
-            [
-                'role_id' => \App\Models\Role::ADMIN,
-                'user_id' => 2,
-            ],
-            [
-                'role_id' => \App\Models\Role::USER,
-                'user_id' => 3,
-            ],
-            [
-                'role_id' => \App\Models\Role::USER,
-                'user_id' => 4,
+                static::ROLE_ID => \App\Models\Role::USER,
             ]
         ]);
 

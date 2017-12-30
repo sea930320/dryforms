@@ -39,6 +39,17 @@ class AccountController extends ApiController
     }
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show()
+    {
+        $user = $this->authManager->user();
+        $user->load(['role', 'company']);
+
+        return $this->respond(['user' => $user]);
+    }
+
+    /**
      * @param ChangePasswordRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
