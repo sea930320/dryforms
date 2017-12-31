@@ -28,8 +28,7 @@ class TeamUpdate extends BaseRequest
             'team_id' => 'exists:teams,id',
             'name' => [
                 'required',
-                'string',
-                Rule::unique('teams')->ignore($this->input('team_id'), 'id')
+                'string'
             ],
             'company_id' => 'required|exists:companies,id'
         ];
