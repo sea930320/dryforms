@@ -70,6 +70,9 @@ class AccountController extends ApiController
      */
     public function changeEmail(ChangeEmailRequest $request)
     {
+        if (auth()->user()->email !== $request->get('old_email')) {
+            return $this->respondWithError(['message' => 'Old email mismatch'], 422);
+        }
         $user = $this->user->where('email', $request->get('old_email'))->first();
         $user->email = $request->get('new_email');
         $user->save();
