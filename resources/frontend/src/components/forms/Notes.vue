@@ -9,6 +9,6 @@
 
 <script type="text/babel">
   export default {
-
+    name: 'notes'
   }
 </script>

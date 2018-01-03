@@ -60,6 +60,7 @@
         methods: {
             store() {
                 if (!this.category.id) {
+                    this.category.company_id = 2
                     apiCategories.store(this.category)
                         .then(response => {
                             this.$parent.$emit('reloadData')

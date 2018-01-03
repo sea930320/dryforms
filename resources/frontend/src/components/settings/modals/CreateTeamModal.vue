@@ -53,6 +53,7 @@
         methods: {
             store() {
                 if (!this.team.id) {
+                    this.team.company_id = 2
                     apiTeams.store(this.team)
                         .then(response => {
                             this.$parent.$emit('reloadData')

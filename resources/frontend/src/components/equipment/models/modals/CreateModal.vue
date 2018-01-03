@@ -73,6 +73,7 @@
         methods: {
             store() {
                 if (!this.model.id) {
+                    this.model.company_id = 2
                     apiModels.store(this.model)
                         .then(response => {
                             this.$parent.$emit('reloadData')

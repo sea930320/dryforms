@@ -5,7 +5,7 @@
         <label>Description</label>
         <select class="form-control">
           <option :value="null">-- Please select --</option>
-          <option v-for="item in desciptions" :value="item.name">{{ item.name }}</option>
+          <option v-for="item in categories" :value="item.name">{{ item.name }}</option>
         </select>
       </div>
     </b-row>
@@ -14,7 +14,7 @@
         <label>Make/Model</label>
         <select class="form-control">
           <option :value="null">-- Please select --</option>
-          <option v-for="item in desciptions" :value="item.name">{{ item.name }}</option>
+          <option v-for="item in models" :value="item.name">{{ item.name }}</option>
         </select>
       </div>
     </b-row>
@@ -23,7 +23,7 @@
         <label>Equipment #</label>
         <select class="form-control">
           <option :value="null">-- Please select --</option>
-          <option v-for="item in desciptions" :value="item.name">{{ item.name }}</option>
+          <option v-for="item in equipments" :value="item.name">{{ item.name }}</option>
         </select>
       </div>
     </b-row>
@@ -35,32 +35,48 @@
 </template>
 
 <script type="text/babel">
+  import apiCategories from '../../../api/categories'
+  import apiModels from '../../../api/models'
+
   export default {
     name: 'add-equip-modal',
     data () {
       return {
         show: true,
-        desciptions: [
-          {
-            name: 'Air Mover'
-          }
-        ]
+        categories: [],
+        models: [],
+        equipments: []
       }
     },
     created() {
-      this.$refs.addEquip.show()
+      this.$nextTick(() => {
+        this.getList()
+      })
+      this.$on('reloadData', () => {
+        this.getList()
+      })
     },
     watch: {
       show: function () {
-        if (this.show === false) this.$router.push('/equipment')
+        if (this.show === false) this.$router.go(-1)
       }
     },
     methods: {
+      getList() {
+        apiModels.index()
+          .then(response => {
+            this.models = response.data.data
+          })
+        apiCategories.index()
+          .then(response => {
+            this.categories = response.data.data
+          })
+      },
       pickupEquip () {
-        this.$router.push('/equipment')
+        this.$router.go(-1)
       },
       enterEquip () {
-        this.$router.push('/equipment')
+        this.$router.go(-1)
       }
     }
   }

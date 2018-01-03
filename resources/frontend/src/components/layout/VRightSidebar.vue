@@ -21,10 +21,10 @@
     .list-group {
         height: 100vh;
         background-color: #0d1722;
-        max-width: 280px;
     }
     .list-group-item {
         background-color: #046ac3;
         margin-bottom: 3px;
+        border-radius: unset;
     }
 </style>

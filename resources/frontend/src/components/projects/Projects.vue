@@ -3,17 +3,11 @@
     <b-container v-if="isLoaded" class="pt-2">
       <b-row>
         <b-col cols="3" class="text-left">
-          <select class="form-control" v-model="selectedYear">
-            <option :value="null">-- Please select --</option>
-            <option v-for="item in years" :value="item">{{ item }}</option>
-          </select>
-          <select class="form-control mt-2" v-model="selectedStatus">
-            <option :value="null">-- Please select --</option>
-            <option v-for="item in status" :value="item.value">{{ item.label }}</option>
-          </select>
+          <b-form-select v-model="selectedYear" :options="years" id="select_year"></b-form-select>
+          <b-form-select v-model="selectedStatus" :options="status" class="mt-2"></b-form-select>
         </b-col>
         <b-col cols="6" class="text-center">
-          <img src="" alt="Company Logo">
+          <img :src="companyLogo" alt="Company Logo">
         </b-col>
         <b-col cols="3" class="text-right">
           <input type="text" class="form-control" placeholder="Search..." v-model="searchText">
@@ -51,7 +45,7 @@
       </div>
     </b-container>
     <loading v-else></loading>
-  </div>          
+  </div>
 </template>
 
 <script type="text/babel">
@@ -62,26 +56,32 @@
     data () {
       return {
         isLoaded: false,
-        selectedYear: null,
-        selectedStatus: null,
+        selectedYear: new Date().getFullYear(),
+        selectedStatus: 1,
         searchText: '',
-        years: ['2015', '2016', '2017'],
+        companyLogo: require('../../assets/fallback-logo.jpg'),
+        years: [
+          { value: '2015', text: '2015' },
+          { value: '2016', text: '2016' },
+          { value: '2017', text: '2017' }
+        ],
         status: [
-          { label: 'In-Progress', value: 1 },
-          { label: 'Completed', value: 2 },
-          { label: 'Deleted', value: 3 }
-        ]
+          { text: 'In-Progress', value: 1 },
+          { text: 'Completed', value: 2 },
+          { text: 'Deleted', value: 3 }
+        ],
+        projects: []
       }
     },
     watch: {
       selectedYear: function () {
-        console.log(this.selectedYear)
+        this.loadData()
       },
       selectedStatus: function () {
-        console.log(this.selectedStatus)
+        this.loadData()
       },
       searchText: function () {
-        console.log(this.searchText)
+        this.loadData()
       }
     },
     created () {
@@ -95,9 +95,8 @@
     methods: {
       loadData () {
         setTimeout(() => {
-          console.log('Get data from backend!')
           this.isLoaded = true
-        }, 1000)
+        }, 2000)
       }
     }
   }

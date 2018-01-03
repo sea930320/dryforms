@@ -1,7 +1,7 @@
 <template>
 	<b-row>
     <b-col class="text-left">
-      <img src="" alt="Company Logo">
+      <img :src="companyLogo" alt="Company Logo">
     </b-col>
     <b-col class="text-right">
       <h5 class="m-0">{{ title }}</h5>
@@ -15,8 +15,10 @@
 
 <script type="text/babel">
   export default {
+    name: 'form-header',
     data () {
       return {
+        companyLogo: require('../../assets/fallback-logo.jpg'),
         title: 'Flood out',
         street: '8631 Rocky Ave',
         city: 'Las Vegas',
