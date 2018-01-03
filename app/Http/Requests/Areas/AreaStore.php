@@ -1,9 +1,9 @@
 <?php
-namespace App\Http\Requests\Teams;
+namespace App\Http\Requests\Areas;
 
 use App\Http\Requests\BaseRequest;
 
-class TeamStore extends BaseRequest
+class AreaStore  extends BaseRequest
 {
     /**
      * @return bool
@@ -19,7 +19,8 @@ class TeamStore extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'title' => 'required|string',
+            'type' => 'required|in:system,company',
             'company_id' => 'required|exists:companies,id'
         ];
     }

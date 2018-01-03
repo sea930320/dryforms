@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
+    use BelongsToCompany;
+
     /**
      * The database table used by the model.
      *
@@ -31,7 +34,9 @@ class Team extends Model
         'name',
         'company_id',
 
-        'company'
+        'company',
+        'equipments',
+        'users'
     ];
 
     /**
@@ -48,5 +53,13 @@ class Team extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(Team::class, 'users_teams');
     }
 }

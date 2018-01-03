@@ -39,6 +39,17 @@ class AccountController extends ApiController
     }
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show()
+    {
+        $user = $this->authManager->user();
+        $user->load(['role', 'company']);
+
+        return $this->respond(['user' => $user]);
+    }
+
+    /**
      * @param ChangePasswordRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
@@ -59,6 +70,9 @@ class AccountController extends ApiController
      */
     public function changeEmail(ChangeEmailRequest $request)
     {
+        if (auth()->user()->email !== $request->get('old_email')) {
+            return $this->respondWithError(['message' => 'Old email mismatch'], 422);
+        }
         $user = $this->user->where('email', $request->get('old_email'))->first();
         $user->email = $request->get('new_email');
         $user->save();

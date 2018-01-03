@@ -20,8 +20,6 @@ Route::group(['middleware' => 'api'], function ($router) {
     $router->get('refresh', 'Auth\ApiAuthController@refresh');
 });
 
-
-//TODO authentification middleware
 Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('companies', 'CompaniesController');
     $router->resource('categories', 'EquipmentCategoriesController');
@@ -29,10 +27,14 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('teams', 'TeamsController');
     $router->resource('statuses', 'EquipmentStatusesController');
     $router->resource('equipment', 'EquipmentsController');
+    $router->resource('forms', 'FormsController');
+    $router->resource('users', 'UsersController');
+    $router->resource('areas', 'AreasController');
     $router->delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
     $router->get('get-models/{id}', 'EquipmentCategoriesController@getModels');
 
     /** Account */
+    $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);
     $router->post('account/password/change', ['uses' => 'AccountController@changePassword', 'as' => 'account.password.change']);
     $router->post('account/email/change', ['uses' => 'AccountController@changeEmail', 'as' => 'account.email.change']);
 });
