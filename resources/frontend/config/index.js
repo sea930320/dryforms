@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
         '/api': {
-            target: 'http://reis.dev/api',
+            target: 'http://reis.test',
             changeOrigin: true,
             pathRewrite: {
                 '^/api': ''
@@ -21,7 +21,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: 'dryforms.dev', // can be overwritten by process.env.HOST
+    host: 'http://reis.test', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.HOST, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -58,7 +58,7 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../index.html'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../../../public/app/'),

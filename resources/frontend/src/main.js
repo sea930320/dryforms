@@ -11,8 +11,10 @@ import lodash from 'lodash'
 import VueLodash from 'vue-lodash'
 import App from './components/layout/Main'
 import router from './router'
+import User from './store/modules/user'
 
 Vue.config.productionTip = false
+Vue.config.devtools = true
 
 Vue.use(BootstrapVue)
 Vue.use(Vuex)
@@ -24,10 +26,17 @@ Vue.use(VueLodash, lodash)
 const bus = new Vue()
 Vue.prototype.$bus = bus
 
+const store = new Vuex.Store({
+    modules: {
+        User
+    }
+})
+
 /* eslint-disable no-new */
 const vue = new Vue({
     el: '#app',
     router,
+    store,
     template: '<App/>',
     components: {App},
     http: {

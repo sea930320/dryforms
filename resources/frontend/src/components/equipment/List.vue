@@ -19,7 +19,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="model in models">
-                            <td>{{ model.category.name }}</td>
+                            <td v-if="model.category">{{ model.category.name }}</td>
                             <td>{{ model.name }}</td>
                             <td>{{ model.total }}</td>
                             <td></td>
@@ -48,17 +48,17 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody v-if="category.models.length === 0">
+                    <tbody v-if="category.equipments.length === 0">
                         <tr><td colspan="6">No equipment available</td></tr>
                     </tbody>
-                    <tbody v-if="category.models.length > 0" v-for="model in category.models">
-                        <tr v-for="item in model.equipment">
-                            <td></td>
-                            <td>{{ item.model.name }}</td>
-                            <td>{{ item.serial }}</td>
-                            <td>{{ item.team.name }}</td>
-                            <td>{{ item.location }}</td>
-                            <td>{{ item.status.name }}</td>
+                    <tbody v-if="category.equipments.length > 0" v-for="model in category.equipments">
+                        <tr>
+                            <td>{{ model.id }}</td>
+                            <td>{{ model.model.name }}</td>
+                            <td>{{ model.serial }}</td>
+                            <td v-if="model.team">{{ model.team.name }}</td><td v-else></td>
+                            <td>{{ model.location }}</td>
+                            <td>{{ model.status.name }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -87,6 +87,7 @@
             }
         },
         created() {
+//            console.log(this.$store.state.User.user)
             this.$nextTick(() => {
                 this.initData()
             })
@@ -101,7 +102,7 @@
                 return Promise.all(data)
                     .then(response => {
                         this.models = response[0].data.data
-                        this.equipment = response[1].data
+                        this.equipment = response[1].data.data
                         this.isLoaded = true
                         return response
                     })
