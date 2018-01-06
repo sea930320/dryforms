@@ -129,17 +129,17 @@
             getList() {
                 const data = [
                     apiModels.index(),
-                    apiTeams.index(),
                     apiCategories.index(),
-                    apiStatuses.index()
+                    apiStatuses.index(),
+                    apiTeams.index()
                 ]
 
                 return Promise.all(data)
                     .then(response => {
                         this.models = response[0].data.data
-                        this.teams = response[1].data.data
-                        this.categories = response[2].data.data
-                        this.statuses = response[3].data.data
+                        this.categories = response[1].data.data
+                        this.statuses = response[2].data.data
+                        this.teams = response[3].data.data
                         this.isLoaded = true
 
                         return response
