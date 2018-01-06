@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-const modelsResource = '/api/statuses'
+const statusesResource = '/api/statuses'
 
 export default {
     index (data) {
-        return axios.get(modelsResource, data)
+        return axios.get(statusesResource, data)
     }
 }

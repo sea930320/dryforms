@@ -7,10 +7,10 @@ const state = {
 }
 
 const getters = {
-    CompanyId: state => {
+    companyId: state => {
         return state.company.id
     },
-    UserId: state => {
+    userId: state => {
         return state.user.id
     }
 }

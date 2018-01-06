@@ -53,19 +53,21 @@
             </div>
         </b-row>
         <div slot="modal-footer" class="w-100">
-            <b-btn class="float-left" variant="primary" @click="addEquip()">Add</b-btn>
-            <b-btn class="float-right" @click="enterEquip()">Enter</b-btn>
+            <b-btn class="float-left" @click="cancel()">Cancel</b-btn>
+            <b-btn class="float-right" variant="primary" @click="addEquip()">Add</b-btn>
         </div>
     </b-modal>
 </template>
 
 <script type="text/babel">
+    import {mapActions, mapGetters} from 'vuex'
+
     import apiCategories from '../../../api/categories'
     import apiModels from '../../../api/models'
     import apiTeams from '../../../api/teams'
     import apiStatuses from '../../../api/statuses'
     import apiEquipment from '../../../api/equipment'
-    import {mapActions, mapGetters} from 'vuex'
+    import ErrorHandler from '../../../mixins/error-handler'
 
     export default {
         name: 'add-equip-modal',
@@ -74,16 +76,16 @@
                 show: true,
                 categories: [],
                 models: [],
+                statuses: [],
+                teams: [],
                 data: {
-                    'model_id': null,
-                    'category_id': null,
-                    'team_id': null,
-                    'status_id': null
+                    model_id: null,
+                    category_id: null,
+                    team_id: null,
+                    status_id: null
                 },
                 newModel: '',
-                newCategory: '',
-                statuses: [],
-                teams: []
+                newCategory: ''
             }
         },
         mounted() {
@@ -98,14 +100,13 @@
             })
         },
         computed: {
-            // mix the getters into computed with object spread operator
             ...mapGetters({
-                company_id: 'CompanyId',
-                user_id: 'UserId'
+                company_id: 'companyId',
+                user_id: 'userId'
             })
         },
         watch: {
-            show: function () {
+            show () {
                 if (this.show === false) this.$router.go(-1)
             },
             data: {
@@ -126,21 +127,22 @@
                 'fetchUser'
             ]),
             getList() {
-                apiModels.index()
+                const data = [
+                    apiModels.index(),
+                    apiTeams.index(),
+                    apiCategories.index(),
+                    apiStatuses.index()
+                ]
+
+                return Promise.all(data)
                     .then(response => {
-                        this.models = response.data.data
-                    })
-                apiTeams.index()
-                    .then(response => {
-                        this.teams = response.data.data
-                    })
-                apiCategories.index()
-                    .then(response => {
-                        this.categories = response.data.data
-                    })
-                apiStatuses.index()
-                    .then(response => {
-                        this.statuses = response.data.data
+                        this.models = response[0].data.data
+                        this.teams = response[1].data.data
+                        this.categories = response[2].data.data
+                        this.statuses = response[3].data.data
+                        this.isLoaded = true
+
+                        return response
                     })
             },
             addEquip () {
@@ -164,13 +166,14 @@
                     })
                 }
                 this.data.company_id = this.company_id
-                apiEquipment.store(this.data).then(response => {
-                    console.log(response)
-                })
+                apiEquipment.store(this.data)
+                    .then(response => {
+                        console.log(response)
+                    }).catch(ErrorHandler.handle)
 
                 this.$router.go(-1)
             },
-            enterEquip () {
+            cancel () {
                 this.$router.go(-1)
             }
         }
