@@ -17,9 +17,9 @@ class QueryBuilder
 
         return $this;
     }
-
+// TODO Extend
     public function setQueryParams(array $params)
-    {dd($this->query->toSql());
+    {
         foreach ($params as $key => $value) {
             $this->query->where($key, $value);
         }
