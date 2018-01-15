@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Equipments\EquipmentIndex;
 use App\Http\Requests\Equipments\EquipmentStore;
 use App\Http\Requests\Equipments\EquipmentUpdate;
 use App\Models\Category;
@@ -8,6 +9,7 @@ use App\Models\Equipment;
 use App\Models\EquipmentModel;
 use App\Models\Status;
 use App\Models\Team;
+use App\Services\QueryBuilder;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -62,15 +64,26 @@ class EquipmentsController extends ApiController
     }
 
     /**
+     * @param EquipmentIndex $request
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(EquipmentIndex $request): JsonResponse
     {
+        $queryParams = $request->validatedOnly();
         $categories = $this->category->with([
             'equipments.model',
             'equipments.team',
             'equipments.status',
-        ])->paginate(20);
+        ]);
+        //TODO Extend query builder
+        foreach ($queryParams as $key => $value) {
+            $categories->whereHas('equipments', function($query) use ($key, $value) {
+                $query->where($key, $value);
+            });
+        }
+
+        $categories = $categories->paginate(20);
 
         return $this->respond($categories);
     }
