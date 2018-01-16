@@ -10,6 +10,7 @@ use App\Models\EquipmentModel;
 use App\Models\Status;
 use App\Models\Team;
 use App\Services\QueryBuilder;
+use App\Services\QueryBuilders\EquipmentQueryBuilder;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -76,14 +77,10 @@ class EquipmentsController extends ApiController
             'equipments.team',
             'equipments.status',
         ]);
-        //TODO Extend query builder
-        foreach ($queryParams as $key => $value) {
-            $categories->whereHas('equipments', function($query) use ($key, $value) {
-                $query->where($key, $value);
-            });
-        }
+        $queryBuilder = new EquipmentQueryBuilder();
+        $categories = $queryBuilder->setQuery($categories)->setQueryParams($queryParams);
 
-        $categories = $categories->paginate(20);
+        $categories = $categories->paginate($request->get('per_page'));
 
         return $this->respond($categories);
     }

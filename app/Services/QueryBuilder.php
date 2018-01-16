@@ -2,28 +2,18 @@
 namespace App\Services;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
-class QueryBuilder
+abstract class QueryBuilder implements IQueryBuilder
 {
     /**
-     * @var Model
+     * @var Builder
      */
-    private $query;
+    protected $query;
 
-    public function setQuery(Builder $query): QueryBuilder
+    public function setQuery(Builder $query): IQueryBuilder
     {
         $this->query = $query;
 
         return $this;
-    }
-// TODO Extend
-    public function setQueryParams(array $params)
-    {
-        foreach ($params as $key => $value) {
-            $this->query->where($key, $value);
-        }
-
-        return $this->query;
     }
 }
