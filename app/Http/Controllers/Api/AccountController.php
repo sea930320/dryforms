@@ -57,7 +57,7 @@ class AccountController extends ApiController
     public function changePassword(ChangePasswordRequest $request)
     {
         $user = $this->authManager->user();
-        $user->fill(['password' => $this->hasher->make($request->get('new_password'))]);
+        $user->password = $request->get('new_password');
         $user->save();
 
         return $this->respond(['message' => 'Password was successfully changed']);

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Equipments;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\BaseIndexRequest;
 
-class EquipmentIndex extends BaseRequest
+class EquipmentIndex extends BaseIndexRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,6 +28,13 @@ class EquipmentIndex extends BaseRequest
             'status_id' => 'nullable|exists:equipment_statuses,id',
             'model_id' => 'nullable|exists:equipment_models,id',
             'team_id' => 'nullable|exists:teams,id',
+            'per_page' => 'nullable|integer',
+            'category_name' => 'nullable|string',
+            'model_name' => 'nullable|string',
+            'status' => 'nullable|string',
+            'total' => 'nullable|integer',
+            'sort_by' => 'nullable|string',
+            'sort_type' => 'nullable|in:asc,desc',
         ];
     }
 }
