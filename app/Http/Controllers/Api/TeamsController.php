@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Teams\TeamsIndex;
 use App\Http\Requests\Teams\TeamStore;
 use App\Http\Requests\Teams\TeamUpdate;
 use App\Models\Team;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Williamoliveira\ArrayQueryBuilder\ArrayBuilder;
 
 class TeamsController extends ApiController
 {
@@ -24,11 +26,16 @@ class TeamsController extends ApiController
     }
 
     /**
+     * @param TeamsIndex $request
+     * @param ArrayBuilder $arrayBuilder
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(TeamsIndex $request, ArrayBuilder $arrayBuilder): JsonResponse
     {
-        $teams = $this->team->paginate(20);
+        $query = $this->team->newQuery();
+        $query = $arrayBuilder->apply($query, $request->all());
+        $teams = $query->paginate($request->get('per_page') ?? 20);
 
         return $this->respond($teams);
     }

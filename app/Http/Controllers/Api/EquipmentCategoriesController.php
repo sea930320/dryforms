@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Categories\CategoriesIndex;
 use App\Http\Requests\Categories\CategoryStore;
 use App\Http\Requests\Categories\CategoryUpdate;
 use App\Models\Category;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Williamoliveira\ArrayQueryBuilder\ArrayBuilder;
 
 class EquipmentCategoriesController extends ApiController
 {
@@ -24,11 +26,16 @@ class EquipmentCategoriesController extends ApiController
     }
 
     /**
+     * @param CategoriesIndex $request
+     * @param ArrayBuilder $arrayBuilder
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(CategoriesIndex $request, ArrayBuilder $arrayBuilder): JsonResponse
     {
-        $categories = $this->category->paginate(20);
+        $query = $this->category->newQuery();
+        $query = $arrayBuilder->apply($query, $request->all());
+        $categories = $query->paginate(20);
 
         return $this->respond($categories);
     }

@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Models\ModelsIndex;
 use App\Http\Requests\Models\ModelStore;
 use App\Http\Requests\Models\ModelUpdate;
 use App\Models\EquipmentModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Williamoliveira\ArrayQueryBuilder\ArrayBuilder;
 
 class EquipmentModelsController extends ApiController
 {
@@ -24,11 +26,16 @@ class EquipmentModelsController extends ApiController
     }
 
     /**
+     * @param ModelsIndex $request
+     * @param ArrayBuilder $arrayBuilder
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(ModelsIndex $request, ArrayBuilder $arrayBuilder): JsonResponse
     {
-        $models = $this->model->with(['category'])->paginate(20);
+        $query = $this->model->newQuery();
+        $query = $arrayBuilder->apply($query, $request->all());
+        $models = $query->paginate($request->get('per_page') ?? 20);
 
         return $this->respond($models);
     }
