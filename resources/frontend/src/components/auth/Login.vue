@@ -23,7 +23,7 @@
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <b-button variant="primary" @click="login">Log In</b-button>
-                    </div>                    
+                    </div>
                 </div>
             </form>
         </div>

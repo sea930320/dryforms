@@ -90,7 +90,29 @@ module.exports = {
                     {loader: "style-loader"},
                     {loader: "css-loader"}
                 ]
-            }
+            },
+            {
+                test: /\.(js|jsx)$/,
+                include: [
+                    /src\/js/,
+                    /node_modules\/axios/
+                ],
+                loader: 'babel',
+                query: {
+                    cacheDirectory: true,
+                    plugins: [
+                        ['transform-runtime'],
+                    ],
+                    presets: [
+                        ['env', {
+                            targets: {
+                                browsers: ['ie >= 8']
+                            },
+                            loose: true,
+                        }],
+                    ],
+                }
+            },
         ]
     }
 }

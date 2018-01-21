@@ -72,17 +72,18 @@ class EquipmentsController extends ApiController
     public function index(EquipmentIndex $request): JsonResponse
     {
         $queryParams = $request->validatedOnly();
-        $categories = $this->category->with([
-            'equipments.model',
-            'equipments.team',
-            'equipments.status',
+        $equipments = $this->equipment->with([            
+            'team',
+            'status',
+            'model',
+            'model.category'
         ]);
         $queryBuilder = new EquipmentQueryBuilder();
-        $categories = $queryBuilder->setQuery($categories)->setQueryParams($queryParams);
+        $equipments = $queryBuilder->setQuery($equipments)->setQueryParams($queryParams);
 
-        $categories = $categories->paginate($request->get('per_page'));
+        $equipments = $equipments->paginate($request->get('per_page'));
 
-        return $this->respond($categories);
+        return $this->respond($equipments);
     }
 
     /**
@@ -111,7 +112,7 @@ class EquipmentsController extends ApiController
         $categoryPrefix = $this->category->find($request->get('category_id'))->prefix;
         $equipment = $this->equipment->create([
             'model_id' => $request->get('model_id'),
-            'team_id' => $request->get('model_id'),
+            'team_id' => $request->get('team_id'),
             'serial' => $categoryPrefix . ' ' . $request->get('serial'),
             'status_id' => $request->get('status_id'),
             'company_id' => $request->get('company_id'),

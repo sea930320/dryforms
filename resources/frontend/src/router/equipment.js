@@ -53,10 +53,26 @@ const routes = (configRoute) => [
             title: 'Manage Your Inventory',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks
+            rightLinks: rightLinks,
+            requiresAuth: true
         },
         component: resolve => {
             require(['../components/equipment/List.vue'], resolve)
+        }
+    },
+    {
+        path: '/equipment/detail/cat/:category_id?/mod/:model_id?/stat/:status_id?',
+        name: 'Equipment Detail',
+        props: {title: 'Equipment Detail'},
+        meta: {
+            title: 'Detail Information',
+            roles: ['customer'],
+            leftLinks: leftLinks,
+            rightLinks: rightLinks,
+            requiresAuth: true
+        },
+        component: resolve => {
+            require(['../components/equipment/Detail.vue'], resolve)
         }
     },
     {
@@ -67,7 +83,8 @@ const routes = (configRoute) => [
             title: 'Manage Equipment Categories',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks
+            rightLinks: rightLinks,
+            requiresAuth: true
         },
         component: resolve => {
             require(['../components/equipment/categories/Categories.vue'], resolve)
@@ -95,7 +112,8 @@ const routes = (configRoute) => [
             title: 'Add Equipment to Inventory',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks
+            rightLinks: rightLinks,
+            requiresAuth: true
         },
         component: resolve => {
             require(['../components/equipment/modals/Add.vue'], resolve)

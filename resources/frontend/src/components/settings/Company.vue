@@ -63,60 +63,44 @@
             </div>
         </div>
         <loading v-else></loading>
-    </div>    
+    </div>
 </template>
 
 <script type="text/babel">
     import Loading from '../layout/Loading'
+    import apiAccount from '../../api/account'
     import apiCompanies from '../../api/companies'
+    import { mapActions } from 'vuex'
 
     export default {
         name: 'Company',
         components: {Loading},
         data() {
             return {
-                isLoaded: false,
-                company: {
-                    name: null,
-                    street: null,
-                    city: null,
-                    state: null,
-                    zip: null,
-                    phone: null,
-                    email: null,
-                    cloud_link: null,
-                    imageName: '',
-                    imageUrl: '',
-                    imageFile: ''
-                }
             }
         },
         created() {
-            this.initData()
+            this.fetchUser()
         },
         methods: {
+            ...mapActions([
+              'fetchUser'
+            ]),
             update() {
                 console.log(this.company)
-                apiCompanies.patch(1, this.company)
+                apiAccount.userInformation()
                     .then(response => {
-                        this.company = response.data.company
-                        this.$notify({
-                            type: 'info',
-                            title: response.data.message
-                        })
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            initData() {
-                apiCompanies.show(1)
-                    .then(response => {
-                        this.company = response.data
-                        this.isLoaded = true
-                    })
-                    .catch(error => {
-                        console.log(error.response)
+                      apiCompanies.patch(response.data.user.company_id, this.company)
+                          .then(response => {
+                              this.company = response.data.company
+                              this.$notify({
+                                  type: 'info',
+                                  title: response.data.message
+                              })
+                          })
+                          .catch(error => {
+                              console.log(error)
+                          })
                     })
             },
             onFilePicked (e) {
@@ -137,6 +121,14 @@
                     this.company.imageFile = ''
                     this.company.imageUrl = ''
                 }
+            }
+        },
+        computed: {
+          company: function() {
+            return this.$store.state.User.company
+          },
+          isLoaded: function() {
+            return this.company.length !== 0
           }
         }
     }

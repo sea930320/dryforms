@@ -1,0 +1,75 @@
+$break-extra: 1200px;
+body {
+    overflow: hidden;
+    position: relative;
+    @media screen and (max-width: $break-extra) {
+        font-size: 14px;
+    }
+}
+
+#app {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.btn-xs {
+    font-size: 11px;
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.content {
+    display: block;
+    width: 100%;
+    height: 90%;
+    overflow-y: scroll;
+    position: absolute;
+}
+
+.sign-view {
+    height: 90vh;
+    overflow-y: scroll;
+}
+
+.custom-control {
+    position: relative;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    min-height: 24px;
+    min-height: 1.5rem;
+    padding-left: 24px;
+    padding-left: 1.5rem;
+    margin-right: 16px;
+    margin-right: 1rem;
+    .custom-control-indicator {
+        border-radius: .25rem;
+    }
+    .custom-control-indicator {
+        position: absolute;
+        top: 4px;
+        top: .25rem;
+        left: 0;
+        display: block;
+        width: 16px;
+        width: 1rem;
+        height: 16px;
+        height: 1rem;
+        pointer-events: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: #ddd;
+        background-repeat: no-repeat;
+        background-position: 50%;
+        background-size: 50% 50%;
+    }
+    .custom-control-input:checked~.custom-control-indicator {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3E%3C/svg%3E")
+    }
+    .custom-control-input:checked~.custom-control-indicator {
+        color: #fff;
+        background-color: #007bff;
+    }
+}

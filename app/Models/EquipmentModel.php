@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Status;
 
 class EquipmentModel extends Model
 {
@@ -50,5 +51,20 @@ class EquipmentModel extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * EquipmentModel constructor.
+     *
+     * @param Status $status
+     */
+    public function __construct($attributes = array(), $permitted = false)
+    {
+        parent::__construct($attributes);
+        $statuses = Status::get();
+        foreach ($statuses as $key => $status) {
+            $alias_status = 'status_'. $status->id. '_count';
+            array_push($this->visible, $alias_status);
+        }
     }
 }

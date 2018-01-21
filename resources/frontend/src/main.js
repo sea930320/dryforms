@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
-import Vuex from 'vuex'
 import axios from 'axios'
 import VueSession from 'vue-session'
 import Notifications from 'vue-notification'
@@ -11,26 +10,23 @@ import lodash from 'lodash'
 import VueLodash from 'vue-lodash'
 import App from './components/layout/Main'
 import router from './router'
-import User from './store/modules/user'
+import store from './store'
+import VeeValidate from 'vee-validate'
+import globalMixin from './mixins/global-mixin'
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
 
 Vue.use(BootstrapVue)
-Vue.use(Vuex)
 Vue.use(VueSession)
 Vue.use(Notifications)
 Vue.use(vueSignature)
 Vue.use(VueLodash, lodash)
+Vue.use(VeeValidate)
 
 const bus = new Vue()
 Vue.prototype.$bus = bus
-
-const store = new Vuex.Store({
-    modules: {
-        User
-    }
-})
+Vue.mixin(globalMixin)
 
 /* eslint-disable no-new */
 const vue = new Vue({

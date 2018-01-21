@@ -33,8 +33,11 @@ export default {
             this.$session.start()
             this.$session.set('apiToken', response.data.token)
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
-            this.$router.push('/')
-            location.reload()
+            if (this.$route.query.redirect) {
+              this.$router.push(this.$route.query.redirect)
+            } else {
+              this.$router.push('/')
+            }
         }
     }
 }

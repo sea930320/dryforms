@@ -64,20 +64,20 @@
           <label class="col-md-3 col-form-label">Expiration Date</label>
           <div class="col-md-6 row">
             <input type="text" class="form-control col-md-3 mr-2" placeholder="mm" v-model="user.card_month">
-            <input type="text" class="form-control col-md-3" placeholder="yyyy" v-model="user.card_year">  
+            <input type="text" class="form-control col-md-3" placeholder="yyyy" v-model="user.card_year">
           </div>
         </div>
         <div class="form-group row">
           <label class="col-md-3 col-form-label">CVV</label>
            <div class="col-md-6 row">
             <input type="text" class="form-control col-md-3" placeholder="XXX" v-model="user.card_cvv">
-          </div> 
+          </div>
         </div>
         <div class="form-group row">
           <label class="col-md-3 col-form-label">Postal Code</label>
            <div class="col-md-6 row">
             <input type="text" class="form-control col-md-3" v-model="user.card_cvv">
-          </div> 
+          </div>
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
@@ -129,7 +129,7 @@
     }
     &:active {
       box-shadow: 0 1px 2px rgba(0, 0, 0 , 0.4);
-      transition: .2s ease;  
+      transition: .2s ease;
     }
   }
   .facebook {

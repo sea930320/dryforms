@@ -4,7 +4,8 @@ const equipmentResource = '/api/equipment'
 
 export default {
     index (data) {
-        return axios.get(equipmentResource, data)
+        var query = Object.keys(data).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(data[k])}`).join('&')
+        return axios.get(equipmentResource + '?' + query)
     },
     store (data) {
         return axios.post(equipmentResource, data)
