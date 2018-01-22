@@ -17,6 +17,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function() {
     Route::resource('users', 'Backend\UsersController');
     Route::resource('plans', 'Backend\PlansController');
     Route::resource('coupons', 'Backend\CouponsController');
+
+    Route::resource('units-of-measure', 'Backend\UnitsOfMeasureController');
 });
 
 Route::middleware([])->namespace('Frontend')->group(function() {
