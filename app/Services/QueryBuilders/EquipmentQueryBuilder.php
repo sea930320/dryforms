@@ -69,15 +69,20 @@ class EquipmentQueryBuilder extends QueryBuilder
 
     /**
      * @param string $categoryPrefix
+     * @param int $categoryId
      *
      * @return Builder
      */
-    public function getMaxSerialQuery($categoryPrefix): Builder    
+    public function getMaxSerialQuery($categoryPrefix, $categoryId): Builder    
     {
         $len = strlen($categoryPrefix);
         $this->query
-            ->select(DB::raw("MAX(CAST(SUBSTRING(serial, $len, length(serial) - $len + 1) AS UNSIGNED)) AS max_serial"))
-            ->where('serial', 'REGEXP', "^$categoryPrefix");
+            ->with(['model'])            
+            ->whereHas('model', function ($query) use ($categoryId) {
+                $query->where('category_id', $categoryId);
+            })
+            ->where('serial', 'REGEXP', "^$categoryPrefix")
+            ->select(DB::raw("MAX(CAST(SUBSTRING(serial, $len, length(serial) - $len + 1) AS UNSIGNED)) AS max_serial"));
         return $this->query;
     }
 }

@@ -19,7 +19,9 @@ export default {
     delete(id) {
         return axios.delete(equipmentResource + '/' + id)
     },
-    valdiateSerial(serial, modelId) {
-      return axios.get('/api/validate-serial/' + serial + '/' + modelId)
+    valdiateSerial(serial, categoryId) {
+      if (categoryId) {
+        return axios.get('/api/validate-serial/' + serial + '/category_id/' + categoryId)
+      }
     }
 }

@@ -104,9 +104,9 @@
                       <b-table ref="serialsTable" :busy.sync="isBusy" :items="getCurEquipmentNumbers" small striped hover fixed :fields="fields" :current-page="currentPage" :per-page="perPage" head-variant="">
                         <template v-for="field in fields" v-if="row.item[field]" :slot="field" slot-scope="row">
                           <b-input-group>
-                            <b-form-input type="text" v-model="row.item[field]['value']" :disabled="isBusy"></b-form-input>
+                            <b-form-input type="text" v-model.lazy.trim="row.item[field]['value']" :disabled="isBusy" @input="validateSerial(row.item[field])"></b-form-input>
                             <b-input-group-button>
-                              <b-button variant="" @click="validateSerial(row.item[field]['value'])">?</b-button>
+                              <b-button :variant="row.item[field]['validate']?'success':'danger'" @click="reason(row.item[field])" style="width: 38px">{{row.item[field]['validate']?'O':'?'}}</b-button>
                             </b-input-group-button>
                           </b-input-group>
                         </template>
@@ -150,6 +150,7 @@
 <script type="text/babel">
     import {mapActions, mapGetters} from 'vuex'
     import Loading from '../../layout/Loading'
+    import _ from 'lodash'
 
     import apiCategories from '../../../api/categories'
     import apiModels from '../../../api/models'
@@ -176,7 +177,10 @@
                     status_id: null,
                     quantity: 1,
                     auto_assign: 'yes',
-                    serials: [{value: ''}]
+                    serials: [{
+                      value: '',
+                      validate: false
+                    }]
                 },
                 newModel: '',
                 newCategory: '',
@@ -241,7 +245,10 @@
               let oldVal = this.data.serials.length || 0
               if (parseInt(newVal) > parseInt(oldVal)) {
                 for (let i = oldVal; i < newVal; i++) {
-                  this.data.serials.push({value: ''})
+                  this.data.serials.push({
+                    value: '',
+                    validate: false
+                  })
                 }
               } else {
                 this.data.serials = this.data.serials.slice(0, newVal)
@@ -313,32 +320,56 @@
                 })
                 return serialGroup
             },
-            validateSerial(serial) {
-              if (!this.data.category_id && !this.newCategory) {
-                this.errorSerialValidate('Please Select Category')
+            validateSerial: _.debounce(function(equipment) {
+              let serial = equipment['value']
+              if (!serial) {
+                equipment['validate'] = false
+                equipment['reason'] = 'Please Input Serial Number'
                 return false
-              } else if (!this.data.category_id && this.newCategory && this.categories) {
+              }
+              if (!this.data.category_id && (!this.newCategory || !this.newPrefix)) {
+                equipment['reason'] = 'Please input valid category'
+                equipment['validate'] = false
+                return false
+              }
+              if (!this.data.category_id && (this.newCategory && this.newPrefix)) {
                 if (this.categories.some(category => category.name === this.newCategory)) {
-                  this.errorSerialValidate('Please Input Valid Category')
+                  equipment['reason'] = 'Please input valid category'
+                  equipment['validate'] = false
                   return false
                 }
-              }
-              if (!this.data.model_id && !this.newModel) {
-                this.errorSerialValidate('Please Select Make/Model')
-                return false
-              } else if (!this.data.model_id && this.newModel && this.models) {
-                if (this.models.some(model => model.name === this.newModel)) {
-                  this.errorSerialValidate('Please Input Valid Make/Model')
-                  return false
-                }
-              }
-              if (this.newCategory || this.newModel) {
+                equipment['validate'] = true
+                equipment['reason'] = 'Valid Serial Number'
                 return true
               }
-              return apiEquipment.valdiateSerial(serial, this.data.model_id)
+              return apiEquipment.valdiateSerial(serial, this.data.category_id)
                   .then(response => {
-
-                  }).catch(this.handleErrorResponse)
+                    if (response.data.message === 'exist') {
+                      equipment['validate'] = false
+                      equipment['reason'] = 'Serial number alreday exists'
+                      return false
+                    }
+                    equipment['validate'] = true
+                    return true
+                  }).catch(err => {
+                    if (err) {
+                      equipment['validate'] = false
+                      equipment['reason'] = 'Please check network state'
+                      return false
+                    }
+                  })
+            }, 500),
+            reason(equipment) {
+              if (!equipment['validate']) {
+                let msg = equipment['reason'] ? equipment['reason'] : 'Please Input Serial Number'
+                this.errorSerialValidate(msg)
+                return
+              }
+              this.$notify({
+                  type: 'success',
+                  title: 'Valid Serial Number',
+                  text: 'You can use this serial number'
+              })
             },
             addEquip () {
                 if (!this.data.category_id || !this.data.model_id) {
@@ -363,6 +394,10 @@
                     let serial = this.data.serials[i]
                     if (!serial.value) {
                       this.errorSerialValidate('You must enter all serial numbers')
+                      return
+                    }
+                    if (!serial.validate) {
+                      this.errorSerialValidate('Please enter validate serial numbers')
                       return
                     }
                   }
@@ -463,7 +498,10 @@
                   status_id: null,
                   quantity: 1,
                   auto_assign: 'yes',
-                  serials: [{value: ''}]
+                  serials: [{
+                    value: '',
+                    validate: false
+                  }]
               }
               this.resultModal = {
                 show: false,

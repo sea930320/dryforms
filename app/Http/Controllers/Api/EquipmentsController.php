@@ -104,12 +104,12 @@ class EquipmentsController extends ApiController
 
     /**
      * @param array $serials
-     * @param int $model_id
+     * @param int $category_id
      * @param string $categoryPrefix
      *
      * @return array
      */
-    private function validateSerials($serials, $model_id, $categoryPrefix)
+    private function validateSerials($serials, $category_id, $categoryPrefix)
     {
         $validate_ret = [
             'exists'=> [],
@@ -118,8 +118,12 @@ class EquipmentsController extends ApiController
 
         foreach ($serials as $key => $serial) {
             $full_sn = $categoryPrefix. str_pad($serial['value'], 10, "0", STR_PAD_LEFT);
-            if ($this->equipment->where('serial', $full_sn)
-                ->where('model_id', $model_id)->exists()) {
+            if ($this->equipment
+                ->with(['model'])
+                ->where('serial', $full_sn)
+                ->whereHas('model', function ($query) use ($category_id) {
+                    $query->where('category_id', $category_id);
+                })->exists()) {
                 array_push($validate_ret['exists'], $serial);
             } else {
                 array_push($validate_ret['nonexistences'], $serial);
@@ -139,7 +143,7 @@ class EquipmentsController extends ApiController
         $categoryPrefix = strlen($categoryPrefix) > 0 ? $categoryPrefix. " " : "";
         if ($request->get('auto_assign') == "yes") {
             $queryBuilder = new EquipmentQueryBuilder();
-            $maxSerial = $queryBuilder->setQuery($this->equipment->query())->getMaxSerialQuery($categoryPrefix);
+            $maxSerial = $queryBuilder->setQuery($this->equipment->query())->getMaxSerialQuery($categoryPrefix, $request->get('category_id'));
             $maxSerial = ($maxSerial->count() > 0) ? $maxSerial->first()->max_serial: 0;
             $serial = $maxSerial + 1;
             $equipments = [];
@@ -157,7 +161,7 @@ class EquipmentsController extends ApiController
             }
             return $this->respond(['message' => 'Equipments successfully created', 'equipment' => $equipments]);
         }
-        $valRet = $this->validateSerials($request->get('serials'), $request->get('model_id'), $categoryPrefix);
+        $valRet = $this->validateSerials($request->get('serials'), $request->get('category_id'), $categoryPrefix);
         if (empty($valRet['exists'])) {
             $equipments = [];
             foreach ($valRet['nonexistences'] as $key => $serial) {
@@ -207,12 +211,19 @@ class EquipmentsController extends ApiController
      * Check if Serial exists
      *
      * @param string $serial
-     * @param string $modelId
+     * @param int $categoryId
      *
      * @return  JsonResponse
      */
-    public function validateSerial($serial, $modelId): JsonResponse
+    public function validateSerial($serial, $categoryId): JsonResponse
     {
+        $categoryPrefix = $this->category->find($categoryId)->prefix;
+        $categoryPrefix = strlen($categoryPrefix) > 0 ? $categoryPrefix. " " : "";
+        $serials = [['value'=>$serial]];
+        $valRet = $this->validateSerials($serials, $categoryId, $categoryPrefix);
+        if (empty($valRet['exists'])) {
+            return $this->respond(['message' => 'nonexistence']);
+        }
         return $this->respond(['message' => 'exist']);
     }
 }
