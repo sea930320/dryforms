@@ -32,6 +32,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('areas', 'AreasController');
     $router->delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
     $router->get('get-models/{id}', 'EquipmentCategoriesController@getModels');
+    $router->get('validate-serial/{serial}/{modelId}', 'EquipmentsController@validateSerial');
 
     /** Account */
     $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);

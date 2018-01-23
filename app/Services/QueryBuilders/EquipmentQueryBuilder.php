@@ -4,7 +4,7 @@ namespace App\Services\QueryBuilders;
 
 use App\Services\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
-
+use DB;
 class EquipmentQueryBuilder extends QueryBuilder
 {
     /**
@@ -47,20 +47,37 @@ class EquipmentQueryBuilder extends QueryBuilder
             });
         }
 
-        if (isset($params['sort_by'])) {
-            $sort_type = isset($params['sort_type']) ? $params['sort_type'] : 'asc';
-            $sort_by = $params['sort_by'];
-            if ($sort_by == "make_model") {
-                $this->query->join('equipment_models', 'model_id', '=','equipment_models.id')->select('equipments.*')->orderBy("equipment_models.name", $sort_type);
-            } else if ($sort_by == "team") {
-                $this->query->join('teams', 'team_id', '=','teams.id')->select('equipments.*')->orderBy("teams.name", $sort_type);
-            } else if ($sort_by == "status") {
-                $this->query->join('equipment_statuses', 'status_id', '=','equipment_statuses.id')->select('equipments.*')->orderBy("equipment_statuses.name", $sort_type);
-            } else {
-                $this->query->orderBy($sort_by, $sort_type);
+        if (isset($params['id_from'])) {
+            $this->query->where('id', '>=', $params['id_from'])->orderBy("id", "asc");
+        } else {
+            if (isset($params['sort_by'])) {
+                $sort_type = isset($params['sort_type']) ? $params['sort_type'] : 'asc';
+                $sort_by = $params['sort_by'];
+                if ($sort_by == "make_model") {
+                    $this->query->join('equipment_models', 'model_id', '=','equipment_models.id')->select('equipments.*')->orderBy("equipment_models.name", $sort_type);
+                } else if ($sort_by == "team") {
+                    $this->query->join('teams', 'team_id', '=','teams.id')->select('equipments.*')->orderBy("teams.name", $sort_type);
+                } else if ($sort_by == "status") {
+                    $this->query->join('equipment_statuses', 'status_id', '=','equipment_statuses.id')->select('equipments.*')->orderBy("equipment_statuses.name", $sort_type);
+                } else {
+                    $this->query->orderBy($sort_by, $sort_type);
+                }
             }
         }
+        return $this->query;
+    }
 
+    /**
+     * @param string $categoryPrefix
+     *
+     * @return Builder
+     */
+    public function getMaxSerialQuery($categoryPrefix): Builder    
+    {
+        $len = strlen($categoryPrefix);
+        $this->query
+            ->select(DB::raw("MAX(CAST(SUBSTRING(serial, $len, length(serial) - $len + 1) AS UNSIGNED)) AS max_serial"))
+            ->where('serial', 'REGEXP', "^$categoryPrefix");
         return $this->query;
     }
 }

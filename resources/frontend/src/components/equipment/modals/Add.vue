@@ -19,7 +19,7 @@
                       <form data-vv-scope="form-category">
                           <b-row>
                               <b-col cols="8">
-                                  <input type="text" name="category" class="form-control" :class="{'is-invalid': errors.has('category') && !data.category_id}" v-validate data-vv-rules="required" v-model="newCategory" :disabled="data.category_id" placeholder="Category">
+                                  <input type="text" name="category" class="form-control" :class="{'is-invalid': (errors.has('category') || validateCategory) && !data.category_id}" v-validate data-vv-rules="required" v-model="newCategory" :disabled="data.category_id" placeholder="Category">
                               </b-col>
                               <b-col cols="4">
                                   <input type="text" name="prefix" class="form-control" :class="{'is-invalid': errors.has('prefix') && !data.category_id}" v-validate data-vv-rules="required" v-model="newPrefix" :disabled="data.category_id" placeholder="Prefix">
@@ -39,7 +39,7 @@
                   <div class="form-group col-md-6">
                       <label>Add New Make/Model</label>
                       <form data-vv-scope="form-model">
-                        <input type="text" name="model" class="form-control" :class="{'is-invalid': errors.has('model') && !data.model_id}" v-validate data-vv-rules="required" v-model="newModel" :disabled="data.model_id" placeholder="Make/Model">
+                        <input type="text" name="model" class="form-control" :class="{'is-invalid': (errors.has('model') || validateModel) && !data.model_id}" v-validate data-vv-rules="required" v-model="newModel" :disabled="data.model_id" placeholder="Make/Model">
                       </form>
                   </div>
               </b-row>
@@ -52,16 +52,19 @@
                       </select>
                   </div>
                   <div class="form-group col-md-6">
+                    <form data-vv-scope="form-global">
                       <label>Statuses</label>
-                      <select class="form-control" v-model="data.status_id">
+                      <select class="form-control" v-model="data.status_id" name="status" :class="{'is-invalid': errors.has('status')}" v-validate data-vv-rules="required">
                           <option :value="null">-- Please select --</option>
                           <option v-for="item in statuses" :value="item.id">{{ item.name }}</option>
                       </select>
+                    </form>
                   </div>
               </b-row>
-              <b-card bg-variant="light" class="mt-1 mb-1 pt-0">
+              <b-card bg-variant="light" class="mt-1 mb-2 pt-0">
                   <b-row>
                     <b-col cols="3">
+                      <form data-vv-scope="form-global">
                         <b-form-group id="fieldsetHorizontal"
                                       horizontal
                                       :label-cols="4"
@@ -69,16 +72,17 @@
                                       label="Quantity"
                                       label-for="inputQuantity"
                                       class="m-0">
-                          <b-form-input id="inputQuantity" type="number" placeholder="Enter the quantity" :size="template_size" v-model="data.quantity" min=1 ></b-form-input>
+                          <b-form-input id="inputQuantity" name="inputQuantity" type="number" placeholder="Enter the quantity" :size="template_size" :class="{'is-invalid': errors.has('inputQuantity')}" v-validate data-vv-rules="required" v-model="data.quantity" min=1 :disabled="isBusy" ></b-form-input>
                         </b-form-group>
+                      </form>
                     </b-col>
                     <b-col cols="8">
-                      <b-form-checkbox v-model="data.autoAssign" value="yes" unchecked-value="no" :size="template_size" class="m-0">
+                      <b-form-checkbox v-model="data.auto_assign" value="yes" unchecked-value="no" :size="template_size" class="m-0">
                         Assign Equipment Numbers Automatically?
                       </b-form-checkbox>
                     </b-col>
                   </b-row>
-                  <b-row v-if="data.autoAssign === 'no' && data.quantity > 0">
+                  <b-row v-if="data.auto_assign === 'no' && data.quantity > 0">
                     <b-col cols="12">
                       <hr>
                       <b-row>
@@ -88,7 +92,7 @@
                         <b-col cols="4" class="pt-2 mb-1">
                           <b-form-group horizontal  :label-cols="4" label-text-align="right" label="<b>Page Size:</b>" :label-size="template_size" class="p-0 m-0">
                             <b-input-group :size="template_size">
-                              <b-form-input type="number" placeholder="Row" min="1" v-model="perRow" :disabled="isBusy"></b-form-input>
+                              <b-form-input type="number" placeholder="Row" min="1" max="6" v-model="perRow" :disabled="isBusy"></b-form-input>
                               <b-input-group-addon>×</b-input-group-addon>
                               <b-form-input type="number" placeholder="Column" min="1" v-model="perCol" :disabled="isBusy"></b-form-input>
                             </b-input-group>
@@ -97,9 +101,14 @@
                       </b-row>
                     </b-col>
                     <b-col cols="12">
-                      <b-table ref="serialsTable" :busy.sync="isBusy" :items="getCurEquipmentNumbers" small striped hover :fields="fields" :current-page="currentPage" :per-page="perPage" head-variant="">
-                        <template v-for="field in fields" :slot="field" slot-scope="row">
-                          <input type="text" v-model="row.item.value">
+                      <b-table ref="serialsTable" :busy.sync="isBusy" :items="getCurEquipmentNumbers" small striped hover fixed :fields="fields" :current-page="currentPage" :per-page="perPage" head-variant="">
+                        <template v-for="field in fields" v-if="row.item[field]" :slot="field" slot-scope="row">
+                          <b-input-group>
+                            <b-form-input type="text" v-model="row.item[field]['value']" :disabled="isBusy"></b-form-input>
+                            <b-input-group-button>
+                              <b-button variant="" @click="validateSerial(row.item[field]['value'])">?</b-button>
+                            </b-input-group-button>
+                          </b-input-group>
                         </template>
                       </b-table>
                       <div class="justify-content-center row-margin-tweak row">
@@ -109,14 +118,32 @@
                     </b-col>
                   </b-row>
               </b-card>
-              <b-btn class="float-right" :size="template_size" variant="primary" @click="addEquip()">Add</b-btn>
-              <b-btn class="float-right mr-3" variant="" :size="template_size" @click="clear()">Clear</b-btn>
+              <b-btn class="float-right" variant="" :size="template_size" @click="initData">Clear</b-btn>
+              <b-btn class="float-right mr-3" :size="template_size" variant="primary" @click="addEquip">Add</b-btn>
             </b-container>
           </div>
           <div class="card-footer text-muted">
           </div>
         </div>
         <loading v-else></loading>
+        <b-modal v-model="resultModal.show" centered :title="resultModal.modalTitle"
+             header-bg-variant="dark"
+             header-text-variant="light"
+             body-bg-variant="light"
+             body-text-variant="dark"
+             footer-bg-variant="dark"
+             footer-text-variant="light">
+          <p class="float-left mb-1">{{resultModal.msg}}</p>
+          <p class="float-left mb-0" v-if="resultModal.success">Would you like to check the archived equipments?</p>
+          <div slot="modal-footer">
+            <b-btn :size="template_size" class="float-right" variant="" @click="initData">
+              {{resultModal.success ? "No": "Close"}}
+            </b-btn>
+            <b-btn  v-if="resultModal.success" :size="template_size" class="float-right mr-3" variant="primary" @click="showEquipments">
+              Yes
+            </b-btn>
+          </div>
+        </b-modal>
     </div>
 </template>
 
@@ -148,7 +175,7 @@
                     team_id: null,
                     status_id: null,
                     quantity: 1,
-                    autoAssign: 'yes',
+                    auto_assign: 'yes',
                     serials: [{value: ''}]
                 },
                 newModel: '',
@@ -156,9 +183,16 @@
                 newPrefix: '',
                 isBusy: false,
                 currentPage: 1,
-                perRow: 1,
+                perRow: 2,
                 perCol: 3,
-                count: 0
+                count: 0,
+                resultModal: {
+                  show: false,
+                  modalTitle: 'Success',
+                  success: false,
+                  msg: '',
+                  id_from: null
+                }
             }
         },
         mounted() {
@@ -186,20 +220,48 @@
             },
             perPage: function() {
               return this.perRow * this.perCol
+            },
+            validateModel: function() {
+              if (!this.models) return false
+              if (this.models.some(model => model.name === this.newModel)) {
+                return true
+              }
+              return false
+            },
+            validateCategory: function() {
+              if (!this.categories) return false
+              if (this.categories.some(category => category.name === this.newCategory)) {
+                return true
+              }
+              return false
             }
         },
         watch: {
-            'data.quantity': function(val) {
-              this.data.serials = []
-              for (let i = 0; i < val; i++) {
-                this.data.serials.push({value: ''})
+            'data.quantity': function(newVal) {
+              let oldVal = this.data.serials.length || 0
+              if (parseInt(newVal) > parseInt(oldVal)) {
+                for (let i = oldVal; i < newVal; i++) {
+                  this.data.serials.push({value: ''})
+                }
+              } else {
+                this.data.serials = this.data.serials.slice(0, newVal)
               }
-              this.count = val
-              if (this.data.autoAssign === 'no' && this.data.quantity > 0) {
+              this.count = newVal
+              if (this.data.auto_assign === 'no' && this.data.quantity > 0 && this.$refs.serialsTable) {
                 this.$refs.serialsTable.refresh()
               }
             },
             'data.category_id': function(val) {
+              if (!val) {
+                this.data.model_id = null
+                this.models = []
+              } else {
+                apiModels.index({category_id: val})
+                  .then(response => {
+                      this.models = response.data.data
+                      this.data.model_id = null
+                  })
+              }
               this.errors.clear('form-category')
               if (val !== null) {
                 this.newCategory = ''
@@ -211,6 +273,11 @@
               if (val !== null) {
                 this.newModel = ''
               }
+            },
+            'resultModal.show': function(val) {
+              if (val === false) {
+                this.initData()
+              }
             }
         },
         methods: {
@@ -220,7 +287,6 @@
             ]),
             getList() {
                 const data = [
-                    apiModels.index(),
                     apiCategories.index(),
                     apiStatuses.index(),
                     apiTeams.index()
@@ -228,10 +294,9 @@
 
                 return Promise.all(data)
                     .then(response => {
-                        this.models = response[0].data.data
-                        this.categories = response[1].data.data
-                        this.statuses = response[2].data.data
-                        this.teams = response[3].data.data
+                        this.categories = response[0].data.data
+                        this.statuses = response[1].data.data
+                        this.teams = response[2].data.data
                         this.isLoaded = true
                         return response
                     })
@@ -240,13 +305,40 @@
                 this.count = this.data.quantity
                 let serials = (ctx.currentPage * ctx.perPage > this.count) ? this.data.serials.slice(ctx.perPage * (ctx.currentPage - 1)) : this.data.serials.slice(ctx.perPage * (ctx.currentPage - 1), ctx.perPage * ctx.currentPage)
                 let serialGroup = []
-                let groupIndex = 0
                 let self = this
-                debugger
                 serials.forEach(function(serial, index) {
-                  serialGroup[index / self.perRow][index % self.perRow] = serial
+                  let colLabel = 'col-' + index % self.perRow
+                  serialGroup[parseInt(index / self.perRow)] = serialGroup[parseInt(index / self.perRow)] || []
+                  serialGroup[parseInt(index / self.perRow)][colLabel] = serial
                 })
-                return serials
+                return serialGroup
+            },
+            validateSerial(serial) {
+              if (!this.data.category_id && !this.newCategory) {
+                this.errorSerialValidate('Please Select Category')
+                return false
+              } else if (!this.data.category_id && this.newCategory && this.categories) {
+                if (this.categories.some(category => category.name === this.newCategory)) {
+                  this.errorSerialValidate('Please Input Valid Category')
+                  return false
+                }
+              }
+              if (!this.data.model_id && !this.newModel) {
+                this.errorSerialValidate('Please Select Make/Model')
+                return false
+              } else if (!this.data.model_id && this.newModel && this.models) {
+                if (this.models.some(model => model.name === this.newModel)) {
+                  this.errorSerialValidate('Please Input Valid Make/Model')
+                  return false
+                }
+              }
+              if (this.newCategory || this.newModel) {
+                return true
+              }
+              return apiEquipment.valdiateSerial(serial, this.data.model_id)
+                  .then(response => {
+
+                  }).catch(this.handleErrorResponse)
             },
             addEquip () {
                 if (!this.data.category_id || !this.data.model_id) {
@@ -257,16 +349,58 @@
                   } else {
                     this.$validator.validateAll()
                   }
-                    if (this.errors.any()) {
-                        return
-                    }
+                  if (this.errors.any()) {
+                      return
+                  }
                 }
-                this.data.company_id = this.company_id
+                this.$validator.validateAll('form-global')
+                if (this.errors.any()) {
+                    return
+                }
+
+                if (this.data.auto_assign === 'no') {
+                  for (let i = 0; i < this.data.serials.length; i++) {
+                    let serial = this.data.serials[i]
+                    if (!serial.value) {
+                      this.errorSerialValidate('You must enter all serial numbers')
+                      return
+                    }
+                  }
+                }
+
                 let self = this
+                this.data.company_id = this.company_id
 
                 var saveEquipment = function() {
-                  return apiEquipment.store(self.data)
+                  let payload = Object.assign({}, self.data)
+                  if (self.data.auto_assign === 'yes') {
+                    delete payload.serials
+                  }
+                  return apiEquipment.store(payload)
                       .then(response => {
+                        if (response.data.message === 'error') {
+                          let validate = response.data.validate.serials || {
+                            exists: [],
+                            nonexistences: []
+                          }
+                          if (validate.exists.length !== 0) {
+                            // self.resultModal = {
+                            //   show: true,
+                            //   success: false,
+                            //   modalTitle: 'Error',
+                            //   msg: 'Some serial numbers already exist'
+                            // }
+                            self.errorSerialValidate('Some serial numbers already exist')
+                          }
+                        } else {
+                          self.resultModal = {
+                            show: true,
+                            success: true,
+                            modalTitle: 'Success',
+                            msg: response.data.message,
+                            id_from: response.data.equipment[0].id
+                          }
+                        }
                       }).catch(self.handleErrorResponse)
                 }
                 var saveModel = function() {
@@ -277,8 +411,12 @@
                   }).then(response => {
                       if (response.data.message) {
                         self.data.model_id = response.data.model.id
+                        self.models.push({
+                          id: response.data.model.id,
+                          name: response.data.model.name
+                        })
+                        return saveEquipment()
                       }
-                      return saveEquipment()
                   }).catch(self.handleErrorResponse)
                 }
 
@@ -289,6 +427,10 @@
                         company_id: this.company_id
                     }).then(response => {
                         self.data.category_id = response.data.category.id
+                        self.categories.push({
+                          id: response.data.category.id,
+                          name: response.data.category.name
+                        })
                         if (!self.data.model_id) {
                             return saveModel()
                         }
@@ -299,6 +441,37 @@
                     return saveModel()
                 }
                 return saveEquipment()
+            },
+            showEquipments () {
+                this.$router.push({
+                  name: 'Equipment Detail',
+                  params: {
+                    category_id: this.data.category_id,
+                    model_id: this.data.model_id,
+                    status_id: this.data.status_id
+                  },
+                  query: {
+                    id_from: this.resultModal.id_from
+                  }
+                })
+            },
+            initData() {
+              this.data = {
+                  model_id: null,
+                  category_id: null,
+                  team_id: null,
+                  status_id: null,
+                  quantity: 1,
+                  auto_assign: 'yes',
+                  serials: [{value: ''}]
+              }
+              this.resultModal = {
+                show: false,
+                success: false,
+                msg: '',
+                id_from: null
+              }
+              this.errors.clear()
             }
         }
     }
@@ -308,6 +481,9 @@
   .equipment-add {
     .custom-control .custom-control-indicator {
       top: .45rem !important;
+    }
+    thead {
+      display: none;
     }
   }
   .input-group-addon {

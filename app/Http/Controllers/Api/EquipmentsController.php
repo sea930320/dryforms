@@ -103,6 +103,32 @@ class EquipmentsController extends ApiController
     }
 
     /**
+     * @param array $serials
+     * @param int $model_id
+     * @param string $categoryPrefix
+     *
+     * @return array
+     */
+    private function validateSerials($serials, $model_id, $categoryPrefix)
+    {
+        $validate_ret = [
+            'exists'=> [],
+            'nonexistences'=> []
+        ];
+
+        foreach ($serials as $key => $serial) {
+            $full_sn = $categoryPrefix. str_pad($serial['value'], 10, "0", STR_PAD_LEFT);
+            if ($this->equipment->where('serial', $full_sn)
+                ->where('model_id', $model_id)->exists()) {
+                array_push($validate_ret['exists'], $serial);
+            } else {
+                array_push($validate_ret['nonexistences'], $serial);
+            }
+        }
+        return $validate_ret;
+    }
+
+    /**
      * @param EquipmentStore $request
      *
      * @return JsonResponse
@@ -110,17 +136,45 @@ class EquipmentsController extends ApiController
     public function store(EquipmentStore $request): JsonResponse
     {
         $categoryPrefix = $this->category->find($request->get('category_id'))->prefix;
-        $equipment = $this->equipment->create([
-            'model_id' => $request->get('model_id'),
-            'team_id' => $request->get('team_id'),
-            'serial' => $categoryPrefix . ' ' . $request->get('serial'),
-            'status_id' => $request->get('status_id'),
-            'company_id' => $request->get('company_id'),
-        ]);
-
-        $equipment->load(['model.category', 'status', 'team']);
-
-        return $this->respond(['message' => 'Equipments successfully created', 'equipment' => $equipment]);
+        $categoryPrefix = strlen($categoryPrefix) > 0 ? $categoryPrefix. " " : "";
+        if ($request->get('auto_assign') == "yes") {
+            $queryBuilder = new EquipmentQueryBuilder();
+            $maxSerial = $queryBuilder->setQuery($this->equipment->query())->getMaxSerialQuery($categoryPrefix);
+            $maxSerial = ($maxSerial->count() > 0) ? $maxSerial->first()->max_serial: 0;
+            $serial = $maxSerial + 1;
+            $equipments = [];
+            for ($index=0; $index < $request->get('quantity'); $index++) {
+                $equipment = $this->equipment->create([
+                    'model_id' => $request->get('model_id'),
+                    'team_id' => $request->get('team_id'),
+                    'serial' => $categoryPrefix. str_pad($serial, 10, "0", STR_PAD_LEFT),
+                    'status_id' => $request->get('status_id'),
+                    'company_id' => $request->get('company_id'),
+                ]);
+                $serial++;
+                $equipment->load(['model.category', 'status', 'team']);
+                array_push($equipments, $equipment);
+            }
+            return $this->respond(['message' => 'Equipments successfully created', 'equipment' => $equipments]);
+        }
+        $valRet = $this->validateSerials($request->get('serials'), $request->get('model_id'), $categoryPrefix);
+        if (empty($valRet['exists'])) {
+            $equipments = [];
+            foreach ($valRet['nonexistences'] as $key => $serial) {
+                $equipment = $this->equipment->create([
+                    'model_id' => $request->get('model_id'),
+                    'team_id' => $request->get('team_id'),
+                    'serial' => $categoryPrefix. str_pad($serial['value'], 10, "0", STR_PAD_LEFT),
+                    'status_id' => $request->get('status_id'),
+                    'company_id' => $request->get('company_id'),
+                ]);
+                $equipment->load(['model.category', 'status', 'team']);
+                array_push($equipments, $equipment);
+            }
+            return $this->respond(['message' => 'Equipments successfully created', 'equipment' => $equipments]);
+        } else {
+            return $this->respond(['message' => 'error', 'validate' => ['serials' => $valRet]]);
+        }
     }
 
     /**
@@ -147,5 +201,18 @@ class EquipmentsController extends ApiController
         $this->equipment->findOrFail($id)->delete();
 
         return $this->respond(['message' => 'Equipment successfully deleted']);
+    }
+
+    /**
+     * Check if Serial exists
+     *
+     * @param string $serial
+     * @param string $modelId
+     *
+     * @return  JsonResponse
+     */
+    public function validateSerial($serial, $modelId): JsonResponse
+    {
+        return $this->respond(['message' => 'exist']);
     }
 }

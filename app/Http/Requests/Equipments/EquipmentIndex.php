@@ -32,6 +32,7 @@ class EquipmentIndex extends BaseIndexRequest
             'filter' => 'nullable|string',
             'sort_by' => 'nullable|string',
             'sort_type' => 'nullable|in:asc,desc',
+            'id_from' => 'nullable|integer',
         ];
     }
 }

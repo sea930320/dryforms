@@ -146,6 +146,13 @@
                     model_id: this.$route.params.model_id || '',
                     status_id: this.$route.params.status_id || ''
                 }
+                if (this.$route.query.id_from) {
+                  for (var field in this.fields) {
+                      if (this.fields.hasOwnProperty(field)) {
+                          this.fields[field].sortable = false
+                      }
+                  }
+                }
                 return apiEquipment.index(data)
                     .then(response => {
                         this.count = response.data.total
@@ -162,7 +169,8 @@
                 sort_by: ctx.sortBy || '',
                 sort_type: (ctx.sortDesc ? 'desc' : 'asc'),
                 per_page: ctx.perPage,
-                filter: ctx.filter
+                filter: ctx.filter,
+                id_from: this.$route.query.id_from || ''
               }
               return apiEquipment.index(data)
                 .then(response => {

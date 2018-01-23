@@ -22,6 +22,7 @@ class Equipment extends Model
     ];
 
     protected $visible = [
+        'id',
         'model_id',
         'category_id',
         'status_id',

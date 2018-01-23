@@ -66,7 +66,7 @@
 
 <script type="text/babel">
     import Loading from '../layout/Loading'
-    import apiModels from '../../api/equipment-models'
+    import apiModels from '../../api/models'
     import apiStatuses from '../../api/statuses'
     import _ from 'lodash'
 
