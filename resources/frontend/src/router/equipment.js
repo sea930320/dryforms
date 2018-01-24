@@ -13,35 +13,35 @@ const rightLinks = [
     {
         path: '/equipment/add',
         name: 'Add Equipment'
-    },
-    {
-        path: '/equipment/remove',
-        name: 'Remove Equipment'
-    },
-    {
-        path: '/equipment/set',
-        name: 'Set Equipment'
-    },
-    {
-        path: '/equipment/pick-up',
-        name: 'Pick Up Equipment'
-    },
-    {
-        path: '/equipment/ooc',
-        name: 'O.O.C. Equipment'
-    },
-    {
-        path: '/equipment/ooc/return',
-        name: 'Return O.O.C. Equipment'
-    },
-    {
-        path: '/equipment/loan',
-        name: 'Loan Equipment'
-    },
-    {
-        path: '/equipment/loan/return',
-        name: 'Return Loan Equipment'
     }
+    // {
+    //     path: '/equipment/remove',
+    //     name: 'Remove Equipment'
+    // },
+    // {
+    //     path: '/equipment/set',
+    //     name: 'Set Equipment'
+    // },
+    // {
+    //     path: '/equipment/pick-up',
+    //     name: 'Pick Up Equipment'
+    // },
+    // {
+    //     path: '/equipment/ooc',
+    //     name: 'O.O.C. Equipment'
+    // },
+    // {
+    //     path: '/equipment/ooc/return',
+    //     name: 'Return O.O.C. Equipment'
+    // },
+    // {
+    //     path: '/equipment/loan',
+    //     name: 'Loan Equipment'
+    // },
+    // {
+    //     path: '/equipment/loan/return',
+    //     name: 'Return Loan Equipment'
+    // }
 ]
 
 const routes = (configRoute) => [
@@ -116,7 +116,7 @@ const routes = (configRoute) => [
             requiresAuth: true
         },
         component: resolve => {
-            require(['../components/equipment/modals/Add.vue'], resolve)
+            require(['../components/equipment/Add.vue'], resolve)
         }
     },
     {

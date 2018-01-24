@@ -1,6 +1,7 @@
 <template>
     <div class="equipment-detail">
         <div v-if="isLoaded" class="card text-center">
+            <remove-modal></remove-modal>
             <div class="card-header">
                 <h5> {{header_text}} </h5>
             </div>
@@ -29,7 +30,7 @@
                     </b-col>
                   </b-row>
                 </b-container>
-                <b-table :busy.sync="isBusy" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :items="getEquipment" small striped hover foot-clone :fields="fields" :current-page="currentPage" :per-page="perPage" :filter="fiter_debouncer" head-variant="">
+                <b-table ref="DetailTable" :busy.sync="isBusy" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :items="getEquipment" small striped hover foot-clone :fields="fields" :current-page="currentPage" :per-page="perPage" :filter="fiter_debouncer" head-variant="">
                     <template slot="category_name" slot-scope="row">
                       {{row.item.model.category.name ? row.item.model.category.name : 'n/a'}}
                     </template>
@@ -41,6 +42,11 @@
                     </template>
                     <template slot="status" slot-scope="row">
                       {{row.item.status.name}}
+                    </template>
+                    <template slot="action" slot-scope="row">
+                      <button class="btn btn-xs btn-danger" @click="openRemoveModal(row.item.id)">
+                          <i class="fa fa-trash"></i> Remove
+                      </button>
                     </template>
                 </b-table>
                 <div class="justify-content-center row-margin-tweak row">
@@ -59,11 +65,13 @@
 <script type="text/babel">
     import Loading from '../layout/Loading'
     import apiEquipment from '../../api/equipment'
+    import RemoveModal from './modals/Remove'
+
     import _ from 'lodash'
 
     export default {
         name: 'Settings',
-        components: { Loading },
+        components: { RemoveModal, Loading },
         data() {
             return {
                 isLoaded: false,
@@ -99,11 +107,16 @@
                     label: 'Status',
                     sortable: true,
                     'class': 'text-center field-stat'
+                  },
+                  action: {
+                    label: 'Actions',
+                    sortable: false,
+                    'class': 'text-center field-act'
                   }
                 },
                 isBusy: false,
                 currentPage: 1,
-                perPage: 2,
+                perPage: 10,
                 count: 0,
                 sortBy: '',
                 sortDesc: false,
@@ -111,20 +124,20 @@
                 fiter_debouncer: '',
                 pageSizeOption: [
                   {
-                    text: 1,
-                    value: 1
-                  },
-                  {
-                    text: 2,
-                    value: 2
-                  },
-                  {
                     text: 5,
                     value: 5
                   },
                   {
                     text: 10,
                     value: 10
+                  },
+                  {
+                    text: 15,
+                    value: 15
+                  },
+                  {
+                    text: 20,
+                    value: 20
                   }
                 ]
             }
@@ -132,6 +145,10 @@
         created() {
             this.$nextTick(() => {
                 this.initData()
+            })
+            this.$on('reloadData', () => {
+                this.initData()
+                this.$refs.DetailTable.refresh()
             })
         },
         watch: {
@@ -200,7 +217,12 @@
             },
             debouncer: _.debounce(function() {
                 this.fiter_debouncer = this.filter
-            }, 500)
+            }, 500),
+            openRemoveModal(id) {
+                this.$emit('openRemoveModal', {
+                    id: id
+                })
+            }
         }
     }
 </script>
@@ -214,21 +236,24 @@
             padding: .25rem;
         }
         .field-cat {
-            width: 20%;
+            width: 18%;
         }
         .field-mod {
-            width: 20%;
+            width: 18%;
         }
         .field-serial {
-            width: 20%;
+            width: 18%;
         }
         .field-team {
-            width: 10%;
+            width: 9%;
         }
         .field-location {
-            width: 20%;
+            width: 18%;
         }
         .field-status {
+            width: 9%;
+        }
+        .field-act {
             width: 10%;
         }
         .table-green {

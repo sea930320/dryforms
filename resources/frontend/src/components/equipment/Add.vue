@@ -149,15 +149,15 @@
 
 <script type="text/babel">
     import {mapActions, mapGetters} from 'vuex'
-    import Loading from '../../layout/Loading'
+    import Loading from '../layout/Loading'
     import _ from 'lodash'
 
-    import apiCategories from '../../../api/categories'
-    import apiModels from '../../../api/models'
-    import apiTeams from '../../../api/teams'
-    import apiStatuses from '../../../api/statuses'
-    import apiEquipment from '../../../api/equipment'
-    import ErrorHandler from '../../../mixins/error-handler'
+    import apiCategories from '../../api/categories'
+    import apiModels from '../../api/models'
+    import apiTeams from '../../api/teams'
+    import apiStatuses from '../../api/statuses'
+    import apiEquipment from '../../api/equipment'
+    import ErrorHandler from '../../mixins/error-handler'
 
     export default {
         mixins: [ErrorHandler],

@@ -4,7 +4,8 @@ const categoriesResource = '/api/categories'
 
 export default {
     index (data) {
-        return axios.get(categoriesResource, data)
+        var query = data ? Object.keys(data).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(data[k])}`).join('&') : ''
+        return axios.get(categoriesResource + '?' + query, data)
     },
     store (data) {
         return axios.post(categoriesResource, data)

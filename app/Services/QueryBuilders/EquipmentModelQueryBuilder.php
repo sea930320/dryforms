@@ -10,8 +10,6 @@ class EquipmentModelQueryBuilder extends QueryBuilder
 {
     /**
      * EquipmentModelQueryBuilder constructor.
-     *
-     * @param Status $status
      */
     public function __construct()
     {

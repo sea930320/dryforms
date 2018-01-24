@@ -1,4 +1,4 @@
-import apiCategories from '../../api/equipment-categories'
+import apiCategories from '../../api/categories'
 
 const state = {
     categories: []

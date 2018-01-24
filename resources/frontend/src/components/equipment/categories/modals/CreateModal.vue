@@ -22,8 +22,10 @@
 
 <script type="text/babel">
     import apiCategories from '../../../../api/categories'
+    import ErrorHandler from '../../../../mixins/error-handler'
 
     export default {
+        mixins: [ErrorHandler],
         name: 'create-category-modal',
         created() {
             this.$parent.$on('openCreateModal', () => {
@@ -65,17 +67,13 @@
                         .then(response => {
                             this.$parent.$emit('reloadData')
                         })
-                        .catch(error => {
-                            console.log(error)
-                        })
+                        .catch(this.handleErrorResponse)
                 } else {
                     apiCategories.patch(this.category.id, this.category)
                         .then(response => {
                             this.$parent.$emit('reloadData')
                         })
-                        .catch(error => {
-                            console.log(error)
-                        })
+                        .catch(this.handleErrorResponse)
                 }
             },
             initData() {
@@ -84,9 +82,7 @@
                     .then(response => {
                         self.category = response.data
                     })
-                    .catch(error => {
-                        console.log(error)
-                    })
+                    .catch(this.handleErrorResponse)
             }
         }
     }
