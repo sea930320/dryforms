@@ -30,6 +30,7 @@ class EquipmentStore extends BaseRequest
             'team_id' => 'nullable|exists:teams,id',
             'quantity' => 'required|numeric|min:1',
             'serials' => 'nullable|array',
+            'serials.*.value' => 'integer',
             'company_id' => 'required|exists:companies,id',
             'auto_assign' => 'required|in:yes,no'
         ];

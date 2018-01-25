@@ -56,7 +56,7 @@ class EquipmentQueryBuilder extends QueryBuilder
                 if ($sort_by == "make_model") {
                     $this->query->join('equipment_models', 'model_id', '=','equipment_models.id')->select('equipments.*')->orderBy("equipment_models.name", $sort_type);
                 } else if ($sort_by == "team") {
-                    $this->query->join('teams', 'team_id', '=','teams.id')->select('equipments.*')->orderBy("teams.name", $sort_type);
+                    $this->query->leftjoin('teams', 'team_id', '=','teams.id')->select('equipments.*')->orderBy("teams.name", $sort_type);
                 } else if ($sort_by == "status") {
                     $this->query->join('equipment_statuses', 'status_id', '=','equipment_statuses.id')->select('equipments.*')->orderBy("equipment_statuses.name", $sort_type);
                 } else {

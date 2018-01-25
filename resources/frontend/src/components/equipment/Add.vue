@@ -11,7 +11,7 @@
                       <label>Category</label>
                       <select class="form-control" v-model="data.category_id">
                           <option :value="null">-- Please select --</option>
-                          <option v-for="item in categories" :value="item.id">{{ item.name }}</option>
+                          <option v-for="item in categories" v-bind:key="item.id" :value="item.id">{{ item.name }}</option>
                       </select>
                   </div>
                   <div class="form-group col-md-6">
@@ -33,7 +33,7 @@
                       <label>Make/Model</label>
                       <select class="form-control" v-model="data.model_id">
                           <option :value="null">-- Please select --</option>
-                          <option v-for="item in models" :value="item.id">{{ item.name }}</option>
+                          <option v-for="item in models" v-bind:key="item.id" :value="item.id">{{ item.name }}</option>
                       </select>
                   </div>
                   <div class="form-group col-md-6">
@@ -48,7 +48,7 @@
                       <label>Crew/Team</label>
                       <select class="form-control" v-model="data.team_id">
                           <option :value="null">-- Please select --</option>
-                          <option v-for="item in teams" :value="item.id">{{ item.name }}</option>
+                          <option v-for="item in teams" v-bind:key="item.id" :value="item.id">{{ item.name }}</option>
                       </select>
                   </div>
                   <div class="form-group col-md-6">
@@ -56,7 +56,7 @@
                       <label>Statuses</label>
                       <select class="form-control" v-model="data.status_id" name="status" :class="{'is-invalid': errors.has('status')}" v-validate data-vv-rules="required">
                           <option :value="null">-- Please select --</option>
-                          <option v-for="item in statuses" :value="item.id">{{ item.name }}</option>
+                          <option v-for="item in statuses" v-bind:key="item.id" :value="item.id">{{ item.name }}</option>
                       </select>
                     </form>
                   </div>
@@ -103,10 +103,13 @@
                     <b-col cols="12">
                       <b-table ref="serialsTable" :busy.sync="isBusy" :items="getCurEquipmentNumbers" small striped hover fixed :fields="fields" :current-page="currentPage" :per-page="perPage" head-variant="">
                         <template v-for="field in fields" v-if="row.item[field]" :slot="field" slot-scope="row">
-                          <b-input-group>
-                            <b-form-input type="text" v-model.lazy.trim="row.item[field]['value']" :disabled="isBusy" @input="validateSerial(row.item[field])"></b-form-input>
+                          <b-input-group v-bind:key="field">
+                            <b-form-input type="number" min=0 v-model.lazy.trim="row.item[field]['value']" :disabled="isBusy" @input="validateSerial(row.item[field])"></b-form-input>
                             <b-input-group-button>
-                              <b-button :variant="row.item[field]['validate']?'success':'danger'" @click="reason(row.item[field])" style="width: 38px">{{row.item[field]['validate']?'O':'?'}}</b-button>
+                              <b-button :variant="row.item[field]['validate']?'success':'danger'" @click="reason(row.item[field])" style="width: 38px">
+                                <i v-if="row.item[field]['validate']" class="fa fa-check"></i>
+                                <i v-else class="fa fa-question"></i>                                
+                              </b-button>
                             </b-input-group-button>
                           </b-input-group>
                         </template>
@@ -349,6 +352,11 @@
                       equipment['reason'] = 'Serial number alreday exists'
                       return false
                     }
+                    if (response.data.message === 'serial is not numeric') {
+                      equipment['validate'] = false
+                      equipment['reason'] = 'Serial number is not numeric'
+                      return false
+                    }
                     equipment['validate'] = true
                     return true
                   }).catch(err => {
@@ -419,12 +427,6 @@
                             nonexistences: []
                           }
                           if (validate.exists.length !== 0) {
-                            // self.resultModal = {
-                            //   show: true,
-                            //   success: false,
-                            //   modalTitle: 'Error',
-                            //   msg: 'Some serial numbers already exist'
-                            // }
                             self.errorSerialValidate('Some serial numbers already exist')
                           }
                         } else {
@@ -523,6 +525,11 @@
     thead {
       display: none;
     }
+    table {
+      .btn {
+        padding: .375rem 0rem !important;
+      }
+    }    
   }
   .input-group-addon {
     font-size: 1rem;

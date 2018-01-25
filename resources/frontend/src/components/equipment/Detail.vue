@@ -2,6 +2,7 @@
     <div class="equipment-detail">
         <div v-if="isLoaded" class="card text-center">
             <remove-modal></remove-modal>
+            <edit-modal :statuses="statuses" :teams="teams"></edit-modal>
             <div class="card-header">
                 <h5> {{header_text}} </h5>
             </div>
@@ -30,20 +31,67 @@
                     </b-col>
                   </b-row>
                 </b-container>
-                <b-table ref="DetailTable" :busy.sync="isBusy" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :items="getEquipment" small striped hover foot-clone :fields="fields" :current-page="currentPage" :per-page="perPage" :filter="fiter_debouncer" head-variant="">
+                <b-table ref="DetailTable" :busy.sync="isBusy" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :items="getEquipment" small striped hover foot-clone :fields="fields" :current-page="currentPage" :per-page="perPage" :filter="fiter_debouncer" head-variant="" align-v="center">
                     <template slot="category_name" slot-scope="row">
                       {{row.item.model.category.name ? row.item.model.category.name : 'n/a'}}
                     </template>
                     <template slot="make_model" slot-scope="row">
                       {{row.item.model.name}}
                     </template>
+                    <template slot="serial" slot-scope="row">
+                      <b-input-group :size="template_size">
+                        <label class="serial-label m-0 pl-1 pr-1">
+                          {{row.item.serial.prefix}}
+                        </label>
+                        <b-form-input type="number" v-model="row.item.serial.number" :size="template_size" min=0 @input="validateSerialNumber(row.item)"></b-form-input>
+                        <label v-if="!row.item.serial.validate" class="serial-label m-0 pl-1 pr-1">
+                          <i style="color:#dc3545" class="fa fa-exclamation-triangle"></i>
+                        </label>
+                        <label v-else-if="(row.item.serial.original !== row.item.serial.prefix + ' ' + row.item.serial.number) && row.item.serial.validate" class="serial-label m-0 pl-1 pr-1 change-serial" @click="changeSerialNumber(row.item)">
+                          <i style="color:#007bff" class="fa fa-check"></i>
+                        </label>
+                      </b-input-group>
+                    </template>
+                    <template slot="location" slot-scope="row">
+                      <b-input-group :size="template_size">
+                        <b-form-input type="text" v-model="row.item.location" :size="template_size"></b-form-input>
+                        <label class="serial-label m-0 pl-1 pr-1 change-serial" @click="changeLocation(row.item)">
+                          <i style="color:#007bff" class="fa fa-check"></i>
+                        </label>
+                      </b-input-group>
+                    </template>
                     <template slot="team" slot-scope="row">
                       {{row.item.team.name}}
+                      <b-dropdown variant="link" right size="xs" no-caret class="pull-right">
+                        <template slot="button-content">
+                          <i class="fa fa-pencil"></i>
+                        </template>
+                        <b-dropdown-item v-for="team in teams" :key="team.id" @click="changeTeam(row.item, team.id)">
+                          <span v-if="row.item.team.id === team.id">
+                            <i class="fa fa-check" style="padding-right:5px"></i>{{team.name}}
+                          </span>
+                          <span v-else style="padding-left:21px">{{team.name}}</span>
+                        </b-dropdown-item>
+                      </b-dropdown>
                     </template>
                     <template slot="status" slot-scope="row">
                       {{row.item.status.name}}
+                      <b-dropdown variant="link" right size="xs" no-caret class="pull-right">
+                        <template slot="button-content">
+                          <i class="fa fa-pencil"></i>
+                        </template>
+                        <b-dropdown-item v-for="status in statuses" :key="status.id" @click="changeStatus(row.item, status.id)">
+                          <span v-if="row.item.status.id === status.id">
+                            <i class="fa fa-check" style="padding-right:5px"></i>{{status.name}}
+                          </span>
+                          <span v-else style="padding-left:21px">{{status.name}}</span>
+                        </b-dropdown-item>
+                      </b-dropdown>
                     </template>
                     <template slot="action" slot-scope="row">
+                      <button class="btn btn-xs btn-default" @click="openEditModal(row.item.id, row.item.model.category_id)">
+                        <i class="fa fa-pencil"></i> Edit
+                      </button>
                       <button class="btn btn-xs btn-danger" @click="openRemoveModal(row.item.id)">
                           <i class="fa fa-trash"></i> Remove
                       </button>
@@ -65,13 +113,17 @@
 <script type="text/babel">
     import Loading from '../layout/Loading'
     import apiEquipment from '../../api/equipment'
+    import apiTeams from '../../api/teams'
+    import apiStatuses from '../../api/statuses'
+
+    import EditModal from './modals/Edit'
     import RemoveModal from './modals/Remove'
 
     import _ from 'lodash'
-
+    
     export default {
         name: 'Settings',
-        components: { RemoveModal, Loading },
+        components: { EditModal, RemoveModal, Loading },
         data() {
             return {
                 isLoaded: false,
@@ -139,7 +191,11 @@
                     text: 20,
                     value: 20
                   }
-                ]
+                ],
+                statuses: [],
+                teams: [{
+                    name: '------'
+                  }]
             }
         },
         created() {
@@ -158,21 +214,17 @@
         },
         methods: {
             initData() {
-                let data = {
-                    category_id: this.$route.params.category_id || '',
-                    model_id: this.$route.params.model_id || '',
-                    status_id: this.$route.params.status_id || ''
-                }
-                if (this.$route.query.id_from) {
-                  for (var field in this.fields) {
-                      if (this.fields.hasOwnProperty(field)) {
-                          this.fields[field].sortable = false
-                      }
-                  }
-                }
-                return apiEquipment.index(data)
+                const apis = [
+                    apiStatuses.index(),
+                    apiTeams.index()
+                ]
+                return Promise.all(apis)
                     .then(response => {
-                        this.count = response.data.total
+                        this.statuses = response[0].data.data
+                        this.teams = [{
+                            name: '------'
+                          }]
+                        this.teams = this.teams.concat(response[1].data.data)
                         this.isLoaded = true
                         return response
                     })
@@ -197,6 +249,13 @@
                         item.model.category = item.model.category || {name: ''}
                         item.status = item.status || {name: ''}
                         item.team = item.team || {name: ''}
+                        let number = item.serial.replace(item.model.category.prefix + ' ', '')
+                        item.serial = {
+                          original: item.serial,
+                          prefix: item.model.category.prefix,
+                          number: number,
+                          validate: true
+                        }
                         return item
                     })
                     this.count = response.data.total
@@ -222,6 +281,94 @@
                 this.$emit('openRemoveModal', {
                     id: id
                 })
+            },
+            openEditModal(id, categoryId) {
+                this.$emit('openEditModal', {
+                    id: id,
+                    category_id: categoryId
+                })
+            },
+            changeTeam(equipment, teamId) {
+                let data = {
+                  id: equipment.id,
+                  team_id: teamId || '',
+                  company_id: equipment.company_id
+                }
+                apiEquipment.patch(equipment.id, data)
+                  .then(response => {
+                      this.initData()
+                      this.$refs.DetailTable.refresh()
+                  })
+                  .catch(this.handleErrorResponse)
+            },
+            changeStatus(equipment, statusId) {
+                let data = {
+                  id: equipment.id,
+                  status_id: statusId,
+                  company_id: equipment.company_id
+                }
+                apiEquipment.patch(equipment.id, data)
+                  .then(response => {
+                      this.initData()
+                      this.$refs.DetailTable.refresh()
+                  })
+                  .catch(this.handleErrorResponse)
+            },
+            validateSerialNumber: _.debounce(function(equipment) {
+              if (!equipment.serial.number) {
+                equipment.serial.validate = false
+                return false
+              }
+              var pad = '0000000000'
+              equipment.serial.number = equipment.serial.number.replace(new RegExp('^[0]+'), '')
+              equipment.serial.number = equipment.serial.number.slice(0, 10)
+              equipment.serial.number = pad.substring(0, pad.length - equipment.serial.number.length) + equipment.serial.number
+              if (equipment.serial.original === equipment.serial.prefix + ' ' + equipment.serial.number) {
+                equipment.serial.validate = true
+                return true
+              }
+              let serial = equipment.serial.number
+              return apiEquipment.valdiateSerial(serial, equipment.model.category_id)
+                  .then(response => {
+                    if (response.data.message === 'nonexistence') {
+                      equipment.serial.validate = true
+                      return true
+                    }
+                    equipment.serial.validate = false
+                    return false
+                  }).catch(err => {
+                    if (err) {
+                      equipment.serial.validate = false
+                      return false
+                    }
+                  })
+            }, 500),
+            changeSerialNumber(equipment) {
+                let data = {
+                  id: equipment.id,
+                  serial: equipment.serial.number.replace(new RegExp('^[0]+'), ''),
+                  category_id: equipment.model.category_id,
+                  company_id: equipment.company_id
+                }
+                apiEquipment.patch(equipment.id, data)
+                  .then(response => {
+                      this.initData()
+                      this.$refs.DetailTable.refresh()
+                  })
+                  .catch(this.handleErrorResponse)
+            },
+            changeLocation(equipment) {
+                let data = {
+                  id: equipment.id,
+                  location: equipment.location,
+                  company_id: equipment.company_id
+                }
+                apiEquipment.patch(equipment.id, data)
+                  .then(response => {
+                      this.initData()
+                      this.$refs.DetailTable.refresh()
+                  })
+                  .catch(this.handleErrorResponse)
             }
         }
     }
@@ -236,29 +383,39 @@
             padding: .25rem;
         }
         .field-cat {
-            width: 18%;
+            width: 16%;
         }
         .field-mod {
-            width: 18%;
+            width: 16%;
         }
         .field-serial {
-            width: 18%;
+            width: 16%;
         }
         .field-team {
-            width: 9%;
+            width: 12%;
         }
         .field-location {
-            width: 18%;
+            width: 16%;
         }
         .field-status {
-            width: 9%;
+            width: 12%;
         }
         .field-act {
-            width: 10%;
+            width: 12%;
         }
         .table-green {
             background-color: rgba(0, 0, 0, 0.05) !important;
             color: inherit !important;
+        }
+        .serial-label {
+            font-size: 1rem;
+            padding: .1rem .5rem;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+        }
+        .change-serial {
+            cursor: pointer;
         }
     }
 </style>

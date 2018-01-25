@@ -13,6 +13,7 @@ use App\Services\QueryBuilder;
 use App\Services\QueryBuilders\EquipmentQueryBuilder;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Config;
 
 class EquipmentsController extends ApiController
 {
@@ -117,7 +118,7 @@ class EquipmentsController extends ApiController
         ];
 
         foreach ($serials as $key => $serial) {
-            $full_sn = $categoryPrefix. str_pad($serial['value'], 10, "0", STR_PAD_LEFT);
+            $full_sn = $categoryPrefix. str_pad(intval($serial['value'], 10), Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT);
             if ($this->equipment
                 ->with(['model'])
                 ->where('serial', $full_sn)
@@ -151,7 +152,7 @@ class EquipmentsController extends ApiController
                 $equipment = $this->equipment->create([
                     'model_id' => $request->get('model_id'),
                     'team_id' => $request->get('team_id'),
-                    'serial' => $categoryPrefix. str_pad($serial, 10, "0", STR_PAD_LEFT),
+                    'serial' => $categoryPrefix. str_pad($serial, Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
                     'status_id' => $request->get('status_id'),
                     'company_id' => $request->get('company_id'),
                 ]);
@@ -168,7 +169,7 @@ class EquipmentsController extends ApiController
                 $equipment = $this->equipment->create([
                     'model_id' => $request->get('model_id'),
                     'team_id' => $request->get('team_id'),
-                    'serial' => $categoryPrefix. str_pad($serial['value'], 10, "0", STR_PAD_LEFT),
+                    'serial' => $categoryPrefix. str_pad(intval($serial['value'],10), Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
                     'status_id' => $request->get('status_id'),
                     'company_id' => $request->get('company_id'),
                 ]);
@@ -189,9 +190,24 @@ class EquipmentsController extends ApiController
     public function update(EquipmentUpdate $request)
     {
         $equipment = $this->equipment->find($request->input('equipment_id'));
-        $equipment->update($request->validatedOnly());
+        $request_params = $request->validated();
+        if (array_key_exists('category_id', $request_params) && array_key_exists('serial', $request_params)) {
+            $categoryPrefix = $this->category->find($request_params['category_id'])->prefix;
+            $categoryPrefix = strlen($categoryPrefix) > 0 ? $categoryPrefix. " " : "";
+            $serials = [['value'=>intval($request_params['serial'], 10)]];
+            $valRet = $this->validateSerials($serials, $request_params['category_id'], $categoryPrefix);
+            if (empty($valRet['exists'])) {
+                $request_params['serial'] = $categoryPrefix. str_pad(intval($request_params['serial'],10), Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT);
+                unset($request_params['category_id']);
+            } else {
+                return $this->respond(['message' => 'exist']);
+            }
+        }
+        if (array_key_exists('category_id', $request_params)) {
+            unset($request_params['category_id']);
+        }
+        $equipment->update($request_params);
         $equipment->load(['model.category', 'status', 'team']);
-
         return $this->respond(['message' => 'Equipment successfully updated', 'equipment_id' => $equipment]);
     }
 
@@ -210,16 +226,17 @@ class EquipmentsController extends ApiController
     /**
      * Check if Serial exists
      *
-     * @param string $serial
+     * @param int $serial
      * @param int $categoryId
      *
      * @return  JsonResponse
      */
     public function validateSerial($serial, $categoryId): JsonResponse
     {
+        if (!ctype_digit($serial)) return $this->respond(['message' => 'serial is not numeric']);
         $categoryPrefix = $this->category->find($categoryId)->prefix;
         $categoryPrefix = strlen($categoryPrefix) > 0 ? $categoryPrefix. " " : "";
-        $serials = [['value'=>$serial]];
+        $serials = [['value'=>intval($serial, 10)]];
         $valRet = $this->validateSerials($serials, $categoryId, $categoryPrefix);
         if (empty($valRet['exists'])) {
             return $this->respond(['message' => 'nonexistence']);

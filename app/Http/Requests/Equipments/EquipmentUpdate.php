@@ -24,12 +24,13 @@ class EquipmentUpdate extends BaseRequest
     public function rules()
     {
         return [
+            'category_id' => 'sometimes|required|exists:equipment_categories,id',
+            'model_id' => 'sometimes|required|exists:equipment_models,id',
             'equipment_id' => 'exists:equipments,id',
             'status_id' => 'exists:equipment_statuses,id',
             'location' => 'nullable|string',
-            'team_id' => 'exists:teams,id',
-            'quantity' => 'required|numeric',
-            'serial' => 'nullable|string',
+            'team_id' => 'nullable|exists:teams,id',
+            'serial' => 'sometimes|required|integer',
             'company_id' => 'required|exists:companies,id'
         ];
     }

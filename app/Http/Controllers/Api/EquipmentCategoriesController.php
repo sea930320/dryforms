@@ -83,7 +83,7 @@ class EquipmentCategoriesController extends ApiController
         $category = $this->category->find($request->input('category_id'));
         $oldPrefix = $category->prefix;
         $oldPrefix = strlen($oldPrefix) > 0 ? $oldPrefix : "";
-        $category->update($request->validatedOnly());
+        $category->update($request->validated());
         $equipments = $category->equipments()->where('serial', 'REGEXP', "^$oldPrefix")->get();
         foreach ($equipments as $key => $equipment) {
             $newSerial = str_replace($oldPrefix, $request->input('prefix'), $equipment->serial);
