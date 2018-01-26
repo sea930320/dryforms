@@ -30,6 +30,7 @@ class ModelIndex extends BaseIndexRequest
             'model_name' => 'nullable|string',
             'sort_by' => 'nullable|string',
             'sort_type' => 'nullable|in:asc,desc',
+            'filter' => 'nullable|string'
         ];
     }
 }

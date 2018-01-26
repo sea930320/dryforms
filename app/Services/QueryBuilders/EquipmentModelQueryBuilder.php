@@ -28,6 +28,15 @@ class EquipmentModelQueryBuilder extends QueryBuilder
                 $query->where('id', $params['category_id']);
             });
         }
+        if (isset($params['filter'])) {
+            $this->query->where(function($query) use ($params) {
+                $query->whereHas('category', function ($query) use ($params) {
+                    $query->where('name', 'like', "%{$params['filter']}%");
+                })->orWhere(
+                    'equipment_models.name', 'like', "%{$params['filter']}%"
+                );
+            });
+        }
         if (isset($params['category_name'])) {
             $this->query->whereHas('category', function ($query) use ($params) {
                 $query->where('name', 'like', "%{$params['category_name']}%");
