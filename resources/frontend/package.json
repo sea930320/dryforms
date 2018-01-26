@@ -15,7 +15,7 @@
     "build-dev": "node build/build-dev.js"
   },
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "https://github.com/axios/axios.git#master",
     "babel-plugin-lodash": "^3.3.2",
     "bootstrap": "^4.0.0-beta.2",
     "bootstrap-vue": "^1.0.2",
