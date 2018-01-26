@@ -97,7 +97,7 @@ module.exports = {
                     /src\/js/,
                     /node_modules\/axios/
                 ],
-                loader: 'babel',
+                loader: 'babel-loader',
                 query: {
                     cacheDirectory: true,
                     plugins: [
