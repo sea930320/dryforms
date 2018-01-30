@@ -53,6 +53,20 @@ const routes = (configRoute) => [
         }
     },
     {
+        path: '/settings/credit-card',
+        name: 'CreditCard',
+        props: {title: 'CreditCard'},
+        meta: {
+            title: 'Update Your Credit Card',
+            roles: ['customer'],
+            leftLinks: leftLinks,
+            rightLinks: rightLinks
+        },
+        component: resolve => {
+            require(['../components/settings/CreditCard.vue'], resolve)
+        }
+    },
+    {
         path: '/settings/teams',
         name: 'Teams',
         props: {title: 'Teams'},

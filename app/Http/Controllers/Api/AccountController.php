@@ -3,6 +3,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Account\ChangeEmailRequest;
 use App\Http\Requests\Account\ChangePasswordRequest;
+use App\Http\Requests\Account\SubscribeRequest;
+use Illuminate\Http\Request;
+
 use App\Models\User;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Auth\AuthManager;
@@ -44,9 +47,22 @@ class AccountController extends ApiController
     public function show()
     {
         $user = $this->authManager->user();
-        $user->load(['role', 'company']);
+        // $user->load(['role', 'company']);
+        // return $this->respond(['user' => $user]);
 
-        return $this->respond(['user' => $user]);
+
+/*------ testing code -------*/
+        $isSubscribed  = $user->subscribed('DryForms');
+        $subscription   = $user->subscription('DryForms');
+        $user->load(['role', 'company']);
+        return $this->respond([
+            'user'          => $user, 
+            'isSubscribed'  => $isSubscribed,
+            'isGracePeriod' => $isSubscribed ? $subscription->onGracePeriod() : false
+        ]);
+/*---------------------------*/
+
+
     }
 
     /**
@@ -79,4 +95,79 @@ class AccountController extends ApiController
 
         return $this->respond(['message' => 'Email was successfully changed']);
     }
+
+
+
+/*------ testing code -------*/
+    /**
+     * @param SubscribeRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function subscribe(SubscribeRequest $request)
+    {
+        $stripeToken = $request->get('stripeToken');
+
+        $pickedPlan = "dryforms";
+        $me = auth()->user();
+        try {
+            if( $me->subscribed('DryForms') && ! $me->subscribedToPlan($pickedPlan, 'DryForms') ) {
+                $me->subscription('DryForms')->swap($pickedPlan);
+            } else {
+                if( $coupon = $request->get('coupon') ) {
+                    $me->newSubscription( 'DryForms', $pickedPlan)
+                        ->withCoupon($coupon)
+                        ->create($request->get('stripeToken'), [
+                            'email' => $me->email
+                        ]);
+
+                } else {
+                    $me->newSubscription( 'DryForms', $pickedPlan)->create($request->get('stripeToken'), [
+                        'email' => $me->email,
+                        'description' => $me->first_name. ' '. $me->last_name
+                    ]);
+                }
+            }
+        } catch (\Exception $e) {
+            return $this->respondWithError(['message' => $e->getMessage()], 422);
+        }
+        return $this->respond(['message' => 'You are now subscribed']);    
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cancelSubscribe(Request $reqest)
+    {
+        // $request->get("feedback") processing...
+        $me = auth()->user();
+        $pickedPlan = "dryforms";
+        try {
+            $me->subscription('DryForms')->cancel();
+        } catch (\Exception $e) {
+            return $this->respondWithError(['message' => $e->getMessage()], 422);
+        }
+        return $this->respond(['message' => 'Your Subscription has been canceled.']);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resumeSubscription(Request $request)
+    {
+        $me = auth()->user();
+        try {
+            $me->subscription('DryForms')->resume();
+        } catch ( \Exception $e) {
+            return $this->respondWithError(['message' => $e->getMessage()], 422);
+        }
+        return $this->respond(['message' => 'Glad to see you back. Your Subscription has been resumed.']);
+    }
+/*---------------------------*/
+
+
 }

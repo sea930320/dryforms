@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import VueConfig from 'vue-configuration'
 import BootstrapVue from 'bootstrap-vue'
 import axios from 'axios'
 import VueSession from 'vue-session'
@@ -13,10 +14,14 @@ import router from './router'
 import store from './store'
 import VeeValidate from 'vee-validate'
 import globalMixin from './mixins/global-mixin'
+import appConfig from './config/app'
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
 
+Vue.use(VueConfig, {
+  config: appConfig
+})
 Vue.use(BootstrapVue)
 Vue.use(VueSession)
 Vue.use(Notifications)

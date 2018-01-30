@@ -37,4 +37,9 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);
     $router->post('account/password/change', ['uses' => 'AccountController@changePassword', 'as' => 'account.password.change']);
     $router->post('account/email/change', ['uses' => 'AccountController@changeEmail', 'as' => 'account.email.change']);
+/*------ testing code -------*/
+    $router->post('account/subscribe', ['uses' => 'AccountController@subscribe', 'as' => 'account.subscribe.create']);
+    $router->get('account/cancel-subscribe', ['uses' => 'AccountController@cancelSubscribe', 'as' => 'account.subscribe.cancel']);
+    $router->get('account/resume-subscribe', ['uses' => 'AccountController@resumeSubscription', 'as' => 'account.subscribe.resume']);
+/*---------------------------*/
 });
