@@ -25,7 +25,7 @@ const actions = {
                 isSubscribed: response.data.isSubscribed,
                 isGracePeriod: response.data.isGracePeriod
             })
-            apiCompanies.show(response.data.user.id).then(response => {
+            apiCompanies.show(response.data.user.company_id).then(response => {
                 commit('setCompany', response.data)
             })
         })

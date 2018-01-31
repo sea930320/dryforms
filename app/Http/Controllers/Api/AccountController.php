@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Auth\AuthManager;
+use Illuminate\Support\Facades\Hash;
 
 class AccountController extends ApiController
 {
@@ -73,7 +74,14 @@ class AccountController extends ApiController
     public function changePassword(ChangePasswordRequest $request)
     {
         $user = $this->authManager->user();
-        $user->password = $request->get('new_password');
+        if (!(Hash::check($request->get('old_password'), $user->password))) {
+            return $this->respondWithError(['message' => 'Your current password does not matches with the password you provided.'], 422);
+        } 
+        if(strcmp($request->get('old_password'), $request->get('new_password')) == 0){
+            return $this->respondWithError(['message' => 'New Password cannot be same as your current password. Please choose a different password.'], 422);
+        }
+        
+        $user->password = bcrypt($request->get('new_password'));
         $user->save();
 
         return $this->respond(['message' => 'Password was successfully changed']);

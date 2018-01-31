@@ -154,6 +154,7 @@
                     })
             },
             validateBeforeSubmit(scope) {
+              this.errors.clear()
               this.$validator.validateAll(scope)
               if (!this.errors.any()) {
                   if (scope !== 'form-email') {

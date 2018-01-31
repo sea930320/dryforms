@@ -16,7 +16,6 @@
 <body>
 	<div id="app"></div>
 </body>
-<script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript" src="{{ asset('app/static/js/manifest.js') }}"></script>
 <script type="text/javascript" src="{{ asset('app/static/js/vendor.js') }}"></script>
 <script type="text/javascript" src="{{ asset('app/static/js/app.js') }}"></script>

@@ -41,7 +41,7 @@ class UsersController extends ApiController
 
     public function index(): JsonResponse
     {
-        $users = $this->user
+        $users = $this->user->with(['role', 'teams'])
             ->where('company_id', auth()->user()->company_id)
             ->paginate(20);
 
@@ -56,9 +56,9 @@ class UsersController extends ApiController
     public function show(int $id): JsonResponse
     {
         $user = $this->user
+            ->with(['role', 'teams'])
             ->where('company_id', auth()->user()->company_id)
             ->findOrFail($id);
-
         return $this->respond($user);
     }
 
@@ -70,13 +70,18 @@ class UsersController extends ApiController
     public function store(UserStore $request): JsonResponse
     {
         $userData = $request->validatedOnly();
+        $teamId = "";
+        if (isset($userData['team_id'])) {
+            $teamId = $userData['team_id'];
+            unset($userData['team_id']);
+        }
         $password = $this->hasher->make(str_random(12));
-        $teamId = $userData['team_id'];
-        unset($userData['team_id']);
         $userData['password'] = $password;
 //TODO send email with password
         $user = $this->user->create($userData);
-        $user->teams()->attach($teamId);
+        if ($teamId) {
+            $user->teams()->attach($teamId);
+        }
 
         return $this->respond(['message' => 'User successfully created', 'user' => $user]);
     }
@@ -89,13 +94,19 @@ class UsersController extends ApiController
     public function update(UserUpdate $request): JsonResponse
     {
         $userData = $request->validatedOnly();
-        $teamId = $userData['team_id'];
-        unset($userData['team_id']);
-
+        $teamId = "";
+        if (isset($userData['team_id'])) {
+            $teamId = $userData['team_id'];
+            unset($userData['team_id']);
+        }
         $user = $this->user->find($request->input('id'));
         $user->update($userData);
-        $user->teams()->sync($teamId);
-
+        if ($teamId) {
+            $user->teams()->sync($teamId);
+        }
+        else {
+            $user->teams()->detach();
+        }
         return $this->respond(['message' => 'User successfully updated', 'user' => $user]);
     }
 
@@ -107,7 +118,6 @@ class UsersController extends ApiController
     public function destroy(int $id): JsonResponse
     {
         $this->user->findOrFail($id)->delete();
-
         return $this->respond(['message' => 'User successfully deleted']);
     }
 }

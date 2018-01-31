@@ -157,7 +157,6 @@ export default {
   }
 }
 </script>
-
 <style type="text/css" lang="scss" rel="stylesheet/scss">
     .settings-credit-card {
         .StripeElement {

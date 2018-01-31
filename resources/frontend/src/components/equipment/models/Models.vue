@@ -89,7 +89,7 @@
                     'class': 'text-center field-category'
                   },
                   action: {
-                    label: ' ',
+                    label: 'Actions',
                     sortable: false,
                     'class': 'text-center field-act'
                   }

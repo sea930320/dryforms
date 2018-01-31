@@ -88,7 +88,7 @@
                     'class': 'text-center field-desc'
                   },
                   action: {
-                    label: ' ',
+                    label: 'Actions',
                     sortable: false,
                     'class': 'text-center field-act'
                   }

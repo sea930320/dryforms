@@ -67,6 +67,20 @@ const routes = (configRoute) => [
         }
     },
     {
+        path: '/settings/users',
+        name: 'Users',
+        props: {title: 'Users'},
+        meta: {
+            title: 'Manage Your Users',
+            roles: ['customer'],
+            leftLinks: leftLinks,
+            rightLinks: rightLinks
+        },
+        component: resolve => {
+            require(['../components/settings/Users.vue'], resolve)
+        }
+    },
+    {
         path: '/settings/teams',
         name: 'Teams',
         props: {title: 'Teams'},
