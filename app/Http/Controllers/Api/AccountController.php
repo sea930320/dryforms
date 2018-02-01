@@ -74,11 +74,12 @@ class AccountController extends ApiController
     public function changePassword(ChangePasswordRequest $request)
     {
         $user = $this->authManager->user();
-        if (!(Hash::check($request->get('old_password'), $user->password))) {
-            return $this->respondWithError(['message' => 'Your current password does not matches with the password you provided.'], 422);
-        } 
-        if(strcmp($request->get('old_password'), $request->get('new_password')) == 0){
-            return $this->respondWithError(['message' => 'New Password cannot be same as your current password. Please choose a different password.'], 422);
+        if (!($this->hasher->check($request->get('old_password'), $user->password))) {
+            return $this->respondWithError([
+                'message' => 'Your current password does not matches with the password you provided.'
+            ],
+                422
+            );
         }
         
         $user->password = bcrypt($request->get('new_password'));
@@ -94,7 +95,7 @@ class AccountController extends ApiController
      */
     public function changeEmail(ChangeEmailRequest $request)
     {
-        if (auth()->user()->email !== $request->get('old_email')) {
+        if ($this->authManager->user()->email !== $request->get('old_email')) {
             return $this->respondWithError(['message' => 'Old email mismatch'], 422);
         }
         $user = $this->user->where('email', $request->get('old_email'))->first();

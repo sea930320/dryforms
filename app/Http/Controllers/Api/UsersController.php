@@ -59,6 +59,7 @@ class UsersController extends ApiController
             ->with(['role', 'teams'])
             ->where('company_id', auth()->user()->company_id)
             ->findOrFail($id);
+
         return $this->respond($user);
     }
 
@@ -70,17 +71,15 @@ class UsersController extends ApiController
     public function store(UserStore $request): JsonResponse
     {
         $userData = $request->validatedOnly();
-        $teamId = "";
-        if (isset($userData['team_id'])) {
-            $teamId = $userData['team_id'];
+        if ($request->has('team_id')) {
             unset($userData['team_id']);
         }
         $password = $this->hasher->make(str_random(12));
         $userData['password'] = $password;
 //TODO send email with password
         $user = $this->user->create($userData);
-        if ($teamId) {
-            $user->teams()->attach($teamId);
+        if ($request->has('team_id')) {
+            $user->teams()->attach($request->get('team_id'));
         }
 
         return $this->respond(['message' => 'User successfully created', 'user' => $user]);
@@ -94,19 +93,18 @@ class UsersController extends ApiController
     public function update(UserUpdate $request): JsonResponse
     {
         $userData = $request->validatedOnly();
-        $teamId = "";
-        if (isset($userData['team_id'])) {
-            $teamId = $userData['team_id'];
+        if ($request->has('team_id')) {
             unset($userData['team_id']);
         }
         $user = $this->user->find($request->input('id'));
         $user->update($userData);
-        if ($teamId) {
-            $user->teams()->sync($teamId);
-        }
-        else {
+
+        if ($request->has('team_id')) {
+            $user->teams()->sync($request->get('team_id'));
+        } else {
             $user->teams()->detach();
         }
+
         return $this->respond(['message' => 'User successfully updated', 'user' => $user]);
     }
 
@@ -118,6 +116,7 @@ class UsersController extends ApiController
     public function destroy(int $id): JsonResponse
     {
         $this->user->findOrFail($id)->delete();
+
         return $this->respond(['message' => 'User successfully deleted']);
     }
 }
