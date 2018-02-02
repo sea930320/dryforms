@@ -20,7 +20,7 @@ class ChangePasswordRequest extends BaseRequest
     {
         return [
             'old_password' => 'required|string',
-            'new_password' => 'required|string|min:8|confirmed'
+            'new_password' => 'required|string|min:8|confirmed|different:old_password'
         ];
     }
 }

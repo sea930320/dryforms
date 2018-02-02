@@ -29,7 +29,7 @@ class RolesController extends ApiController
      */
     public function index(): JsonResponse
     {
-        $roles = $this->role->where('name', '!=', 'Super Admin')->paginate(20);
+        $roles = $this->role->where('id', '!=', Role::SUPER_ADMIN)->paginate(20);
 
         return $this->respond($roles);
     }
