@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Teams\TeamIndex;
 use App\Http\Requests\Teams\TeamStore;
 use App\Http\Requests\Teams\TeamUpdate;
 use App\Models\Team;
+use App\Services\QueryBuilders\SettingsTeamQueryBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TeamsController extends ApiController
@@ -24,12 +26,16 @@ class TeamsController extends ApiController
     }
 
     /**
+     * @param TeamIndex $request
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(TeamIndex $request): JsonResponse
     {
-        $teams = $this->team->paginate(20);
-
+        $queryParams = $request->validatedOnly();
+        $queryBuilder = new SettingsTeamQueryBuilder();
+        $teams = $queryBuilder->setQuery($this->team->query())->setQueryParams($queryParams);
+        $teams = $teams->paginate($request->get('per_page'));        
         return $this->respond($teams);
     }
 

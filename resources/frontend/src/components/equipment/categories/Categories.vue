@@ -3,6 +3,7 @@
         <div class="card text-center" v-if="isLoaded">
             <create-modal></create-modal>
             <delete-modal></delete-modal>
+            
             <div class="card-header">
                 <h5>{{ $route.meta.title }}</h5>
                 <button class="btn pull-right btn-create" @click="openCreateModal()"><i class="fa fa-plus"></i></button>

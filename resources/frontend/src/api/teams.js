@@ -4,7 +4,7 @@ const teamsResource = '/api/teams'
 
 export default {
     index (data) {
-        return axios.get(teamsResource, data)
+        return axios.get(teamsResource, {params: data})
     },
     store (data) {
         return axios.post(teamsResource, data)

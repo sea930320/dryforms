@@ -1,8 +1,9 @@
 <template>
-    <div class="settings-company">
+    <div class="settings-users">
         <div class="card text-center" v-if="isLoaded">
             <edit-modal :roles="roles" :teams="teams"></edit-modal>
             <delete-modal></delete-modal>
+            
             <div class="card-header">
                 <h5>{{ $route.meta.title }}</h5>
             </div>
@@ -251,6 +252,7 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
+.settings-users {
     .field-no {
         width: 5%
     }
@@ -272,4 +274,5 @@
     .field-actions {
         width: 20%
     }
+}
 </style>
