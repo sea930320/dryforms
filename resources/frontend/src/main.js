@@ -15,6 +15,9 @@ import store from './store'
 import VeeValidate from 'vee-validate'
 import globalMixin from './mixins/global-mixin'
 import appConfig from './config/app'
+import FullCalendar from 'vue-full-calendar'
+// import moment from 'moment'
+// import VueMomentJS from 'vue-momentjs'
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
@@ -28,6 +31,8 @@ Vue.use(Notifications)
 Vue.use(vueSignature)
 Vue.use(VueLodash, lodash)
 Vue.use(VeeValidate)
+Vue.use(FullCalendar)
+// Vue.use(VueMomentJS, moment)
 
 const bus = new Vue()
 Vue.prototype.$bus = bus
