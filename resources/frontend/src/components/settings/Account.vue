@@ -1,5 +1,5 @@
 <template>
-    <div class="card text-center">
+    <div class="card text-center settings-account">
         <div class="card-header">
             <h5>{{ $route.meta.title }}</h5>
         </div>
@@ -8,18 +8,18 @@
             <form @submit.prevent="validateBeforeSubmit('form-password')" data-vv-scope="form-password">
                 <div class="form-group">
                     <label>Old Password:</label>
-                    <input type="password" name="Old Password" class="form-control" :class="{'is-invalid': errors.has('Old Password')}" v-validate data-vv-rules="required|min:6" placeholder="Enter Old Password" v-model="passwordData.old_password">
+                    <input type="password" name="Old Password" class="form-control form-control-sm" :class="{'is-invalid': errors.has('Old Password')}" v-validate data-vv-rules="required|min:8" placeholder="Enter Old Password" v-model="passwordData.old_password">
                     <p class="text-danger" v-if="errors.has('Old Password')">{{ errors.first('Old Password') }}</p>
                 </div>
                 <div class="form-group">
                     <label>New Password:</label>
-                    <input type="password" name="New Password" class="form-control" :class="{'is-invalid': errors.has('New Password')}" v-validate data-vv-rules="required|min:6" placeholder="Enter New Password" v-model="passwordData.new_password">
+                    <input type="password" name="New Password" class="form-control form-control-sm" :class="{'is-invalid': errors.has('New Password')}" v-validate data-vv-rules="required|min:8|confirmed:ConfirmationPassword" placeholder="Enter New Password" v-model="passwordData.new_password">
                     <p class="text-danger" v-if="errors.has('New Password')">{{ errors.first('New Password') }}</p>
                 </div>
                 <div class="form-group">
                     <label>New Password Confirmation:</label>
-                    <input type="password" name="Confirmation Password" class="form-control" :class="{'is-invalid': errors.has('Confirmation Password')}" v-validate data-vv-rules="required|min:6"  placeholder="Enter Confirmation Password" v-model="passwordData.new_password_confirmation">
-                    <p class="text-danger" v-if="errors.has('Confirmation Password')">{{ errors.first('Confirmation Password') }}</p>
+                    <input type="password" data-vv-as="Confirmation Password" name="ConfirmationPassword" class="form-control form-control-sm" :class="{'is-invalid': errors.has('ConfirmationPassword')}" v-validate data-vv-rules="required|min:8"  placeholder="Enter Confirmation Password" v-model="passwordData.new_password_confirmation">
+                    <p class="text-danger" v-if="errors.has('ConfirmationPassword')">{{ errors.first('ConfirmationPassword') }}</p>
                 </div>
                 <b-alert :show="alertPassword.dismissCountDown"
                   @dismissed="alertPassword.dismissCountDown=0"
@@ -32,18 +32,18 @@
             <form @submit.prevent="validateBeforeSubmit('form-email')" data-vv-scope="form-email">
                 <div class="form-group">
                     <label>Old Email:</label>
-                    <input type="email" name="Old Email" class="form-control" :class="{'is-invalid': errors.has('Old Email')}" v-validate data-vv-rules="required|email" placeholder="Enter Old Email" v-model.trim="emailData.old_email">
+                    <input type="email" name="Old Email" class="form-control form-control-sm" :class="{'is-invalid': errors.has('Old Email')}" v-validate data-vv-rules="required|email" placeholder="Enter Old Email" v-model.trim="emailData.old_email">
                     <p class="text-danger" v-if="errors.has('Old Email')">{{ errors.first('Old Email') }}</p>
                 </div>
                 <div class="form-group">
                     <label>New Email:</label>
-                    <input type="email" name="New Email" class="form-control" :class="{'is-invalid': errors.has('New Email')}" v-validate.initial data-vv-rules="required|email" placeholder="Enter New Email" v-model.trim="emailData.new_email">
+                    <input type="email" name="New Email" class="form-control form-control-sm" :class="{'is-invalid': errors.has('New Email')}" v-validate data-vv-rules="required|email|confirmed:ConfirmationEmail" placeholder="Enter New Email" v-model.trim="emailData.new_email">
                     <p class="text-danger" v-if="errors.has('New Email')">{{ errors.first('New Email') }}</p>
                 </div>
                 <div class="form-group">
                     <label>New Email Confirmation:</label>
-                    <input type="email" name="Confirmation Email" class="form-control" :class="{'is-invalid': errors.has('Confirmation Email')}" v-validate.initial data-vv-rules="required|email" placeholder="Enter Confirmation Email" v-model="emailData.new_email_confirmation">
-                    <p class="text-danger" v-if="errors.has('Confirmation Email')">{{ errors.first('Confirmation Email') }}</p>
+                    <input type="email" data-vv-as="Confirmation Email" name="ConfirmationEmail" class="form-control form-control-sm" :class="{'is-invalid': errors.has('ConfirmationEmail')}" v-validate data-vv-rules="required|email" placeholder="Enter Confirmation Email" v-model="emailData.new_email_confirmation">
+                    <p class="text-danger" v-if="errors.has('ConfirmationEmail')">{{ errors.first('ConfirmationEmail') }}</p>
                 </div>
                 <b-alert :show="alertEmail.dismissCountDown"
                   @dismissed="alertEmail.dismissCountDown=0"
@@ -154,6 +154,7 @@
                     })
             },
             validateBeforeSubmit(scope) {
+              this.errors.clear()
               this.$validator.validateAll(scope)
               if (!this.errors.any()) {
                   if (scope !== 'form-email') {

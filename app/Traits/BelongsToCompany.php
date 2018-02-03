@@ -12,6 +12,6 @@ trait BelongsToCompany
      */
     public function newQuery($excludeDeleted = true) {
         return parent::newQuery($excludeDeleted)
-            ->where($this->getTable() . '.company_id', '=', auth()->user()->company->id);
+            ->where($this->getTable() . '.company_id', '=', auth()->user()->company_id);
     }
 }

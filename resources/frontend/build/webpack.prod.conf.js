@@ -128,6 +128,11 @@ const webpackConfig = merge(baseWebpackConfig, {
                 ignore: ['.*']
             },
             {
+                from: path.resolve(__dirname, '../node_modules/fullcalendar/dist/fullcalendar.min.css'),
+                to: config.build.assetsSubDirectory + '/vendor/',
+                ignore: ['.*']
+            },
+            {
                 from: path.resolve(__dirname, '../node_modules/font-awesome/css/font-awesome.css'),
                 to: config.build.assetsSubDirectory + '/vendor/',
                 ignore: ['.*']

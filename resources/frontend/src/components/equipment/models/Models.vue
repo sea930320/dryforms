@@ -34,7 +34,7 @@
                 </b-container>
                 <b-table ref="ModelTable" :busy.sync="isBusy" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :items="getList" small striped hover foot-clone :fields="fields" :current-page="currentPage" :per-page="perPage" :filter="fiter_debouncer" head-variant="">
                   <template slot="category_name" slot-scope="row">
-                    {{row.item.category.name}}
+                    {{row.item.category ? row.item.category.name: 'n/a'}}
                   </template>
                   <template slot="make_model" slot-scope="row">
                     {{row.item.name}}
@@ -89,7 +89,7 @@
                     'class': 'text-center field-category'
                   },
                   action: {
-                    label: ' ',
+                    label: 'Actions',
                     sortable: false,
                     'class': 'text-center field-act'
                   }
@@ -111,7 +111,7 @@
             })
             this.$on('reloadData', () => {
                 this.initData()
-                this.$refs.CategoryTable.refresh()
+                this.$refs.ModelTable.refresh()
             })
         },
         watch: {

@@ -3,7 +3,7 @@ namespace App\Http\Requests\Account;
 
 use App\Http\Requests\BaseRequest;
 
-class ChangePasswordRequest extends BaseRequest
+class SubscribeRequest extends BaseRequest
 {
     /**
      * @return bool
@@ -19,8 +19,7 @@ class ChangePasswordRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'old_password' => 'required|string',
-            'new_password' => 'required|string|min:8|confirmed|different:old_password'
+            'stripeToken' => 'required'
         ];
     }
 }

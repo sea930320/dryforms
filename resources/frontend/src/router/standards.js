@@ -254,6 +254,20 @@ const routes = (configRoute) => [
     component: resolve => {
       require(['../components/standards/Materials.vue'], resolve)
     }
+  },
+  {
+    path: '/standards/calendar',
+    name: 'Calendar',
+    props: {title: 'Calendar'},
+    meta: {
+      title: 'Calendar',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/standards/right-link/Calendar.vue'], resolve)
+    }
   }
 ]
 

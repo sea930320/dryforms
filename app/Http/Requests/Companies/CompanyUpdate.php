@@ -26,9 +26,9 @@ class CompanyUpdate extends BaseRequest
         return [
             'company_id' => 'exists:companies,id',
             'user_id' => 'required|numeric|exists:users,id',
-            'name' => 'required|string|unique:companies,name',
+            'name' => 'required|string|unique:companies,name,'. $this->get('id'),
             'logo' => 'nullable|string',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email,'. $this->get('id'),
             'street' => 'required|string',
             'city' => 'required|string',
             'state' => 'required|string',

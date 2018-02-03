@@ -85,10 +85,12 @@ class EquipmentCategoriesController extends ApiController
         $oldPrefix = strlen($oldPrefix) > 0 ? $oldPrefix : "";
         $category->update($request->validated());
         $equipments = $category->equipments()->where('serial', 'REGEXP', "^$oldPrefix")->get();
+
         foreach ($equipments as $key => $equipment) {
             $newSerial = str_replace($oldPrefix, $request->input('prefix'), $equipment->serial);
             $this->equipment->where('id', $equipment->id)->update(['serial' => $newSerial]);
         }
+
         return $this->respond(['message' => 'Category successfully updated', 'category' => $category]);
     }
 
@@ -100,6 +102,7 @@ class EquipmentCategoriesController extends ApiController
     public function destroy(int $id): JsonResponse
     {
         $this->category->findOrFail($id)->delete();
+
         return $this->respond(['message' => 'Category successfully deleted']);
     }
 

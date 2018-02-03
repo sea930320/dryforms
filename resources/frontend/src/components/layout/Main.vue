@@ -40,6 +40,9 @@
         components: {VHeader, VLeftSidebar, VRightSidebar},
         created () {
             this.isSignView = this.beforeSign()
+            let stripeJs = document.createElement('script')
+            stripeJs.setAttribute('src', 'https://js.stripe.com/v3/')
+            document.head.appendChild(stripeJs)
         },
         computed: {
             bodyClass() {
