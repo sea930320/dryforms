@@ -3,7 +3,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Models\ModelStore;
 use App\Http\Requests\Models\ModelUpdate;
+use App\Http\Requests\Models\ModelIndex;
+
 use App\Models\EquipmentModel;
+use App\Services\QueryBuilder;
+use App\Services\QueryBuilders\EquipmentModelQueryBuilder;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EquipmentModelsController extends ApiController
@@ -24,12 +29,18 @@ class EquipmentModelsController extends ApiController
     }
 
     /**
+     * @param ModelIndex $request
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(ModelIndex $request): JsonResponse
     {
-        $models = $this->model->with(['category'])->paginate(20);
+        $queryParams = $request->validatedOnly();
+        $models = $this->model->with(['category']);
+        $queryBuilder = new EquipmentModelQueryBuilder();
+        $models = $queryBuilder->setQuery($models)->setQueryParams($queryParams);
 
+        $models = $models->paginate($request->get('per_page'));
         return $this->respond($models);
     }
 
@@ -53,10 +64,10 @@ class EquipmentModelsController extends ApiController
     public function store(ModelStore $request): JsonResponse
     {
         $model = $this->model->create([
-            'name' => $request->get('name'),
-            'category_id' => $request->get('category_id'),
-            'description' => $request->get('description'),
-            'company_id' => $request->get('company_id')
+            'name' => $request->input('name'),
+            'category_id' => $request->input('category_id'),
+            'description' => $request->input('description'),
+            'company_id' => $request->input('company_id')
         ]);
 
         return $this->respond(['message' => 'Model successfully created', 'model' => $model]);

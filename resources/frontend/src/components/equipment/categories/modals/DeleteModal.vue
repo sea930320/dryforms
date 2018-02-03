@@ -9,8 +9,10 @@
 
 <script type="text/babel">
     import apiCategories from '../../../../api/categories'
+    import ErrorHandler from '../../../../mixins/error-handler'
 
     export default {
+        mixins: [ErrorHandler],
         name: 'delete-category-modal',
         created() {
             this.$parent.$on('openDeleteModal', (payload) => {
@@ -38,9 +40,7 @@
                         .then(response => {
                             this.$parent.$emit('reloadData')
                         })
-                        .catch(error => {
-                            console.log(error.data)
-                        })
+                        .catch(this.handleErrorResponse)
                 }
             }
         }

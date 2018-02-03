@@ -1,39 +1,58 @@
 <template>
     <div class="card text-center">
         <div class="card-header">
-            {{ $route.meta.title }}
+            <h5>{{ $route.meta.title }}</h5>
         </div>
         <div class="card-body text-left">
-            <form>
+          <b-container class="">
+            <form @submit.prevent="validateBeforeSubmit('form-password')" data-vv-scope="form-password">
                 <div class="form-group">
                     <label>Old Password:</label>
-                    <input type="password" class="form-control" placeholder="Password" v-model="passwordData.oldPassword">
+                    <input type="password" name="Old Password" class="form-control" :class="{'is-invalid': errors.has('Old Password')}" v-validate data-vv-rules="required|min:6" placeholder="Enter Old Password" v-model="passwordData.old_password">
+                    <p class="text-danger" v-if="errors.has('Old Password')">{{ errors.first('Old Password') }}</p>
                 </div>
                 <div class="form-group">
                     <label>New Password:</label>
-                    <input type="password" class="form-control" placeholder="Password" v-model="passwordData.newPassword">
+                    <input type="password" name="New Password" class="form-control" :class="{'is-invalid': errors.has('New Password')}" v-validate data-vv-rules="required|min:6" placeholder="Enter New Password" v-model="passwordData.new_password">
+                    <p class="text-danger" v-if="errors.has('New Password')">{{ errors.first('New Password') }}</p>
                 </div>
                 <div class="form-group">
                     <label>New Password Confirmation:</label>
-                    <input type="password" class="form-control" placeholder="Password" v-model="passwordData.newPasswordConfirmation">
+                    <input type="password" name="Confirmation Password" class="form-control" :class="{'is-invalid': errors.has('Confirmation Password')}" v-validate data-vv-rules="required|min:6"  placeholder="Enter Confirmation Password" v-model="passwordData.new_password_confirmation">
+                    <p class="text-danger" v-if="errors.has('Confirmation Password')">{{ errors.first('Confirmation Password') }}</p>
                 </div>
-
-                <button class="btn btn-sm btn-primary" v-on:click="">Submit</button>
-
-                <hr>
-                <div class="form-group">
-                    <label>Old email:</label>
-                    <input type="email" class="form-control" aria-describedby="emailHelp"
-                           placeholder="Enter email" v-model="emailData.oldEmail">
-                </div>
-                <div class="form-group">
-                    <label>New email:</label>
-                    <input type="email" class="form-control" aria-describedby="emailHelp"
-                           placeholder="Enter email" v-model="emailData.newEmail">
-                </div>
-
-                <button class="btn btn-sm btn-primary" v-on:click="changeEmail()">Submit</button>
+                <b-alert :show="alertPassword.dismissCountDown"
+                  @dismissed="alertPassword.dismissCountDown=0"
+                  :variant="alertPassword.isErr?'danger':'success'">
+                  <div v-html="alertPassword.message"> </div>
+                </b-alert>
+                <button type="submit" class="btn btn-sm btn-primary" :disabled="isPendingPassword">Submit</button>
             </form>
+                <hr>
+            <form @submit.prevent="validateBeforeSubmit('form-email')" data-vv-scope="form-email">
+                <div class="form-group">
+                    <label>Old Email:</label>
+                    <input type="email" name="Old Email" class="form-control" :class="{'is-invalid': errors.has('Old Email')}" v-validate data-vv-rules="required|email" placeholder="Enter Old Email" v-model.trim="emailData.old_email">
+                    <p class="text-danger" v-if="errors.has('Old Email')">{{ errors.first('Old Email') }}</p>
+                </div>
+                <div class="form-group">
+                    <label>New Email:</label>
+                    <input type="email" name="New Email" class="form-control" :class="{'is-invalid': errors.has('New Email')}" v-validate.initial data-vv-rules="required|email" placeholder="Enter New Email" v-model.trim="emailData.new_email">
+                    <p class="text-danger" v-if="errors.has('New Email')">{{ errors.first('New Email') }}</p>
+                </div>
+                <div class="form-group">
+                    <label>New Email Confirmation:</label>
+                    <input type="email" name="Confirmation Email" class="form-control" :class="{'is-invalid': errors.has('Confirmation Email')}" v-validate.initial data-vv-rules="required|email" placeholder="Enter Confirmation Email" v-model="emailData.new_email_confirmation">
+                    <p class="text-danger" v-if="errors.has('Confirmation Email')">{{ errors.first('Confirmation Email') }}</p>
+                </div>
+                <b-alert :show="alertEmail.dismissCountDown"
+                  @dismissed="alertEmail.dismissCountDown=0"
+                  :variant="alertEmail.isErr?'danger':'success'">
+                  <div v-html="alertEmail.message"> </div>
+                </b-alert>
+                <button type="submit" class="btn btn-sm btn-primary" :disabled="isPendingEmail">Submit</button>
+            </form>
+          </b-container>
         </div>
         <div class="card-footer text-muted">
 
@@ -41,7 +60,7 @@
     </div>
 </template>
 
-<script type="text/babel">
+<script>
     import apiAccount from '../../api/account'
 
     export default {
@@ -49,28 +68,100 @@
         data() {
             return {
                 passwordData: {
-                    oldPassword: null,
-                    newPassword: null,
-                    newPasswordConfirmation: null
+                    old_password: null,
+                    new_password: null,
+                    new_password_confirmation: null
                 },
                 emailData: {
-                    oldEmail: null,
-                    newEmail: null
-                }
+                    old_email: null,
+                    new_email: null,
+                    new_email_confirmation: null
+                },
+                dismissSecs: 3,
+                alertEmail: {
+                    dismissCountDown: 0,
+                    isErr: false,
+                    message: ''
+                },
+                alertPassword: {
+                    dismissCountDown: 0,
+                    isErr: false,
+                    message: ''
+                },
+                isPendingEmail: false,
+                isPendingPassword: false
             }
         },
         methods: {
             changeEmail() {
+                this.isPendingEmail = true
                 apiAccount.changeEmail(this.emailData)
                     .then(response => {
-                        console.log(response)
+                        this.alertEmail = {
+                          dismissCountDown: this.dismissSecs,
+                          isErr: false,
+                          message: response.data.message
+                        }
+                        this.emailData = {
+                            old_email: null,
+                            new_email: null,
+                            new_email_confirmation: null
+                        }
+                        this.isPendingEmail = false
                     })
                     .catch(error => {
-                        console.log(error.response)
+                        let data = Object.entries(error.data)
+                        var errMsg = ''
+                        for (let ele of data) {
+                          errMsg += ('<br>' + ele[1])
+                        }
+                        this.alertEmail = {
+                          dismissCountDown: this.dismissSecs,
+                          isErr: true,
+                          message: errMsg.substring(4)
+                        }
+                        this.isPendingEmail = false
                     })
             },
             changePassword() {
-
+                this.isPendingPassword = true
+                apiAccount.changePassword(this.passwordData)
+                    .then(response => {
+                        this.alertPassword = {
+                          dismissCountDown: this.dismissSecs,
+                          isErr: false,
+                          message: response.data.message
+                        }
+                        this.passwordData = {
+                            old_password: null,
+                            new_password: null,
+                            new_password_confirmation: null
+                        }
+                        this.isPendingPassword = false
+                    })
+                    .catch(error => {
+                        let data = Object.entries(error.data)
+                        var errMsg = ''
+                        for (let ele of data) {
+                          errMsg += ('<br>' + ele[1])
+                        }
+                        this.alertPassword = {
+                          dismissCountDown: this.dismissSecs,
+                          isErr: true,
+                          message: errMsg.substring(4)
+                        }
+                        this.isPendingPassword = false
+                    })
+            },
+            validateBeforeSubmit(scope) {
+              this.$validator.validateAll(scope)
+              if (!this.errors.any()) {
+                  if (scope !== 'form-email') {
+                    this.changePassword()
+                  } else {
+                    this.changeEmail()
+                  }
+              }
             }
         }
     }

@@ -18,6 +18,13 @@ export default {
                 title: error.statusText,
                 text: messages
             })
+        },
+        errorSerialValidate(msg) {
+            this.$notify({
+                type: 'error',
+                title: 'Invalid Serial Number',
+                text: msg
+            })
         }
     }
 }

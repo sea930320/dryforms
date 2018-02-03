@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Equipments;
+namespace App\Http\Requests\Categories;
 
 use App\Http\Requests\BaseIndexRequest;
 
-class EquipmentIndex extends BaseIndexRequest
+class CategoryIndex extends BaseIndexRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,10 @@ class EquipmentIndex extends BaseIndexRequest
     public function rules()
     {
         return [
-            'category_id' => 'nullable|exists:equipment_categories,id',
-            'status_id' => 'nullable|exists:equipment_statuses,id',
-            'model_id' => 'nullable|exists:equipment_models,id',
-            'team_id' => 'nullable|exists:teams,id',
             'per_page' => 'nullable|integer',
-            'filter' => 'nullable|string',
             'sort_by' => 'nullable|string',
             'sort_type' => 'nullable|in:asc,desc',
-            'id_from' => 'nullable|integer',
+            'filter' => 'nullable|string'
         ];
     }
 }

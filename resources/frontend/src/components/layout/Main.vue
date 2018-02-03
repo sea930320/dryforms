@@ -71,34 +71,5 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-    $break-extra: 1200px;
-
-    body {
-        overflow: hidden;
-        position: relative;
-        @media screen and (max-width: $break-extra) {
-            font-size: 14px;
-        }
-    }
-    #app {
-        padding-left: 0;
-        padding-right: 0;
-    }
-    .btn-xs {
-        font-size: 11px;
-        padding: 2px;
-        padding-left: 8px;
-        padding-right: 8px;
-    }
-    .content {
-        display: block;
-        width: 100%;
-        height: 90%;
-        overflow-y: scroll;
-        position: absolute;
-    }
-    .sign-view {
-        height: 90vh;
-        overflow-y: scroll;
-    }
+    @import "./Main.scss"
 </style>

@@ -3,7 +3,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Categories\CategoryStore;
 use App\Http\Requests\Categories\CategoryUpdate;
+use App\Http\Requests\Categories\CategoryIndex;
+
 use App\Models\Category;
+use App\Models\Equipment;
+use App\Services\QueryBuilder;
+use App\Services\QueryBuilders\EquipmentCategoryQueryBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EquipmentCategoriesController extends ApiController
@@ -12,24 +17,30 @@ class EquipmentCategoriesController extends ApiController
      * @var Category
      */
     private $category;
-
+    private $equipment;
     /**
      * EquipmentCategoriesController constructor.
      *
      * @param Category $category
+     * @param Equipment $equipment
      */
-    public function __construct(Category $category)
+    public function __construct(Category $category, Equipment $equipment)
     {
         $this->category = $category;
+        $this->equipment = $equipment;
     }
 
     /**
+     * @param CategoryIndex $request
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(CategoryIndex $request): JsonResponse
     {
-        $categories = $this->category->paginate(20);
-
+        $queryParams = $request->validatedOnly();
+        $queryBuilder = new EquipmentCategoryQueryBuilder();
+        $categories = $queryBuilder->setQuery($this->category->query())->setQueryParams($queryParams);
+        $categories = $categories->paginate($request->get('per_page'));        
         return $this->respond($categories);
     }
 
@@ -70,8 +81,14 @@ class EquipmentCategoriesController extends ApiController
     public function update(CategoryUpdate $request): JsonResponse
     {
         $category = $this->category->find($request->input('category_id'));
-        $category->update($request->validatedOnly());
-
+        $oldPrefix = $category->prefix;
+        $oldPrefix = strlen($oldPrefix) > 0 ? $oldPrefix : "";
+        $category->update($request->validated());
+        $equipments = $category->equipments()->where('serial', 'REGEXP', "^$oldPrefix")->get();
+        foreach ($equipments as $key => $equipment) {
+            $newSerial = str_replace($oldPrefix, $request->input('prefix'), $equipment->serial);
+            $this->equipment->where('id', $equipment->id)->update(['serial' => $newSerial]);
+        }
         return $this->respond(['message' => 'Category successfully updated', 'category' => $category]);
     }
 
@@ -83,7 +100,6 @@ class EquipmentCategoriesController extends ApiController
     public function destroy(int $id): JsonResponse
     {
         $this->category->findOrFail($id)->delete();
-
         return $this->respond(['message' => 'Category successfully deleted']);
     }
 

@@ -1,85 +1,49 @@
 <template>
-  <b-modal id="removeEquip" :title="$route.meta.title" class="text-left" v-model="show" size="lg">
-    <b-row>
-      <div class="form-group col-md-6">
-        <label>Description</label>
-        <select class="form-control">
-          <option :value="null">-- Please select --</option>
-          <option v-for="item in categories" :value="item.name">{{ item.name }}</option>
-        </select>
-      </div>
-    </b-row>
-    <b-row>
-      <div class="form-group col-md-6">
-        <label>Make/Model</label>
-        <select class="form-control">
-          <option :value="null">-- Please select --</option>
-          <option v-for="item in models" :value="item.name">{{ item.name }}</option>
-        </select>
-      </div>
-    </b-row>
-    <b-row>
-      <div class="form-group col-md-6">
-        <label>Equipment #</label>
-        <select class="form-control">
-          <option :value="null">-- Please select --</option>
-          <option v-for="item in equipments" :value="item.name">{{ item.name }}</option>
-        </select>
-      </div>
-    </b-row>
-    <div slot="modal-footer" class="w-100">
-      <b-btn class="float-left" variant="primary" @click="removeEquip()">Remove</b-btn>
-      <b-btn class="float-right" @click="enterEquip()">Enter</b-btn>
-    </div>
-  </b-modal>
+
+    <b-modal id="removeEquipment" :title="modalName" class="text-left" @ok="remove()" v-model="show" :ok-title="'Confirm'" :ok-variant="'danger'">
+        <h5>Are you sure?</h5>
+    </b-modal>
+
 </template>
 
 <script type="text/babel">
-  import apiCategories from '../../../api/categories'
-  import apiModels from '../../../api/models'
+    import apiEquipments from '../../../api/equipment'
 
-  export default {
-    name: 'add-equip-modal',
-    data () {
-      return {
-        show: true,
-        categories: [],
-        models: [],
-        equipments: []
-      }
-    },
-    created() {
-      this.$nextTick(() => {
-        this.getList()
-      })
-      this.$on('reloadData', () => {
-        this.getList()
-      })
-    },
-    watch: {
-      show: function () {
-        if (this.show === false) this.$router.go(-1)
-      }
-    },
-    methods: {
-      getList() {
-        apiModels.index()
-          .then(response => {
-            this.models = response.data.data
-          })
-        apiCategories.index()
-          .then(response => {
-            this.categories = response.data.data
-          })
-      },
-      removeEquip () {
-        this.$router.go(-1)
-      },
-      enterEquip () {
-        this.$router.go(-1)
-      }
+    export default {
+        name: 'remove-equipment-modal',
+        created() {
+            this.$parent.$on('openRemoveModal', (payload) => {
+                this.equipment.id = payload.id
+                this.show = true
+            })
+        },
+        data() {
+            return {
+                show: false,
+                equipment: {
+                    id: null
+                }
+            }
+        },
+        computed: {
+            modalName() {
+                return 'Delete Equipment Confirmation'
+            }
+        },
+        methods: {
+            remove() {
+                if (this.equipment.id) {
+                    apiEquipments.delete(this.equipment.id)
+                        .then(response => {
+                            this.$parent.$emit('reloadData')
+                        })
+                        .catch(error => {
+                            console.log(error.data)
+                        })
+                }
+            }
+        }
     }
-  }
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">

@@ -13,34 +13,6 @@ const rightLinks = [
     {
         path: '/equipment/add',
         name: 'Add Equipment'
-    },
-    {
-        path: '/equipment/remove',
-        name: 'Remove Equipment'
-    },
-    {
-        path: '/equipment/set',
-        name: 'Set Equipment'
-    },
-    {
-        path: '/equipment/pick-up',
-        name: 'Pick Up Equipment'
-    },
-    {
-        path: '/equipment/ooc',
-        name: 'O.O.C. Equipment'
-    },
-    {
-        path: '/equipment/ooc/return',
-        name: 'Return O.O.C. Equipment'
-    },
-    {
-        path: '/equipment/loan',
-        name: 'Loan Equipment'
-    },
-    {
-        path: '/equipment/loan/return',
-        name: 'Return Loan Equipment'
     }
 ]
 
@@ -53,10 +25,26 @@ const routes = (configRoute) => [
             title: 'Manage Your Inventory',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks
+            rightLinks: rightLinks,
+            requiresAuth: true
         },
         component: resolve => {
             require(['../components/equipment/List.vue'], resolve)
+        }
+    },
+    {
+        path: '/equipment/detail/cat/:category_id?/mod/:model_id?/stat/:status_id?',
+        name: 'Equipment Detail',
+        props: {title: 'Equipment Detail'},
+        meta: {
+            title: 'Detail Information',
+            roles: ['customer'],
+            leftLinks: leftLinks,
+            rightLinks: rightLinks,
+            requiresAuth: true
+        },
+        component: resolve => {
+            require(['../components/equipment/Detail.vue'], resolve)
         }
     },
     {
@@ -67,7 +55,8 @@ const routes = (configRoute) => [
             title: 'Manage Equipment Categories',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks
+            rightLinks: rightLinks,
+            requiresAuth: true
         },
         component: resolve => {
             require(['../components/equipment/categories/Categories.vue'], resolve)
@@ -95,10 +84,11 @@ const routes = (configRoute) => [
             title: 'Add Equipment to Inventory',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks
+            rightLinks: rightLinks,
+            requiresAuth: true
         },
         component: resolve => {
-            require(['../components/equipment/modals/Add.vue'], resolve)
+            require(['../components/equipment/Add.vue'], resolve)
         }
     },
     {

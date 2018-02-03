@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import Dashboard from '@/components/main/Dashboard'
 import Login from '@/components/auth/Login'
 import Register from '@/components/auth/Register'
@@ -10,9 +10,9 @@ import projects from './projects'
 import standards from './standards'
 import forms from './forms'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+const router = new VueRouter({
     routes: [
         {
             path: '/',
@@ -36,3 +36,22 @@ export default new Router({
         ...forms()
     ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    var sess = router.app.$session
+
+    if (sess.exists() && sess.get('apiToken')) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

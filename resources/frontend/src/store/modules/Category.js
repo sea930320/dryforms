@@ -1,4 +1,4 @@
-import apiCategories from '../../api/equipment-categories'
+import apiCategories from '../../api/categories'
 
 const state = {
     categories: []
@@ -7,7 +7,7 @@ const state = {
 const getters = {
     Categories: state => {
         return state.categories
-    },
+    }
 }
 
 const actions = {
@@ -16,7 +16,7 @@ const actions = {
             console.log(response)
             commit('setCategories', response.data)
         })
-    },
+    }
 }
 
 const mutations = {

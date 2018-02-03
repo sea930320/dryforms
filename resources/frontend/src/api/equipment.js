@@ -4,7 +4,8 @@ const equipmentResource = '/api/equipment'
 
 export default {
     index (data) {
-        return axios.get(equipmentResource, data)
+        var query = data ? Object.keys(data).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(data[k])}`).join('&') : ''
+        return axios.get(equipmentResource + '?' + query)
     },
     store (data) {
         return axios.post(equipmentResource, data)
@@ -17,5 +18,10 @@ export default {
     },
     delete(id) {
         return axios.delete(equipmentResource + '/' + id)
+    },
+    valdiateSerial(serial, categoryId) {
+      if (categoryId) {
+        return axios.get('/api/validate-serial/' + serial + '/category_id/' + categoryId)
+      }
     }
 }

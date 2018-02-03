@@ -6,18 +6,18 @@
     </b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav class="left-nav">
-        <b-nav-item v-for="item in menuItems" :key="item.route" v-if="$session.get('apiToken')" :to="item.route" class="text-center">
+        <b-nav-item v-for="item in menuItems" :key="item.route" v-if="authorized" :to="item.route" class="text-center">
           <img :src="item.img" alt="Logo" class="img-fluid">
           <p class="text-white font-weight-bold text-uppercase mb-0">{{ item.name }}</p>
         </b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="right-nav ml-auto">
-        <b-nav-item v-if="!$session.get('apiToken')" to="/login" class="font-weight-bold mt-4">Login</b-nav-item>
-        <b-nav-item v-if="!$session.get('apiToken')" to="/register" class="font-weight-bold mt-4 mr-3">Register</b-nav-item>
-        <b-nav-item v-if="$session.get('apiToken')" class="dashboard text-center p-2" to="/dashboard">
+        <b-nav-item v-if="!authorized" to="/login" class="font-weight-bold mt-4">Login</b-nav-item>
+        <b-nav-item v-if="!authorized" to="/register" class="font-weight-bold mt-4 mr-3">Register</b-nav-item>
+        <b-nav-item v-if="authorized" class="dashboard text-center p-2" to="/dashboard">
           <img :src="dashbordImg">
         </b-nav-item>
-        <b-nav-item v-if="$session.get('apiToken')" v-on:click="logout()" class="logout w-16 mt-4">
+        <b-nav-item v-if="authorized" v-on:click="logout()" class="logout w-16 mt-4">
           <div class="text-white font-weight-bold">LOGOUT&nbsp;<i class="fa fa-sign-out"></i></div>
         </b-nav-item>
       </b-navbar-nav>
@@ -36,6 +36,7 @@
         logoImg: require('../../assets/logo.png'),
         dashbordImg: require('../../assets/dashboard.png'),
         logoutImg: require('../../assets/logout.png'),
+        authorized: false,
         menuItems: [
           {
             name: 'Projects',
@@ -64,6 +65,16 @@
           }
         ]
       }
+    },
+    created() {
+      let sess = this.$session
+      this.authorized = sess.exists() && sess.get('apiToken')
+    },
+    watch: {
+        '$route' (to, from) {
+          let sess = this.$session
+          this.authorized = sess.exists() && sess.get('apiToken')
+        }
     },
     methods: {}
   }
