@@ -8,6 +8,15 @@
 // Bootstrap
 @import "../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
+a, p {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+td, th {
+  padding: 4px !important;
+}
+
 .btn-xs {
   margin: 3px !important;
 }

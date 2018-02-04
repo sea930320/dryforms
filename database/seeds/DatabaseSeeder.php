@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TeamsSeeder::class);
         $this->call(FormsSeeder::class);
         $this->call(AreasSeeder::class);
+        $this->call(DefaultFormsDataSeeder::class);
     }
 }
