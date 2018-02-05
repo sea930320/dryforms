@@ -128,9 +128,9 @@
                             </b-col>
                             <b-col cols="12">
                                 <b-table ref="serialsTable" :busy.sync="isBusy" :items="getCurEquipmentNumbers" small
-                                         striped hover fixed :fields="fields" :current-page="currentPage"
+                                         striped hover fixed :fields="fieldArray" :current-page="currentPage"
                                          :per-page="perPage" head-variant="">
-                                    <template v-for="field in fields" v-if="row.item[field]" :slot="field"
+                                    <template v-for="field in fieldArray" v-if="row.item[field]" :slot="field"
                                               slot-scope="row">
                                         <b-input-group v-bind:key="field">
                                             <b-form-input type="number" min=0
@@ -141,7 +141,7 @@
                                                 <b-button :variant="row.item[field]['validate']?'success':'danger'"
                                                           @click="reason(row.item[field])" style="width: 38px">
                                                     <i v-if="row.item[field]['validate']" class="fa fa-check"></i>
-                                                    <i v-else class="fa fa-question"></i>
+                                                    <i v-else class="fa fa-exclamation-triangle"></i>
                                                 </b-button>
                                             </b-input-group-button>
                                         </b-input-group>
@@ -254,7 +254,7 @@
                 company_id: 'companyId',
                 user_id: 'userId'
             }),
-            fields: function () {
+            fieldArray: function () {
                 let fields = []
                 for (let i = 0; i < this.perRow; i++) {
                     fields.push('col-' + i)
