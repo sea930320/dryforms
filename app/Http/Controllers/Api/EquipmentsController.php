@@ -160,7 +160,7 @@ class EquipmentsController extends ApiController
                 $equipment = $this->equipment->create([
                     'model_id' => $request->get('model_id'),
                     'team_id' => $request->get('team_id'),
-                    'serial' => $categoryPrefix. str_pad($serial, Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
+                    'serial' => $categoryPrefix. str_pad($serial, $this->config->get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
                     'status_id' => $request->get('status_id'),
                     'company_id' => $request->get('company_id'),
                 ]);
@@ -177,7 +177,7 @@ class EquipmentsController extends ApiController
                 $equipment = $this->equipment->create([
                     'model_id' => $request->get('model_id'),
                     'team_id' => $request->get('team_id'),
-                    'serial' => $categoryPrefix. str_pad(intval($serial['value'],10), Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
+                    'serial' => $categoryPrefix. str_pad(intval($serial['value'],10), $this->config->get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
                     'status_id' => $request->get('status_id'),
                     'company_id' => $request->get('company_id'),
                 ]);
