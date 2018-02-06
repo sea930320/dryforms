@@ -28,14 +28,20 @@ class UserUpdate extends BaseRequest
             ],
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'zip' => 'required|numeric',
-            'phone' => 'required|string',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'zip' => 'nullable|numeric',
+            'phone' => 'nullable|string',
             'company_id' => 'required|exists:companies,id',
-            'role_id' => 'required|exists:roles,id',
-            'team_id' => 'required|exists:teams,id'
+            'role_id' => [
+                'required',
+                Rule::exists('roles', 'id')
+                    ->where(function ($query) {
+                        $query->where('name', '!=', 'Super Admin');
+                    })
+            ],
+            'team_id' => 'nullable|exists:teams,id'
         ];
     }
 

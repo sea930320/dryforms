@@ -18,5 +18,5 @@ class Form extends Model
     /**
      * @var array
      */
-    public $visible = ['id', 'name'];
+    public $visible = ['id', 'name', 'default_data'];
 }

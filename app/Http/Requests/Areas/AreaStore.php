@@ -3,7 +3,7 @@ namespace App\Http\Requests\Areas;
 
 use App\Http\Requests\BaseRequest;
 
-class AreaStore  extends BaseRequest
+class AreaStore extends BaseRequest
 {
     /**
      * @return bool

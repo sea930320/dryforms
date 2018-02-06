@@ -41,6 +41,7 @@ class EquipmentModelsController extends ApiController
         $models = $queryBuilder->setQuery($models)->setQueryParams($queryParams);
 
         $models = $models->paginate($request->get('per_page'));
+
         return $this->respond($models);
     }
 

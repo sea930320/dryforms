@@ -9,7 +9,7 @@
         <div class="form-group">
             <label>Category:</label>
             <select class="form-control" v-model="model.category_id">
-                <option :value="null">-- Please select --</option>
+                <option value="">-- Please select --</option>
                 <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
             </select>
         </div>
@@ -34,7 +34,7 @@
                 this.model = {
                     id: null,
                     name: null,
-                    category_id: null,
+                    category_id: '',
                     description: null
                 }
                 this.show = true

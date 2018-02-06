@@ -41,7 +41,7 @@ class UsersController extends ApiController
 
     public function index(): JsonResponse
     {
-        $users = $this->user
+        $users = $this->user->with(['role', 'teams'])
             ->where('company_id', auth()->user()->company_id)
             ->paginate(20);
 
@@ -56,6 +56,7 @@ class UsersController extends ApiController
     public function show(int $id): JsonResponse
     {
         $user = $this->user
+            ->with(['role', 'teams'])
             ->where('company_id', auth()->user()->company_id)
             ->findOrFail($id);
 
@@ -70,13 +71,16 @@ class UsersController extends ApiController
     public function store(UserStore $request): JsonResponse
     {
         $userData = $request->validatedOnly();
+        if ($request->has('team_id')) {
+            unset($userData['team_id']);
+        }
         $password = $this->hasher->make(str_random(12));
-        $teamId = $userData['team_id'];
-        unset($userData['team_id']);
         $userData['password'] = $password;
 //TODO send email with password
         $user = $this->user->create($userData);
-        $user->teams()->attach($teamId);
+        if ($request->has('team_id')) {
+            $user->teams()->attach($request->get('team_id'));
+        }
 
         return $this->respond(['message' => 'User successfully created', 'user' => $user]);
     }
@@ -89,12 +93,17 @@ class UsersController extends ApiController
     public function update(UserUpdate $request): JsonResponse
     {
         $userData = $request->validatedOnly();
-        $teamId = $userData['team_id'];
-        unset($userData['team_id']);
-
+        if ($request->has('team_id')) {
+            unset($userData['team_id']);
+        }
         $user = $this->user->find($request->input('id'));
         $user->update($userData);
-        $user->teams()->sync($teamId);
+
+        if ($request->has('team_id')) {
+            $user->teams()->sync($request->get('team_id'));
+        } else {
+            $user->teams()->detach();
+        }
 
         return $this->respond(['message' => 'User successfully updated', 'user' => $user]);
     }

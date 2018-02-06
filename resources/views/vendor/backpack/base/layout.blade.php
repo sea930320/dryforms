@@ -30,7 +30,8 @@
     <!-- BackPack Base CSS -->
     <link rel="stylesheet" href="{{ asset('vendor/backpack/backpack.base.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('css/') }}/dashboard.css">
+    <link rel="stylesheet" href="{{ asset('css/vendor/') }}/vendor.min.css">
+    <link rel="stylesheet" href="{{ asset('css/') }}/backend.min.css">
     @yield('after_styles')
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -174,7 +175,7 @@
 
     @yield('after_scripts')
 
-    <script src="{{ asset('js') }}/dashboard.js"></script>
+    <script src="{{ asset('js') }}/vendor/vendor.min.js"></script>
 
     <!-- JavaScripts -->
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

@@ -1,6 +1,7 @@
 <template>
 
-    <b-modal id="removeEquipment" :title="modalName" class="text-left" @ok="remove()" v-model="show" :ok-title="'Confirm'" :ok-variant="'danger'">
+    <b-modal id="removeEquipment" :title="modalName" class="text-left" @ok="remove()" v-model="show"
+             :ok-title="'Confirm'" :ok-variant="'danger'">
         <h5>Are you sure?</h5>
     </b-modal>
 

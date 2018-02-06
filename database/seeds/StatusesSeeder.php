@@ -29,6 +29,9 @@ class StatusesSeeder extends Seeder
             [
                 'name' => 'Loan'
             ],
+            [
+                'name' => 'Missing'
+            ],
         ];
 
         DB::table('equipment_statuses')->insert($statuses);

@@ -60,6 +60,6 @@ class Team extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(Team::class, 'users_teams');
+        return $this->belongsToMany(User::class, 'users_teams');
     }
 }

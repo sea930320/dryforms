@@ -66,8 +66,9 @@ class FormsSeeder extends Seeder
      */
     public function run()
     {
-
+        Schema::disableForeignKeyConstraints();
         DB::table('forms')->truncate();
         DB::table('forms')->insert($this->forms);
+        Schema::enableForeignKeyConstraints();
     }
 }

@@ -34,7 +34,8 @@ gulp.task('vendor-js', function () {
         './node_modules/angular-jwt/dist/angular-jwt.js',
         './node_modules/angular-ui-router/release/angular-ui-router.js',
         './node_modules/angular-route/angular-route.js',
-        './node_modules/angular-local-storage/dist/angular-local-storage.js'
+        './node_modules/angular-local-storage/dist/angular-local-storage.js',
+        './node_modules/summernote/dist/summernote.js',
     ])
         .pipe(concat('vendor.min.js'))
         .pipe(gulpif(isProduction(), uglify({mangle: false, output: {
@@ -46,15 +47,20 @@ gulp.task('vendor-js', function () {
 gulp.task('vendor-css', function () {
     return gulp.src([
         './node_modules/ng-toast/dist/ngToast.css',
-        './node_modules/ng-toast/dist/ngToast-animations.css'
+        './node_modules/ng-toast/dist/ngToast-animations.css',
+        './node_modules/summernote/dist/summernote.css',
     ])
         .pipe(concat('vendor.min.css'))
         .pipe(gulp.dest('public/css/vendor/'));
 });
 
 gulp.task('fonts', function () {
-    return gulp.src([])
-        .pipe(gulp.dest('public/fonts/'));
+    return gulp.src([
+        './node_modules/summernote/dist/font/summernote.woff',
+        './node_modules/summernote/dist/font/summernote.ttf',
+        './node_modules/summernote/dist/font/summernote.eot',
+    ])
+        .pipe(gulp.dest('public/css/vendor/font/'));
 });
 
 gulp.task('views', function () {

@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Areas\AreasIndex;
 use App\Http\Requests\Areas\AreaStore;
 use App\Http\Requests\Areas\AreaUpdate;
 use App\Models\Area;
 use Illuminate\Http\JsonResponse;
+use Williamoliveira\ArrayQueryBuilder\ArrayBuilder;
 
 class AreasController extends ApiController
 {
@@ -24,14 +26,16 @@ class AreasController extends ApiController
     }
 
     /**
+     * @param AreasIndex $request
+     * @param ArrayBuilder $arrayBuilder
+     *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(AreasIndex $request, ArrayBuilder $arrayBuilder): JsonResponse
     {
-        $areas = $this->area
-            ->where('company_id', auth()->user()->company->id)
-            ->orWHere('type', 'system')
-            ->paginate(20);
+        $query = $this->area->newQuery();
+        $query = $arrayBuilder->apply($query, $request->all());
+        $areas = $query->paginate($request->get('per_page') ?? 20);
 
         return $this->respond($areas);
     }

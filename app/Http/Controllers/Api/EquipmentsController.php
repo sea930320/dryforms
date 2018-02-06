@@ -13,7 +13,7 @@ use App\Services\QueryBuilder;
 use App\Services\QueryBuilders\EquipmentQueryBuilder;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Config;
+use Illuminate\Config\Repository as Config;
 
 class EquipmentsController extends ApiController
 {
@@ -43,6 +43,11 @@ class EquipmentsController extends ApiController
     private $category;
 
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * EquipmentsController constructor.
      *
      * @param Equipment $equipment
@@ -50,19 +55,22 @@ class EquipmentsController extends ApiController
      * @param Status $status
      * @param Category $category
      * @param Team $team
+     * @param Config $config
      */
     public function __construct(
         Equipment $equipment,
         EquipmentModel $model,
         Status $status,
         Category $category,
-        Team $team
+        Team $team,
+        Config $config
     ) {
         $this->equipment = $equipment;
         $this->model = $model;
         $this->status = $status;
         $this->category = $category;
         $this->team = $team;
+        $this->config = $config;
     }
 
     /**
@@ -112,25 +120,25 @@ class EquipmentsController extends ApiController
      */
     private function validateSerials($serials, $category_id, $categoryPrefix)
     {
-        $validate_ret = [
+        $responseData = [
             'exists'=> [],
             'nonexistences'=> []
         ];
 
         foreach ($serials as $key => $serial) {
-            $full_sn = $categoryPrefix. str_pad(intval($serial['value'], 10), Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT);
+            $serialNumber = $categoryPrefix . str_pad(intval($serial['value'], 10), $this->config->get('constants.equipment.serial_length'), "0", STR_PAD_LEFT);
             if ($this->equipment
                 ->with(['model'])
-                ->where('serial', $full_sn)
+                ->where('serial', $serialNumber)
                 ->whereHas('model', function ($query) use ($category_id) {
                     $query->where('category_id', $category_id);
                 })->exists()) {
-                array_push($validate_ret['exists'], $serial);
+                array_push($responseData['exists'], $serial);
             } else {
-                array_push($validate_ret['nonexistences'], $serial);
+                array_push($responseData['nonexistences'], $serial);
             }
         }
-        return $validate_ret;
+        return $responseData;
     }
 
     /**
@@ -141,8 +149,8 @@ class EquipmentsController extends ApiController
     public function store(EquipmentStore $request): JsonResponse
     {
         $categoryPrefix = $this->category->find($request->get('category_id'))->prefix;
-        $categoryPrefix = strlen($categoryPrefix) > 0 ? $categoryPrefix. " " : "";
-        if ($request->get('auto_assign') == "yes") {
+        $categoryPrefix = strlen($categoryPrefix) > 0 ? $categoryPrefix . " " : "";
+        if ($request->get('auto_assign') === "yes") {
             $queryBuilder = new EquipmentQueryBuilder();
             $maxSerial = $queryBuilder->setQuery($this->equipment->query())->getMaxSerialQuery($categoryPrefix, $request->get('category_id'));
             $maxSerial = ($maxSerial->count() > 0) ? $maxSerial->first()->max_serial: 0;
@@ -152,7 +160,7 @@ class EquipmentsController extends ApiController
                 $equipment = $this->equipment->create([
                     'model_id' => $request->get('model_id'),
                     'team_id' => $request->get('team_id'),
-                    'serial' => $categoryPrefix. str_pad($serial, Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
+                    'serial' => $categoryPrefix. str_pad($serial, $this->config->get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
                     'status_id' => $request->get('status_id'),
                     'company_id' => $request->get('company_id'),
                 ]);
@@ -169,7 +177,7 @@ class EquipmentsController extends ApiController
                 $equipment = $this->equipment->create([
                     'model_id' => $request->get('model_id'),
                     'team_id' => $request->get('team_id'),
-                    'serial' => $categoryPrefix. str_pad(intval($serial['value'],10), Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
+                    'serial' => $categoryPrefix. str_pad(intval($serial['value'],10), $this->config->get('constants.equipment.serial_length'), "0", STR_PAD_LEFT),
                     'status_id' => $request->get('status_id'),
                     'company_id' => $request->get('company_id'),
                 ]);

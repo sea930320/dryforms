@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2490b3be02f0f4c17ece0ca0f7bd829b",
+    "content-hash": "e6956fccf8c650d6b4e871e23b701b5d",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -4083,6 +4083,48 @@
                 "environment"
             ],
             "time": "2016-09-01T10:05:43+00:00"
+        },
+        {
+            "name": "williamoliveira/eloquent-array-query-builder",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/williamoliveira/eloquent-array-query-builder.git",
+                "reference": "f80d99f3c3e2d9e7d288c05920d0a512f4ce9b20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/williamoliveira/eloquent-array-query-builder/zipball/f80d99f3c3e2d9e7d288c05920d0a512f4ce9b20",
+                "reference": "f80d99f3c3e2d9e7d288c05920d0a512f4ce9b20",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.9",
+                "phpunit/phpunit": "^5.0",
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/var-dumper": "^3.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Williamoliveira\\ArrayQueryBuilder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Oliveira",
+                    "email": "william.oliveir4@gmail.com"
+                }
+            ],
+            "description": "Query Laravel Eloquent with and array",
+            "time": "2017-10-03T14:02:32+00:00"
         }
     ],
     "packages-dev": [
