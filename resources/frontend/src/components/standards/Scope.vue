@@ -5,9 +5,9 @@
     </div>
     <div class="card-body">
       <label>* Enter side menu name</label>
-      <input type="text" class="form-control" v-model="sideMenuName">
+      <input type="text" class="form-control" v-model="formInfo.name">
       <label>* Enter form title</label>
-      <input type="text" class="form-control" v-model="formTitle">
+      <input type="text" class="form-control" v-model="formInfo.title">
       <b-row class="mt-5 mb-5">
         <div v-for="(index, count) in tableCols" :key="index" :class="count == 0 ? 'col-md-6 pr-0': 'col-md-6 pl-0'">
           <table class="text-center">
@@ -34,12 +34,24 @@
   export default {
     data () {
       return {
-        sideMenuName: 'Project Scope',
-        formTitle: 'Project Scope',
         addNotes: false,
         tableCols: new Array(2),
         services: new Array(20)
       }
+    },
+    created() {
+
+    },
+    computed: {
+        formInfo: function() {
+            if (this.$store.state.StandardForm.formOrders.length !== 0) {
+                let form = this.$store.state.StandardForm.formOrders.filter(function(formOrder) {
+                    return formOrder.form.name === 'Project Scope'
+                })
+                return form[0].standard_form[0]
+            }
+            return ''
+        }
     }
   }
 </script>

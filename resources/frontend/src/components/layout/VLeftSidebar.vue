@@ -1,16 +1,87 @@
 <template>
-    <b-list-group class="text-left p-0">
-        <b-list-group-item v-for="link in $route.meta.leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
+    <b-list-group class="text-left p-0" v-if="isStandards === false">
+        <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
             <router-link :to="link.path" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                 <p class="m-0"><img v-if="link.icon != ''" :src="link.icon"> {{ link.name }}</p>
             </router-link>
+        </b-list-group-item>        
+    </b-list-group>
+    <b-list-group v-else-if="isStandards === true && isLoaded" class="text-left p-0">
+        <b-list-group-item class="bg-blue mb-2">
+            <router-link :to="{name: 'Formorder'}" class="pointer text-white">
+                <p class="m-0"><img v-if="leftLinksIcon['Forms Order'] != ''" :src="leftLinksIcon['Forms Order']"> Forms Order</p>
+            </router-link>
+        </b-list-group-item> 
+        <b-list-group-item v-for="link in formOrders" :key="link.id" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
+            <router-link :to="{name: link.form.name}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+                <p class="m-0"><img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="leftLinkImg">
+                <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
+                </p>
+            </router-link>
         </b-list-group-item>
     </b-list-group>
+    <loading v-else></loading>
 </template>
+
 <script type="text/babel">
+    import {mapActions} from 'vuex'
+    import Loading from './Loading'
+    import apiStandardForm from '../../api/standard_form'
+
+    import _ from 'lodash'
+    import ErrorHandler from '../../mixins/error-handler'
+
     export default {
+        mixins: [ErrorHandler],
+        components: {
+          Loading
+        },
         data() {
             return {
+                leftLinks: [],
+                isStandards: null,
+                leftLinksIcon: {}
+            }
+        },
+        created() {
+            this.leftLinksIcon = this.$config.get('leftLinksIcon')
+            this.fetchFormOrders()
+        },
+        computed: {
+            formOrders: function() {
+                return this.$store.state.StandardForm.formOrders
+            },
+            isLoaded: function() {
+                return this.isStandards === true && this.formOrders.length !== 0
+            }
+        },
+        methods: {
+            ...mapActions([
+                'fetchFormOrders'
+            ]),
+            updateFormName: _.debounce(function (standardForm) {
+                if (standardForm.id) {
+                    apiStandardForm.patch(standardForm.id, {
+                        id: standardForm.id,
+                        name: standardForm.name
+                    }).then(response => {
+                    }).catch(this.handleErrorResponse)
+                } else {
+                    apiStandardForm.store(standardForm)
+                    .then(response => {
+                        standardForm.id = response.data.form.id
+                    }).catch(this.handleErrorResponse)
+                }
+            }, 500)
+        },
+        watch: {
+            '$route' (to, from) {
+                if (to.path.indexOf('standards') !== -1) {
+                    this.isStandards = true
+                } else {
+                    this.leftLinks = this.$route.meta.leftLinks
+                    this.isStandards = false
+                }
             }
         }
     }
@@ -33,5 +104,17 @@
     }
     .text-black {
         color: black;
+    }
+    .leftLinkImg {
+        float: left;
+    }
+    .leftLinkInput {
+        text-align: left;
+        background-color: transparent;
+        border: none;
+        width: calc(100% - 39px);
+        float: left;
+        margin-left: 7px;
+        cursor: pointer;
     }
 </style>

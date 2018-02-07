@@ -21,8 +21,8 @@ class StandardFormUpdate extends BaseRequest
     {
         return [
             'id' => 'exists:standard_forms,id',
-            'form_id' => 'required|exists:forms,id',
-            'company_id' => 'required|exists:companies,id',
+            'form_id' => 'sometimes|required|exists:forms,id',
+            'company_id' => 'sometimes|required|exists:companies,id',
             'name' => 'nullable|string',
             'title' => 'nullable|string',
             'statement' => 'nullable|string',

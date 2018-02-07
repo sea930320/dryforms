@@ -1,68 +1,3 @@
-const leftLinks = [
-  {
-    path: '/standards/formorder',
-    name: 'Forms Order',
-    icon: require('../assets/icon-forms.png'),
-    mb: true
-  },
-  {
-    path: '/standards/scope',
-    name: 'Project Scope',
-    icon: require('../assets/icon-scope.png')
-  },
-  {
-    path: '/standards/authorization',
-    name: 'Work Authorization',
-    icon: require('../assets/icon-workauth.png')
-  },
-  {
-    path: '/standards/antimicrobial',
-    name: 'Anti-Microbial',
-    icon: require('../assets/icon-antimicrobial.png')
-  },
-  {
-    path: '/standards/responsibility',
-    name: 'Customer Responsibility',
-    icon: require('../assets/icon-customer.png')
-  },
-  {
-    path: '/standards/liability',
-    name: 'Release from Liability',
-    icon: require('../assets/icon-release.png')
-  },
-  {
-    path: '/standards/stoppage',
-    name: 'Work Stoppage',
-    icon: require('../assets/icon-workstop.png')
-  },
-  {
-    path: '/standards/certificate',
-    name: 'Certificate of Completion',
-    icon: require('../assets/icon-complete.png')
-  },
-  {
-    path: '/standards/areas',
-    name: 'Affected Areas',
-    icon: require('../assets/icon-antimicrobial.png'),
-    mt: true
-  },
-  {
-    path: '/standards/crews',
-    name: 'Crews / Teams',
-    icon: require('../assets/icon-callreport.png')
-  },
-  {
-    path: '/standards/structures',
-    name: 'Structures',
-    icon: require('../assets/icon-structure.png')
-  },
-  {
-    path: '/standards/materials',
-    name: 'Materials',
-    icon: require('../assets/icon-moisture.png')
-  }
-]
-
 const rightLinks = [
   {
     path: 'support',
@@ -94,7 +29,6 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard Side Menu Forms order Management',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -103,12 +37,11 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/scope',
-    name: 'Scope',
+    name: 'Project Scope',
     props: {title: 'Scope'},
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -117,12 +50,11 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/authorization',
-    name: 'Authorization',
+    name: 'Work Authorization',
     props: {title: 'Authorization'},
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -131,12 +63,11 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/antimicrobial',
-    name: 'Antimicrobial',
+    name: 'Anti-Microbial',
     props: {title: 'antimicrobial'},
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -145,12 +76,11 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/responsibility',
-    name: 'Responsibility',
+    name: 'Customer Responsibility',
     props: {title: 'Responsibility'},
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -159,12 +89,11 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/liability',
-    name: 'Liability',
+    name: 'Release from Liability',
     props: {title: 'Liability'},
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -173,12 +102,11 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/stoppage',
-    name: 'Stoppage',
+    name: 'Work Stoppage',
     props: {title: 'Stoppage'},
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -187,12 +115,11 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/certificate',
-    name: 'Certificate',
+    name: 'Certificate of Completion',
     props: {title: 'Certificate'},
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -201,12 +128,11 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/areas',
-    name: 'Areas',
+    name: 'Affected Areas',
     props: {title: 'Areas'},
     meta: {
       title: 'Standard Areas Management',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -220,7 +146,6 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard Crews/Teams Dropdown Management',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -234,7 +159,6 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard  Moisture Map Structures Dropdown Management',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -248,7 +172,6 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard  Moisture Map Materials Dropdown Management',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -262,7 +185,6 @@ const routes = (configRoute) => [
     meta: {
       title: 'Calendar',
       roles: ['customer'],
-      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {

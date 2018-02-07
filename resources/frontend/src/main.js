@@ -35,21 +35,6 @@ const bus = new Vue()
 Vue.prototype.$bus = bus
 Vue.mixin(globalMixin)
 
-/* eslint-disable no-new */
-const vue = new Vue({
-    el: '#app',
-    router,
-    store,
-    template: '<App/>',
-    components: {App},
-    http: {
-        root: '/root',
-        headers: {
-            Authorization: 'Basic YXBpOnBhc3N3b3Jk'
-        }
-    }
-})
-
 axios.interceptors.request.use(config => {
     config.headers['Authorization'] = 'Bearer ' + Vue.prototype.$session.get('apiToken')
 
@@ -81,4 +66,19 @@ axios.interceptors.response.use(response => {
     }
 
     return Promise.reject(error.response)
+})
+
+/* eslint-disable no-new */
+const vue = new Vue({
+    el: '#app',
+    router,
+    store,
+    template: '<App/>',
+    components: {App},
+    http: {
+        root: '/root',
+        headers: {
+            Authorization: 'Basic YXBpOnBhc3N3b3Jk'
+        }
+    }
 })
