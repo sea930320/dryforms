@@ -14,7 +14,7 @@
       <b-navbar-nav class="right-nav ml-auto">
         <b-nav-item v-if="!authorized" to="/login" class="font-weight-bold mt-4">Login</b-nav-item>
         <b-nav-item v-if="!authorized" to="/register" class="font-weight-bold mt-4 mr-3">Register</b-nav-item>
-        <b-nav-item v-if="authorized" class="dashboard text-center p-2" to="/dashboard">
+        <b-nav-item v-if="authorized" class="dashboard text-center p-2" @click="gotoAdmin">
           <img :src="dashbordImg">
         </b-nav-item>
         <b-nav-item v-if="authorized" v-on:click="logout()" class="logout w-16 mt-4">
@@ -76,7 +76,11 @@
           this.authorized = sess.exists() && sess.get('apiToken')
         }
     },
-    methods: {}
+    methods: {
+        gotoAdmin() {
+          window.location.href = '/admin'
+        }
+    }
   }
 </script>
 

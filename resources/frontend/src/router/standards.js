@@ -8,12 +8,6 @@ const rightLinks = [
     path: 'calendar',
     name: 'Calendar',
     icon: require('../assets/icon-calendar.png')
-  },
-  {
-    path: '/standards/createform',
-    name: 'Create Form',
-    icon: '',
-    mt: true
   }
 ]
 

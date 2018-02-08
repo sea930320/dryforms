@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\StandardForms\StandardFormsIndex;
 use App\Http\Requests\StandardForms\StandardFormStore;
 use App\Http\Requests\StandardForms\StandardFormUpdate;
+
 use App\Models\StandardForm;
+use App\Models\DefaultFromData;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class StandardsController extends ApiController
@@ -16,13 +19,19 @@ class StandardsController extends ApiController
     private $standardForm;
 
     /**
+     * @var DefaultFromData
+     */
+    private $defaultFormData;
+
+    /**
      * StandardsController constructor.
      *
      * @param StandardForm $standardForm
      */
-    public function __construct(StandardForm $standardForm)
+    public function __construct(StandardForm $standardForm, DefaultFromData $defaultFromData)
     {
         $this->standardForm = $standardForm;
+        $this->defaultFormData = $defaultFromData;
     }
 
     /**

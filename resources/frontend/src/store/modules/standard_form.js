@@ -23,9 +23,9 @@ const mutations = {
                     id: null,
                     form_id: form.form_id,
                     company_id: form.company_id,
-                    name: form.form.name,
-                    title: form.form.name,
-                    statement: ''
+                    name: form.default_forms_data.name || form.form.name,
+                    title: form.default_forms_data.title || form.form.name,
+                    statement: form.default_forms_data.statement || ''
                 })
             }
         })

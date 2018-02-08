@@ -6,6 +6,7 @@ use App\Http\Requests\FormOrders\FormOrdersStore;
 
 use App\Models\FormOrder;
 use App\Models\Form;
+
 use Illuminate\Http\JsonResponse;
 
 class FormOrdersController extends ApiController
@@ -38,7 +39,7 @@ class FormOrdersController extends ApiController
     public function index(): JsonResponse
     {
         $formOrders = $this->formOrder
-        	->with(['form', 'standard_form' => function($query) {
+        	->with(['form', 'default_forms_data', 'standard_form' => function($query) {
         		$query->where('company_id', auth()->user()->company_id);
         	}])
         	->where('company_id', auth()->user()->company_id);
