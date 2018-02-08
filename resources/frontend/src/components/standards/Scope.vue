@@ -44,8 +44,8 @@
     },
     computed: {
         formInfo: function() {
-            if (this.$store.state.StandardForm.formOrders.length !== 0) {
-                let form = this.$store.state.StandardForm.formOrders.filter(function(formOrder) {
+            if (this.$store.state.StandardForm.formsOrder.length !== 0) {
+                let form = this.$store.state.StandardForm.formsOrder.filter(function(formOrder) {
                     return formOrder.form.name === 'Project Scope'
                 })
                 return form[0].standard_form[0]

@@ -24,12 +24,13 @@ const routes = (configRoute) => [
   },
   {
     path: '/standards/formorder',
-    name: 'Formorder',
-    props: {title: 'Formorder'},
+    name: 'Forms Order',
+    props: {title: 'Forms Order'},
     meta: {
       title: 'Standard Side Menu Forms order Management',
       roles: ['customer'],
-      rightLinks: rightLinks
+      rightLinks: rightLinks,
+      requiresAuth: true
     },
     component: resolve => {
       require(['../components/standards/Formorder.vue'], resolve)
@@ -68,7 +69,8 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      rightLinks: rightLinks
+      rightLinks: rightLinks,
+      requiresAuth: true
     },
     component: resolve => {
       require(['../components/standards/Antimicrobial.vue'], resolve)
@@ -81,7 +83,8 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      rightLinks: rightLinks
+      rightLinks: rightLinks,
+      requiresAuth: true
     },
     component: resolve => {
       require(['../components/standards/Responsibility.vue'], resolve)
@@ -94,7 +97,8 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standards',
       roles: ['customer'],
-      rightLinks: rightLinks
+      rightLinks: rightLinks,
+      requiresAuth: true
     },
     component: resolve => {
       require(['../components/standards/Liability.vue'], resolve)

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\FormOrders\FormOrdersStore;
+
 use App\Models\FormOrder;
 use App\Models\Form;
 use Illuminate\Http\JsonResponse;
@@ -52,6 +54,26 @@ class FormOrdersController extends ApiController
 
         $formOrders = $formOrders->get();
         return $this->respond($formOrders);
+    }
+
+    /**
+     * @param FormOrdersStore $request
+     *
+     * @return JsonResponse
+     */
+    public function store(FormOrdersStore $request): JsonResponse
+    {
+    	$formsOrder = $request->get('formsOrder');
+    	$formsOrderIDs = array_map(function($formOrder) {
+    		return $formOrder['id'];
+    	}, $formsOrder);
+    	sort($formsOrderIDs, SORT_NUMERIC);
+    	foreach ($formsOrderIDs as $key => $id) {
+    		$this->formOrder->find($id)->update([
+    			'form_id' => $formsOrder[$key]['form_id']
+    		]);
+    	}
+        return $this->respond(['message' => 'Form Order successfully saved']);
     }
 
     /**

@@ -8,11 +8,11 @@
     </b-list-group>
     <b-list-group v-else-if="isStandards === true && isLoaded" class="text-left p-0">
         <b-list-group-item class="bg-blue mb-2">
-            <router-link :to="{name: 'Formorder'}" class="pointer text-white">
+            <router-link :to="{name: 'Forms Order'}" class="pointer text-white">
                 <p class="m-0"><img v-if="leftLinksIcon['Forms Order'] != ''" :src="leftLinksIcon['Forms Order']"> Forms Order</p>
             </router-link>
         </b-list-group-item> 
-        <b-list-group-item v-for="link in formOrders" :key="link.id" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
+        <b-list-group-item v-for="link in formsOrder" :key="link.id" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
             <router-link :to="{name: link.form.name}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                 <p class="m-0"><img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="leftLinkImg">
                 <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
@@ -36,6 +36,24 @@
         components: {
           Loading
         },
+        computed: {
+            formsOrder: function() {
+                return this.$store.state.StandardForm.formsOrder
+            },
+            isLoaded: function() {
+                return this.isStandards === true && this.formsOrder.length !== 0
+            }
+        },
+        created() {
+            this.leftLinksIcon = this.$config.get('leftLinksIcon')
+            if (this.$route.path.indexOf('standards') !== -1) {
+                this.isStandards = true
+            } else {
+                this.leftLinks = this.$route.meta.leftLinks
+                this.isStandards = false
+            }
+            this.fetchFormsOrder()
+        },
         data() {
             return {
                 leftLinks: [],
@@ -43,21 +61,9 @@
                 leftLinksIcon: {}
             }
         },
-        created() {
-            this.leftLinksIcon = this.$config.get('leftLinksIcon')
-            this.fetchFormOrders()
-        },
-        computed: {
-            formOrders: function() {
-                return this.$store.state.StandardForm.formOrders
-            },
-            isLoaded: function() {
-                return this.isStandards === true && this.formOrders.length !== 0
-            }
-        },
         methods: {
             ...mapActions([
-                'fetchFormOrders'
+                'fetchFormsOrder'
             ]),
             updateFormName: _.debounce(function (standardForm) {
                 if (standardForm.id) {

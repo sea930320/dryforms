@@ -1,23 +1,23 @@
-import apiFormOrders from '../../api/form_orders'
+import apiFormsOrder from '../../api/forms_order'
 
 const state = {
-    formOrders: []
+    formsOrder: []
 }
 
 const getters = {
 }
 
 const actions = {
-    fetchFormOrders ({dispatch, commit}) {
-        apiFormOrders.index().then(response => {
-            commit('setFormOrders', response.data)
+    fetchFormsOrder ({dispatch, commit}) {
+        apiFormsOrder.index().then(response => {
+            commit('setFormsOrder', response.data)
         })
     }
 }
 
 const mutations = {
-    setFormOrders (state, formOrders) {
-        formOrders.forEach(form => {
+    setFormsOrder (state, formsOrder) {
+        formsOrder.forEach(form => {
             if (form.standard_form.length === 0) {
                 form.standard_form.push({
                     id: null,
@@ -29,7 +29,7 @@ const mutations = {
                 })
             }
         })
-        state.formOrders = formOrders
+        state.formsOrder = formsOrder
     }
 }
 
