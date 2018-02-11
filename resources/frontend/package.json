@@ -27,6 +27,7 @@
     "vue": "^2.5.2",
     "vue-color": "^2.4.3",
     "vue-configuration": "^1.0.3",
+    "vue-froala-wysiwyg": "^2.7.5",
     "vue-full-calendar": "^2.5.2",
     "vue-image-crop-upload": "^2.2.3",
     "vue-infinite-loading": "^2.2.3",

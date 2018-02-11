@@ -7,7 +7,6 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('app/static/vendor/bootstrap.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('app/static/vendor/bootstrap-vue.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('app/static/vendor/font-awesome.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('app/static/vendor/fullcalendar.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('app/static/fonts/fontawesome-webfont.woff') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('app/static/fonts/fontawesome-webfont.woff2') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('app/static/fonts/fontawesome-webfont.ttf') }}">

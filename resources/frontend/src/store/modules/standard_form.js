@@ -5,6 +5,13 @@ const state = {
 }
 
 const getters = {
+    formPerID(state) {
+        return function(formID) {
+            return state.formsOrder.filter(form => {
+                return form.form_id === parseInt(formID)
+            })
+        }
+    }
 }
 
 const actions = {

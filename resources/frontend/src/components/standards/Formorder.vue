@@ -1,26 +1,30 @@
 <template>
-  <div class="card text-center" v-if="isLoaded">
-    <div class="card-header">
-        {{ $route.meta.title }}
+  <div class="Forms-Order">
+    <div class="card text-center" v-if="isLoaded">
+      <div class="card-header">
+          <h5> {{ $route.meta.title }} </h5>
+      </div>
+      <div class="card-body text-left pt-3 pb-3">
+        <b-container class="">
+          <b-list-group>
+            <draggable v-model="forms" :options="{group:'people'}" @update="updateOrder(forms)">
+              <transition-group name="list-complete">           
+                <b-list-group-item v-for="item in forms" :key="item.name" class="mb-2 list-complete-item text-center">{{ item.name }}</b-list-group-item>
+              </transition-group>
+            </draggable>
+          </b-list-group>
+        </b-container>
+      </div>
     </div>
-    <div class="card-body">
-      <b-list-group>
-        <draggable v-model="forms" :options="{group:'people'}" @update="updateOrder(forms)">
-          <transition-group name="list-complete">           
-            <b-list-group-item v-for="item in forms" :key="item.name" class="mb-3 list-complete-item">{{ item.name }}</b-list-group-item>           
-          </transition-group>
-        </draggable>
-      </b-list-group>      
-    </div>
+    <loading v-else></loading>
   </div>
-  <loading v-else></loading>
 </template>
 
 <script type="text/babel">
   import draggable from 'vuedraggable'
   import _ from 'lodash'
-
   import {mapActions} from 'vuex'
+
   import Loading from '../layout/Loading'
   import apiFormsOrder from '../../api/forms_order'
   
@@ -84,5 +88,15 @@
   }
   .list-complete-enter, .list-complete-leave-active {
     opacity: 0;
+  }
+  .Forms-Order {
+    .list-group-item {
+      border: 0px;
+      border-radius: 3px;
+      margin-bottom: 6px;
+      padding-top: 10px;
+      background: linear-gradient(180deg, #ececec 0, rgba(36, 36, 36, 0.08) 10%, rgba(36, 36, 36, 0.08) 90%, #a2a2a2);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#a6000000",endColorstr="#00000000",GradientType=0);
+    }
   }
 </style>
