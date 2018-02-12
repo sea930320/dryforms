@@ -17,7 +17,10 @@
                     </div>
                     <div>
                         <b-form-checkbox v-model="addFooter">Footer Text.(Select if you wish to have a footer text)</b-form-checkbox> 
-                        <vue-editor id="footerEditor" v-model="footerText" v-if="addFooter" class="mb-3"></vue-editor>
+                        <!-- <vue-editor id="footerEditor" v-model="footerText" v-if="addFooter" class="mb-3"></vue-editor> -->
+                        <div v-if="addFooter">
+                        <froala :tag="'textarea'" id="footerEditor" :config="config" v-model="footerText" class="mb-3"></froala>
+                        </div>
                     </div>      
                     <b-form-checkbox v-model="addSignature">Owner/Occupant and Company electric signature.(Select if you wich to have electric signature)</b-form-checkbox>
                 </b-container>
@@ -45,6 +48,7 @@
                 addSignature: false,
                 footerText: 'Please call in the event of an Emergency or if you have any questions. I have read and understand the information above.',
                 config: {
+                    key: this.$config.get('froala_key'),
                     events: {
                         'froalaEditor.initialized': function () {
                             console.log('initialized')

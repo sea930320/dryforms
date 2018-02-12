@@ -3,6 +3,7 @@ import StatesJson from './states_has.json'
 export default {
     states: StatesJson,
     stripe_key: 'pk_test_673csdaF0F7IIGRqwTgquBtT',
+    froala_key: 'HczpldC-16e1D-11C-9A-8daA2wzA-13==',
     leftLinksIcon: {
       'Forms Order': require('../assets/icon-forms.png'),
       'Project Scope': require('../assets/icon-scope.png'),
