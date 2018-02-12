@@ -2,7 +2,7 @@
     <b-container fluid id="app">
         <v-header :sideBarOpened.sync="sideBarOpened"/>
 
-        <b-row v-if="!isSignView">
+        <b-row v-if="!isSignView" class="m-0">
             <v-left-sidebar :collapsed.sync="sideBarCollapsed" class="col-md-2"/>
             <div class="col-md-8 p-0">
                 <section role="main" class="content">
@@ -10,7 +10,7 @@
                     <router-view></router-view>
                 </section>
             </div>
-            <v-right-sidebar :collapsed.sync="sideBarCollapsed" class="col-md-2"/>
+            <v-right-sidebar :collapsed.sync="sideBarCollapsed" class="col-md-2 p-0"/>
         </b-row>
 
         <b-row v-else align-h="center" class="sign-view m-0 pt-5">
@@ -74,5 +74,5 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-    @import "./Main.scss"
+    @import "./Main.scss";
 </style>

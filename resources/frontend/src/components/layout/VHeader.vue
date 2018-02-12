@@ -87,7 +87,8 @@
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
   $break-extra: 1200px;
   $nav-bg-dark: #515763;
-  $side-bg-dark: #0d1722;
+  $side-bg-dark: rgba(0, 0, 0, 0.3);
+  $left-side-width: 16.666667%;
 
   .navbar {
     background-color: $side-bg-dark;
@@ -112,7 +113,7 @@
         .dashboard {
           background-color: #046ac3;
           position: absolute;
-          right: 16%;
+          right: $left-side-width;
           height: inherit;
         }
         .fa-sign-out {
@@ -141,10 +142,10 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 16%;
+      width: $left-side-width;
     }
   }
   .w-16 {
-    width: 16%;
+    width: $left-side-width;
   }
 </style>

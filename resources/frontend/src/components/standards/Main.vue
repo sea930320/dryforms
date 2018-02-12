@@ -12,14 +12,14 @@
                     <input type="text" class="form-control" v-model="form.title">
                     <label class="mt-3">* Enter form body text</label>
                     <froala :tag="'textarea'" :config="config" v-model="form.statement"></froala>
-                    <!-- <div class="mt-3">
+                    <div class="mt-3">
                         <b-form-checkbox v-model="addNotes">Addtional notes.(Select if you wish to have Additional notes text box)</b-form-checkbox>  
                     </div>
                     <div>
                         <b-form-checkbox v-model="addFooter">Footer Text.(Select if you wish to have a footer text)</b-form-checkbox> 
                         <vue-editor id="footerEditor" v-model="footerText" v-if="addFooter" class="mb-3"></vue-editor>
                     </div>      
-                    <b-form-checkbox v-model="addSignature">Owner/Occupant and Company electric signature.(Select if you wich to have electric signature)</b-form-checkbox> -->
+                    <b-form-checkbox v-model="addSignature">Owner/Occupant and Company electric signature.(Select if you wich to have electric signature)</b-form-checkbox>
                 </b-container>
             </div>
             <div class="card-footer"></div>
@@ -40,10 +40,10 @@
         components: { VueEditor, Loading },
         data () {
             return {
-                // addNotes: false,
-                // addFooter: false,
-                // addSignature: false,
-                // footerText: 'Please call in the event of an Emergency or if you have any questions. I have read and understand the information above.'
+                addNotes: false,
+                addFooter: false,
+                addSignature: false,
+                footerText: 'Please call in the event of an Emergency or if you have any questions. I have read and understand the information above.',
                 config: {
                     events: {
                         'froalaEditor.initialized': function () {
@@ -83,5 +83,9 @@
     }
     #footerEditor {
         height: 150px !important;
+    }
+    .fr-box.fr-basic.fr-top .fr-wrapper {
+        height: 400px;
+        overflow: auto;
     }
 </style>

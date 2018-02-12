@@ -113,12 +113,12 @@
                         let data = Object.entries(error.data)
                         var errMsg = ''
                         for (let ele of data) {
-                          errMsg += ('<br>' + ele[1])
+                            errMsg += ('<br>' + ele[1])
                         }
                         this.alertEmail = {
-                          dismissCountDown: this.dismissSecs,
-                          isErr: true,
-                          message: errMsg.substring(4)
+                            dismissCountDown: this.dismissSecs,
+                            isErr: true,
+                            message: errMsg.substring(4)
                         }
                         this.isPendingEmail = false
                     })
@@ -143,26 +143,26 @@
                         let data = Object.entries(error.data)
                         var errMsg = ''
                         for (let ele of data) {
-                          errMsg += ('<br>' + ele[1])
+                            errMsg += ('<br>' + ele[1])
                         }
                         this.alertPassword = {
-                          dismissCountDown: this.dismissSecs,
-                          isErr: true,
-                          message: errMsg.substring(4)
+                            dismissCountDown: this.dismissSecs,
+                            isErr: true,
+                            message: errMsg.substring(4)
                         }
                         this.isPendingPassword = false
                     })
             },
             validateBeforeSubmit(scope) {
-              this.errors.clear()
-              this.$validator.validateAll(scope)
-              if (!this.errors.any()) {
-                  if (scope !== 'form-email') {
-                    this.changePassword()
-                  } else {
-                    this.changeEmail()
-                  }
-              }
+                this.errors.clear()
+                this.$validator.validateAll(scope)
+                if (!this.errors.any()) {
+                    if (scope !== 'form-email') {
+                        this.changePassword()
+                    } else {
+                        this.changeEmail()
+                    }
+                }
             }
         }
     }

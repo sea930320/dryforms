@@ -48,26 +48,38 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => {
     return response
 }, error => {
-    // if (!Vue.prototype.$session.get('apiToken')) {
-    //     vue.$router.push('/logout')
-    // }
-    if (error.response.data.message === 'Token has expired' && Vue.prototype.$session.get('apiToken')) {
-        axios.get('/api/refresh')
-            .then(response => {
-                Vue.prototype.$session.remove('apiToken')
-                Vue.prototype.$session.set('apiToken', response.data.token)
+    let res = error.response
+    let lastRefresh = Vue.prototype.$session.get('lastRefresh')
+
+    if (res.data.message === 'Token has expired' && Vue.prototype.$session.get('apiToken') && res.config && !res.config.__isRetryRequest) {
+        if (!lastRefresh || new Date().getTime() - lastRefresh > 1000 * 60 * 5) {
+            return new Promise((resolve, reject) => {
+                Vue.prototype.$session.set('lastRefresh', new Date().getTime())
+                axios.get('/api/refresh')
+                    .then(response => {
+                        Vue.prototype.$session.remove('apiToken')
+                        Vue.prototype.$session.set('apiToken', response.data.token)
+                        error.config.__isRetryRequest = true
+                        error.config.headers['Authorization'] = 'Bearer ' + response.data.token
+                        resolve(axios(error.config))
+                    })
+                    .catch(err => {
+                        Vue.prototype.$session.remove('apiToken')
+                        vue.$router.push('/logout')
+                        return reject(err)
+                    })
             })
-            .catch(() => {
-                Vue.prototype.$session.remove('apiToken')
-                vue.$router.push('/logout')
-            })
+        } else {
+            error.config.__isRetryRequest = false
+            error.config.headers['Authorization'] = 'Bearer ' + Vue.prototype.$session.get('apiToken')
+            return Promise.resolve(axios(error.config))
+        }
     }
-    if (error.response.data.message === 'The token has been blacklisted') {
+    if (res.data.message === 'The token has been blacklisted') {
         Vue.prototype.$session.remove('apiToken')
         vue.$router.push('/logout')
     }
-
-    return Promise.reject(error.response)
+    return Promise.reject(res)
 })
 
 /* eslint-disable no-new */

@@ -25,8 +25,7 @@ const routes = (configRoute) => [
             title: 'Manage Your Inventory',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks,
-            requiresAuth: true
+            rightLinks: rightLinks
         },
         component: resolve => {
             require(['../components/equipment/List.vue'], resolve)
@@ -40,8 +39,7 @@ const routes = (configRoute) => [
             title: 'Detail Information',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks,
-            requiresAuth: true
+            rightLinks: rightLinks
         },
         component: resolve => {
             require(['../components/equipment/Detail.vue'], resolve)
@@ -55,8 +53,7 @@ const routes = (configRoute) => [
             title: 'Manage Equipment Categories',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks,
-            requiresAuth: true
+            rightLinks: rightLinks
         },
         component: resolve => {
             require(['../components/equipment/categories/Categories.vue'], resolve)
@@ -84,8 +81,7 @@ const routes = (configRoute) => [
             title: 'Add Equipment to Inventory',
             roles: ['customer'],
             leftLinks: leftLinks,
-            rightLinks: rightLinks,
-            requiresAuth: true
+            rightLinks: rightLinks
         },
         component: resolve => {
             require(['../components/equipment/Add.vue'], resolve)

@@ -1,7 +1,7 @@
 <template>
     <b-list-group class="text-left p-0" v-if="isStandards === false">
-        <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
-            <router-link :to="link.path" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+        <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-side-left'">
+            <router-link :to="link.path" :class="link.mb ? 'pointer text-black' : 'pointer text-white'">
                 <p class="m-0"><img v-if="link.icon != ''" :src="link.icon"> {{ link.name }}</p>
             </router-link>
         </b-list-group-item>        
@@ -12,8 +12,8 @@
                 <p class="m-0"><img v-if="leftLinksIcon['Forms Order'] != ''" :src="leftLinksIcon['Forms Order']"> Forms Order</p>
             </router-link>
         </b-list-group-item> 
-        <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
-            <router-link :to="{name: 'Standards Form', params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+        <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-side-left'">
+            <router-link :to="{name: 'Standards Form', params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-white'">
                 <p class="m-0">
                     <!-- <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="leftLinkImg"> -->
                 <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
@@ -97,17 +97,24 @@
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
     .list-group {
         height: 100vh;
-        background-color: #0d1722;
+        background-color: rgba(0, 0, 0, 0.3);
     }
     .list-group-item {
-        margin-bottom: 3px;
         border-radius: unset;
+        padding: 0.5rem 1.25rem;
     }
     .bg-blue {
         background-color: #046ac3;
     }
     .bg-grey {
         background-color: #c8c8c8;
+    }
+    .bg-side-left {
+        background-color: rgba(187, 187, 187, 0.2);
+        border-radius: 50px;
+        box-shadow: inset 0px 0px 20px 2px rgba(230, 219, 219, 0.18), 0px 0px 0px 0px rgba(228, 219, 219, 0.15);
+        margin: 15px 15px 0px 15px;
+        border: 0px;
     }
     .text-black {
         color: black;
@@ -123,5 +130,6 @@
         float: left;
         margin-left: 7px;
         cursor: pointer;
+        color: white;
     }
 </style>
