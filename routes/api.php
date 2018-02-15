@@ -36,6 +36,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
     $router->get('get-models/{id}', 'EquipmentCategoriesController@getModels');
     $router->get('validate-serial/{serial}/category_id/{categoryId}', 'EquipmentsController@validateSerial');
+    $router->post('standard/statement', ['uses' => 'StandardsController@statementStore', 'as' => 'standard.statement.store']);
     /** Account */
     $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);
     $router->post('account/password/change', ['uses' => 'AccountController@changePassword', 'as' => 'account.password.change']);

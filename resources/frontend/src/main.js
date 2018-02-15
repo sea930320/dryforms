@@ -32,10 +32,10 @@ Vue.use(VueLodash, lodash)
 Vue.use(VeeValidate)
 Vue.use(FullCalendar)
 Vue.use(VueFroala)
+Vue.mixin(globalMixin)
 
 const bus = new Vue()
 Vue.prototype.$bus = bus
-Vue.mixin(globalMixin)
 
 axios.interceptors.request.use(config => {
     config.headers['Authorization'] = 'Bearer ' + Vue.prototype.$session.get('apiToken')

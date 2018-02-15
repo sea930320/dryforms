@@ -34,6 +34,10 @@ body {
     overflow-y: scroll;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .custom-control {
     position: relative;
     display: -ms-inline-flexbox;
@@ -245,4 +249,29 @@ section.content[role=main] {
       }
     }
   }
+}
+
+.left-sidebar-img {
+  float: left;
+}
+
+.icon-margin {
+  width: calc(100% - 35px);
+}
+
+.left-sidebar-ellipse {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  float: left;
+  text-align: left;
+  padding-left: 5px;
+  white-space: nowrap;
+}
+
+.right-sidebar-ellipse {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  white-space: nowrap;
 }

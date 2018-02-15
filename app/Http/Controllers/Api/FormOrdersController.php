@@ -39,9 +39,7 @@ class FormOrdersController extends ApiController
     public function index(): JsonResponse
     {
         $formOrders = $this->formOrder
-        	->with(['form', 'default_forms_data', 'standard_form' => function($query) {
-        		$query->where('company_id', auth()->user()->company_id);
-        	}])
+        	->with(['form', 'default_forms_data', 'standard_form'])
         	->where('company_id', auth()->user()->company_id);
 
         $forms = $this->form->get();

@@ -17,5 +17,8 @@ export default {
     },
     delete(id) {
         return axios.delete(standardFormResource + '/' + id)
+    },
+    storeStatement (data) {
+        return axios.post('/api/standard/statement', data)
     }
 }

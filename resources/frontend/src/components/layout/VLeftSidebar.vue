@@ -2,7 +2,10 @@
     <b-list-group class="text-left p-0" v-if="isStandards === false">
         <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-side-left'">
             <router-link :to="link.path" :class="link.mb ? 'pointer text-black' : 'pointer text-white'">
-                <p class="m-0"><img v-if="link.icon != ''" :src="link.icon"> {{ link.name }}</p>
+                <p class="m-0">
+                    <img class="left-sidebar-img" v-if="link.icon != ''" :src="link.icon">
+                    <span class="left-sidebar-ellipse" :class="link.icon ? 'icon-margin' : ''"> {{ link.name }} </span>
+                </p>
             </router-link>
         </b-list-group-item>        
     </b-list-group>
@@ -49,11 +52,11 @@
             this.leftLinksIcon = this.$config.get('leftLinksIcon')
             if (this.$route.path.indexOf('standards') !== -1) {
                 this.isStandards = true
+                this.fetchFormsOrder()
             } else {
                 this.leftLinks = this.$route.meta.leftLinks
                 this.isStandards = false
             }
-            this.fetchFormsOrder()
         },
         data() {
             return {
@@ -85,6 +88,7 @@
             '$route' (to, from) {
                 if (to.path.indexOf('standards') !== -1) {
                     this.isStandards = true
+                    this.fetchFormsOrder()
                 } else {
                     this.leftLinks = this.$route.meta.leftLinks
                     this.isStandards = false

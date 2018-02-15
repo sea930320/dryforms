@@ -5,27 +5,22 @@ namespace App\Models;
 use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
-class StandardForm extends Model
+class StandardStatement extends Model
 {
     use BelongsToCompany;
-
     /**
      * @var string
      */
-    public $table = 'standard_forms';
+    public $table = 'standard_statements';
 
     /**
      * @var array
      */
     public $fillable = [
+    	'company_id',
         'form_id',
-        'name',
         'title',
-        'company_id',
-        'additional_notes_show',
-        'footer_text_show',
-        'footer_text',
-        'signature'
+        'statement',        
     ];
 
     /**

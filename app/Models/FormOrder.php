@@ -19,7 +19,7 @@ class FormOrder extends Model
     /**
      * @var array
      */
-    public $visible = ['id', 'company_id', 'form_id', 'form', 'company', 'default_forms_data', 'standard_form'];
+    public $visible = ['id', 'company_id', 'form_id', 'form', 'company', 'default_forms_data', 'standard_form', 'standard_statement'];
 
     /**
      * Relation with forms.
@@ -51,5 +51,13 @@ class FormOrder extends Model
     public function standard_form()
     {
         return $this->hasMany(StandardForm::class, 'form_id', 'form_id');
+    }
+
+    /**
+     * Relation with standard_statements.
+     */
+    public function standard_statement()
+    {
+        return $this->hasMany(StandardStatement::class, 'form_id', 'form_id');
     }
 }

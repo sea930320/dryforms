@@ -29,7 +29,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in projects">
+              <tr v-for="item in projects" :key="item.id">
                 <td>{{ item.owner }}</td>
                 <td>{{ item.address }}</td>
                 <td>{{ item.phone }}</td>
