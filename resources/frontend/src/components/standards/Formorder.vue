@@ -98,7 +98,7 @@
       background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ececec), color-stop(10%, rgba(36, 36, 36, 0.08)), color-stop(90%, rgba(36, 36, 36, 0.08)), to(#a2a2a2));
       background: linear-gradient(180deg, #fff5e8 0, rgba(99, 93, 55, 0.3) 12%, rgba(36, 36, 36, 0.2) 90%, #a2a2a2);
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#a6000000",endColorstr="#00000000",GradientType=0);
-      color: white;
+      color: #422100;
     }
   }
 </style>

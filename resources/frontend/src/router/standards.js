@@ -9,13 +9,13 @@ const rightLinks = [
     name: 'Calendar',
     icon: require('../assets/icon-calendar.png')
   },
-  {
-    methodCall: {
-      section: 'standards',
-      name: 'add_statement'
-    },
-    name: 'Add Statement'
-  },
+  // {
+  //   methodCall: {
+  //     section: 'standards',
+  //     name: 'add_statement'
+  //   },
+  //   name: 'Add Statement'
+  // },
   {
     methodCall: {
       section: 'standards',
@@ -55,19 +55,19 @@ const routes = (configRoute) => [
       require(['../components/standards/Main.vue'], resolve)
     }
   },
-  // {
-  //   path: '/standards/scope',
-  //   name: 'Project Scope',
-  //   props: {title: 'Scope'},
-  //   meta: {
-  //     title: 'Standards',
-  //     roles: ['customer'],
-  //     rightLinks: rightLinks
-  //   },
-  //   component: resolve => {
-  //     require(['../components/standards/Scope.vue'], resolve)
-  //   }
-  // },
+  {
+    path: '/standards/scope',
+    name: 'Project Scope',
+    props: {title: 'Scope'},
+    meta: {
+      title: 'Standards',
+      roles: ['customer'],
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/standards/Scope.vue'], resolve)
+    }
+  },
   {
     path: '/standards/authorization',
     name: 'Work Authorization',

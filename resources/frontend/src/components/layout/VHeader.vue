@@ -87,7 +87,8 @@
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
   $break-extra: 1200px;
   $nav-bg-dark: #515763;
-  $side-bg-dark: rgba(0, 0, 0, 0.3);
+  // $side-bg-dark: rgba(0, 0, 0, 0.3);
+  $side-bg-dark: #0d1722;
   $left-side-width: 16.666667%;
 
   .navbar {

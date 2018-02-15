@@ -10,7 +10,7 @@ body {
 #app {
     padding-left: 0;
     padding-right: 0;
-    background: url('../../assets/br_footer_black_linen.png');
+    // background: url('../../assets/br_footer_black_linen.png');
 }
 
 .btn-xs {
@@ -238,18 +238,18 @@ input:-ms-input-placeholder {
   color: #999 !important;
 }
 
-section.content[role=main] {
-  background: rgba(255, 255, 255, 0.4);
-  .card {
-    background: transparent;
-    .card-header {
-      h5 {
-        color: white;
-        text-shadow: 2px 2px 10px hsl(231, 40%, 27%);
-      }
-    }
-  }
-}
+// section.content[role=main] {
+//   background: rgba(255, 255, 255, 0.4);
+//   .card {
+//     background: transparent;
+//     .card-header {
+//       h5 {
+//         color: white;
+//         text-shadow: 2px 2px 10px hsl(231, 40%, 27%);
+//       }
+//     }
+//   }
+// }
 
 .left-sidebar-img {
   float: left;

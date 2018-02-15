@@ -1,26 +1,26 @@
 <template>
     <b-list-group class="text-left p-0" v-if="isStandards === false">
-        <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-side-left'">
-            <router-link :to="link.path" :class="link.mb ? 'pointer text-black' : 'pointer text-white'">
-                <p class="m-0">
-                    <img class="left-sidebar-img" v-if="link.icon != ''" :src="link.icon">
+        <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
+            <router-link :to="link.path" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+                <div class="m-0">
+                    <div class="left-sidebar-img" v-if="link.icon != ''"><img :src="link.icon"/></div>
                     <span class="left-sidebar-ellipse" :class="link.icon ? 'icon-margin' : ''"> {{ link.name }} </span>
-                </p>
+                </div>
             </router-link>
         </b-list-group-item>        
     </b-list-group>
     <b-list-group v-else-if="isStandards === true && isLoaded" class="text-left p-0">
         <b-list-group-item class="bg-blue mb-2 list-complete-item">
             <router-link :to="{name: 'Forms Order'}" class="pointer text-white">
-                <p class="m-0"><img v-if="leftLinksIcon['Forms Order'] != ''" :src="leftLinksIcon['Forms Order']"> Forms Order</p>
+                <div class="m-0"><img v-if="leftLinksIcon['Forms Order'] != ''" :src="leftLinksIcon['Forms Order']"> Forms Order</div>
             </router-link>
         </b-list-group-item> 
-        <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-side-left'">
-            <router-link :to="{name: 'Standards Form', params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-white'">
-                <p class="m-0">
-                    <!-- <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="leftLinkImg"> -->
-                <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
-                </p>
+        <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
+            <router-link :to="{name: 'Standards Form', params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+                <div class="m-0">
+                    <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
+                    <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
+                </div>
             </router-link>
         </b-list-group-item>
     </b-list-group>
@@ -101,11 +101,12 @@
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
     .list-group {
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: #0d1722;
     }
     .list-group-item {
+        margin-bottom: 3px;
         border-radius: unset;
-        padding: 0.5rem 1.25rem;
+        padding: 0.75rem 0.75rem;
     }
     .bg-blue {
         background-color: #046ac3;
@@ -123,9 +124,7 @@
     .text-black {
         color: black;
     }
-    .leftLinkImg {
-        float: left;
-    }
+
     .leftLinkInput {
         text-align: left;
         background-color: transparent;
@@ -134,6 +133,6 @@
         float: left;
         margin-left: 7px;
         cursor: pointer;
-        color: white;
+        // color: white;
     }
 </style>
