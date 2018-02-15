@@ -11,11 +11,14 @@
                     <input type="text" class="form-control mb-3" v-model="form.name">
                     <label>* Enter form title</label>
                     <input type="text" class="form-control" v-model="form.title">
-                    <div v-for="item in form.statements" :key="item.id">
+                    <div v-for="item in form.statements" :key="item.id" class='mb-3'>
                         <label class="mt-3" v-text="'* ' + item.title"></label>
                         <froala :tag="'textarea'" :config="config" v-model="item.statement"></froala>
+                        <button class="btn btn-xs btn-danger pull-right" @click="removeStatement(item.id)">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
                     </div>
-                    <div class="mt-3">
+                    <div class="pt-5">
                         <b-form-checkbox v-model="addNotes" @change="setAndFilter('additional_notes_show', $event)">Addtional notes.(Select if you wish to have Additional notes text box)</b-form-checkbox>  
                     </div>
                     <div>
@@ -109,6 +112,13 @@
                 } else {
                     this.form = null
                 }
+            },
+            removeStatement(id) {
+                apiStandardForm.deleteStatement(id)
+                    .then(response => {
+                        this.setForm(this.$route.params.form_id)
+                    })
+                    .catch(this.handleErrorResponse)
             }
         },
         watch: {

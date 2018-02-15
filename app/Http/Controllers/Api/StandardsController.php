@@ -57,7 +57,7 @@ class StandardsController extends ApiController
     }
 
     /**
-     * @param int $id
+     * @param int $form_id
      *
      * @return JsonResponse
      */
@@ -98,6 +98,18 @@ class StandardsController extends ApiController
         ]);
 
         return $this->respond(['message' => 'Statement successfully created', 'statement' => $statement]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return JsonResponse
+     */
+    public function statementDelete(int $id): JsonResponse
+    {
+        $this->standardStatement->findOrFail($id)->delete();
+
+        return $this->respond(['message' => 'Statement successfully deleted']);
     }
 
     /**

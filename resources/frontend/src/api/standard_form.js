@@ -12,13 +12,16 @@ export default {
     patch (id, data) {
         return axios.patch(standardFormResource + '/' + id, data)
     },
-    show(id) {
+    show (id) {
         return axios.get(standardFormResource + '/' + id)
     },
-    delete(id) {
+    delete (id) {
         return axios.delete(standardFormResource + '/' + id)
     },
     storeStatement (data) {
         return axios.post('/api/standard/statement', data)
+    },
+    deleteStatement (id) {
+        return axios.delete('/api/standard/statement' + '/' + id)
     }
 }
