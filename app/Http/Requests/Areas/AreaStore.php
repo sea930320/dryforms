@@ -20,8 +20,7 @@ class AreaStore extends BaseRequest
     {
         return [
             'title' => 'required|string',
-            'type' => 'required|in:system,company',
-            'company_id' => 'required|exists:companies,id'
+            'type' => 'required|in:system,company'
         ];
     }
 }

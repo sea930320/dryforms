@@ -1,25 +1,25 @@
 <template>
-    <b-list-group class="text-left p-0" v-if="isStandards === false">
+    <b-list-group class="text-left p-0" v-if='isLoaded'>
+        <template v-if="isStandards === true">
+            <b-list-group-item class="bg-blue mb-2 list-complete-item">
+                <router-link :to="{name: 'Forms Order'}" class="pointer text-white">
+                    <div class="m-0"><img v-if="leftLinksIcon['Forms Order'] != ''" :src="leftLinksIcon['Forms Order']"> Forms Order</div>
+                </router-link>
+            </b-list-group-item> 
+            <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="link.default_statements">
+                <router-link :to="{name: 'Standards Form', params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+                    <div class="m-0">
+                        <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
+                        <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
+                    </div>
+                </router-link>
+            </b-list-group-item>
+        </template>
         <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
             <router-link :to="link.path" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                 <div class="m-0">
                     <div class="left-sidebar-img" v-if="link.icon != ''"><img :src="link.icon"/></div>
                     <span class="left-sidebar-ellipse" :class="link.icon ? 'icon-margin' : ''"> {{ link.name }} </span>
-                </div>
-            </router-link>
-        </b-list-group-item>        
-    </b-list-group>
-    <b-list-group v-else-if="isStandards === true && isLoaded" class="text-left p-0">
-        <b-list-group-item class="bg-blue mb-2 list-complete-item">
-            <router-link :to="{name: 'Forms Order'}" class="pointer text-white">
-                <div class="m-0"><img v-if="leftLinksIcon['Forms Order'] != ''" :src="leftLinksIcon['Forms Order']"> Forms Order</div>
-            </router-link>
-        </b-list-group-item> 
-        <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
-            <router-link :to="{name: 'Standards Form', params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
-                <div class="m-0">
-                    <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
-                    <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
                 </div>
             </router-link>
         </b-list-group-item>
@@ -45,16 +45,16 @@
                 return this.$store.state.StandardForm.formsOrder
             },
             isLoaded: function() {
-                return this.isStandards === true && this.formsOrder.length !== 0
+                return this.isStandards === false || (this.isStandards === true && this.formsOrder.length !== 0)
             }
         },
         created() {
             this.leftLinksIcon = this.$config.get('leftLinksIcon')
+            this.leftLinks = this.$route.meta.leftLinks
             if (this.$route.path.indexOf('standards') !== -1) {
                 this.isStandards = true
                 this.fetchFormsOrder()
             } else {
-                this.leftLinks = this.$route.meta.leftLinks
                 this.isStandards = false
             }
         },
@@ -86,11 +86,11 @@
         },
         watch: {
             '$route' (to, from) {
+                this.leftLinks = this.$route.meta.leftLinks
                 if (to.path.indexOf('standards') !== -1) {
                     this.isStandards = true
                     this.fetchFormsOrder()
                 } else {
-                    this.leftLinks = this.$route.meta.leftLinks
                     this.isStandards = false
                 }
             }

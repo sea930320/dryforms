@@ -12,7 +12,7 @@
                     <label>* Enter form title</label>
                     <input type="text" class="form-control" v-model="form.title">
                     <div v-for="item in form.statements" :key="item.id">
-                        <label class="mt-3" v-text="'* ' + item.title"></label>
+                        <label class="mt-3" v-text="item.title ? '* ' + item.title : '* Enter form body text'"></label>
                         <froala :tag="'textarea'" :config="config" v-model="item.statement"></froala>
                         <!-- <button class="btn btn-xs btn-danger pull-right" @click="removeStatement(item.id)">
                             <i class="fa fa-trash"></i> Delete
@@ -77,6 +77,7 @@
                             title: 'Success',
                             text: 'Successfully saved'
                         })
+                        this.setForm(this.$route.params.form_id)
                     }).catch(this.handleErrorResponse)
                 } else {
                     apiStandardForm.store(this.form)
@@ -87,6 +88,7 @@
                             title: 'Success',
                             text: 'Successfully saved'
                         })
+                        this.setForm(this.$route.params.form_id)
                     }).catch(this.handleErrorResponse)
                 }
             })
@@ -106,7 +108,11 @@
 
                     apiStandardForm.show(formID)
                         .then(response => {
-                            this.$set(this.form, 'statements', response.data.statements)
+                            let statements = response.data.statements
+                            if (statements.length === 0) {
+                                statements.push(formPerID[0].default_statements)
+                            }
+                            this.$set(this.form, 'statements', statements)
                             this.isLoaded = true
                         })
                 } else {

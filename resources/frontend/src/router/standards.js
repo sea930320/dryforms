@@ -1,4 +1,28 @@
-const rightLinks = [
+const leftLinks = [
+  {
+      path: '/standards/areas',
+      name: 'Affected Areas',
+      icon: require('../assets/icon-antimicrobial.png'),
+      mt: true
+    },
+    {
+      path: '/standards/crews',
+      name: 'Crews / Teams',
+      icon: require('../assets/icon-callreport.png')
+    },
+    {
+      path: '/standards/structures',
+      name: 'Structures',
+      icon: require('../assets/icon-structure.png')
+    },
+    {
+      path: '/standards/materials',
+      name: 'Materials',
+      icon: require('../assets/icon-moisture.png')
+    }
+]
+
+const rightLinksMain = [
   {
     path: '/standards/support',
     name: 'Suggestions/Support',
@@ -9,13 +33,6 @@ const rightLinks = [
     name: 'Calendar',
     icon: require('../assets/icon-calendar.png')
   },
-  // {
-  //   methodCall: {
-  //     section: 'standards',
-  //     name: 'add_statement'
-  //   },
-  //   name: 'Add Statement'
-  // },
   {
     methodCall: {
       section: 'standards',
@@ -23,6 +40,19 @@ const rightLinks = [
     },
     name: 'Save',
     icon: require('../assets/icon-save.png')
+  }
+]
+
+const rightLinks = [
+  {
+    path: '/standards/support',
+    name: 'Suggestions/Support',
+    icon: require('../assets/icon-support.png')
+  },
+  {
+    path: '/standards/calendar',
+    name: 'Calendar',
+    icon: require('../assets/icon-calendar.png')
   }
 ]
 
@@ -38,6 +68,7 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard Side Menu Forms order Management',
       roles: ['customer'],
+      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -49,103 +80,13 @@ const routes = (configRoute) => [
     name: 'Standards Form',
     meta: {
       roles: ['customer'],
-      rightLinks: rightLinks
+      leftLinks: leftLinks,
+      rightLinks: rightLinksMain
     },
     component: resolve => {
       require(['../components/standards/Main.vue'], resolve)
     }
   },
-  {
-    path: '/standards/scope',
-    name: 'Project Scope',
-    props: {title: 'Scope'},
-    meta: {
-      title: 'Standards',
-      roles: ['customer'],
-      rightLinks: rightLinks
-    },
-    component: resolve => {
-      require(['../components/standards/Scope.vue'], resolve)
-    }
-  },
-  {
-    path: '/standards/authorization',
-    name: 'Work Authorization',
-    props: {title: 'Authorization'},
-    meta: {
-      title: 'Standards',
-      roles: ['customer'],
-      rightLinks: rightLinks
-    },
-    component: resolve => {
-      require(['../components/standards/Authorization.vue'], resolve)
-    }
-  },
-  // {
-  //   path: '/standards/antimicrobial',
-  //   name: 'Anti-Microbial',
-  //   props: {title: 'antimicrobial'},
-  //   meta: {
-  //     title: 'Standards',
-  //     roles: ['customer'],
-  //     rightLinks: rightLinks
-  //   },
-  //   component: resolve => {
-  //     require(['../components/standards/Antimicrobial.vue'], resolve)
-  //   }
-  // },
-  // {
-  //   path: '/standards/responsibility',
-  //   name: 'Customer Responsibility',
-  //   props: {title: 'Responsibility'},
-  //   meta: {
-  //     title: 'Standards',
-  //     roles: ['customer'],
-  //     rightLinks: rightLinks
-  //   },
-  //   component: resolve => {
-  //     require(['../components/standards/Responsibility.vue'], resolve)
-  //   }
-  // },
-  // {
-  //   path: '/standards/liability',
-  //   name: 'Release from Liability',
-  //   props: {title: 'Liability'},
-  //   meta: {
-  //     title: 'Standards',
-  //     roles: ['customer'],
-  //     rightLinks: rightLinks
-  //   },
-  //   component: resolve => {
-  //     require(['../components/standards/Liability.vue'], resolve)
-  //   }
-  // },
-  // {
-  //   path: '/standards/stoppage',
-  //   name: 'Work Stoppage',
-  //   props: {title: 'Stoppage'},
-  //   meta: {
-  //     title: 'Standards',
-  //     roles: ['customer'],
-  //     rightLinks: rightLinks
-  //   },
-  //   component: resolve => {
-  //     require(['../components/standards/Stoppage.vue'], resolve)
-  //   }
-  // },
-  // {
-  //   path: '/standards/certificate',
-  //   name: 'Certificate of Completion',
-  //   props: {title: 'Certificate'},
-  //   meta: {
-  //     title: 'Standards',
-  //     roles: ['customer'],
-  //     rightLinks: rightLinks
-  //   },
-  //   component: resolve => {
-  //     require(['../components/standards/Certificate.vue'], resolve)
-  //   }
-  // },
   {
     path: '/standards/areas',
     name: 'Affected Areas',
@@ -153,6 +94,7 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard Areas Management',
       roles: ['customer'],
+      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -166,6 +108,7 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard Crews/Teams Dropdown Management',
       roles: ['customer'],
+      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -179,6 +122,7 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard  Moisture Map Structures Dropdown Management',
       roles: ['customer'],
+      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -192,6 +136,7 @@ const routes = (configRoute) => [
     meta: {
       title: 'Standard  Moisture Map Materials Dropdown Management',
       roles: ['customer'],
+      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
@@ -205,6 +150,7 @@ const routes = (configRoute) => [
     meta: {
       title: 'Calendar',
       roles: ['customer'],
+      leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {

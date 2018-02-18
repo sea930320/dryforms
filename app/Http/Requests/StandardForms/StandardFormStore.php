@@ -32,7 +32,7 @@ class StandardFormStore extends BaseRequest
 
         if ($this->request->has('statements')) {
             foreach ($this->request->get('statements') as $key => $value) {
-                $rules['statements.' . $key . '.id'] = 'required|exists:standard_statements,id';
+                $rules['statements.' . $key . '.id'] = 'sometimes|nullable|exists:standard_statements,id';
                 $rules['statements.' . $key . '.form_id'] = 'required|exists:forms,id';
                 $rules['statements.' . $key . '.company_id'] = 'in:' . auth()->user()->company_id;
                 $rules['statements.' . $key . '.title'] = 'nullable|string';

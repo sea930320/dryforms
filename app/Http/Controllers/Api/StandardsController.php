@@ -79,7 +79,18 @@ class StandardsController extends ApiController
     public function store(StandardFormStore $request): JsonResponse
     {
         $form = $this->standardForm->create($request->validatedOnly());
-
+        if ($request->has('statements')) {
+            $statements = $request->get('statements');
+            foreach ($statements as $key => $statement) {
+                if (array_key_exists('id', $statement)) {
+                    $standardStatement = $this->standardStatement->find($statement['id']);
+                    $standardStatement->update($statement);
+                } else {
+                    $statement['company_id'] = auth()->user()->company_id;
+                    $this->standardStatement->create($statement);
+                }
+            }
+        }
         return $this->respond(['message' => 'Form successfully created', 'form' => $form]);
     }
 
@@ -124,8 +135,13 @@ class StandardsController extends ApiController
         if ($request->has('statements')) {
             $statements = $request->get('statements');
             foreach ($statements as $key => $statement) {
-                $standardStatement = $this->standardStatement->find($statement['id']);
-                $standardStatement->update($statement);
+                if (array_key_exists('id', $statement)) {
+                    $standardStatement = $this->standardStatement->find($statement['id']);
+                    $standardStatement->update($statement);
+                } else {
+                    $statement['company_id'] = auth()->user()->company_id;
+                    $this->standardStatement->create($statement);
+                }
             }
         }
         return $this->respond(['message' => 'Form successfully updated', 'form' => $form]);

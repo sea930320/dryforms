@@ -31,13 +31,17 @@ class AreasController extends ApiController
      *
      * @return JsonResponse
      */
-    public function index(AreasIndex $request, ArrayBuilder $arrayBuilder): JsonResponse
+    public function index(AreasIndex $request): JsonResponse
     {
-        $query = $this->area->newQuery();
-        $query = $arrayBuilder->apply($query, $request->all());
-        $areas = $query->paginate($request->get('per_page') ?? 20);
+        $provided_areas = $this->area->where('type', 'system');
+        $manual_areas = $this->area->where('company_id', auth()->user()->company->id);
+        $provided_areas = $provided_areas->get();
+        $manual_areas = $manual_areas->get();
 
-        return $this->respond($areas);
+        return $this->respond([
+            'provided_areas' => $provided_areas,
+            'manual_areas'=> $manual_areas
+        ]);
     }
 
     /**
@@ -49,7 +53,7 @@ class AreasController extends ApiController
     {
         $area = $this->area
             ->where('company_id', auth()->user()->company->id)
-            ->orWHere('type', 'system')
+            ->orWhere('type', 'system')
             ->findOrFail($id);
 
         return $this->respond($area);
@@ -65,7 +69,7 @@ class AreasController extends ApiController
         $area = $this->area->create([
             'title' => $request->get('title'),
             'type' => $request->get('type'),
-            'company_id' => $request->get('company_id'),
+            'company_id' => auth()->user()->company->id,
         ]);
 
         return $this->respond(['message' => 'Area successfully created', 'area' => $area]);

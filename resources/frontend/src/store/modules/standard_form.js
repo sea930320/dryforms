@@ -38,7 +38,6 @@ const mutations = {
                     signature: 0
                 }
                 form.standard_form.push(standardForm)
-            } else {
             }
         })
         state.formsOrder = formsOrder
