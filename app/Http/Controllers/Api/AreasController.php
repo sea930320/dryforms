@@ -6,7 +6,6 @@ use App\Http\Requests\Areas\AreaStore;
 use App\Http\Requests\Areas\AreaUpdate;
 use App\Models\Area;
 use Illuminate\Http\JsonResponse;
-use Williamoliveira\ArrayQueryBuilder\ArrayBuilder;
 
 class AreasController extends ApiController
 {
@@ -27,7 +26,6 @@ class AreasController extends ApiController
 
     /**
      * @param AreasIndex $request
-     * @param ArrayBuilder $arrayBuilder
      *
      * @return JsonResponse
      */

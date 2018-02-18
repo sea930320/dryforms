@@ -1,8 +1,8 @@
 <template>
 	<div class="standards-affected-areas">
-		<div v-if="isLoaded" class="card text-left">
+		<div v-if="isLoaded" class="card text-center">
 			<div class="card-header">
-			{{ $route.meta.title }}
+			    <h5>{{ $route.meta.title }}</h5>
 			</div>
 			<div class="card-body">
 			<b-row>

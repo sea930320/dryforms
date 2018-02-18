@@ -11,13 +11,8 @@ const leftLinks = [
       icon: require('../assets/icon-callreport.png')
     },
     {
-      path: '/standards/structures',
-      name: 'Structures',
-      icon: require('../assets/icon-structure.png')
-    },
-    {
-      path: '/standards/materials',
-      name: 'Materials',
+      path: '/standards/moisture',
+      name: 'Moisture Map',
       icon: require('../assets/icon-moisture.png')
     }
 ]
@@ -116,31 +111,17 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/standards/structures',
-    name: 'Structures',
-    props: {title: 'Structures'},
+    path: '/standards/moisture',
+    name: 'Moisture Map',
+    props: {title: 'Moisture Map'},
     meta: {
-      title: 'Standard  Moisture Map Structures Dropdown Management',
+      title: 'Standard Moisture Map Dropdown Management',
       roles: ['customer'],
       leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
-      require(['../components/standards/Structures.vue'], resolve)
-    }
-  },
-  {
-    path: '/standards/materials',
-    name: 'Materials',
-    props: {title: 'Materials'},
-    meta: {
-      title: 'Standard  Moisture Map Materials Dropdown Management',
-      roles: ['customer'],
-      leftLinks: leftLinks,
-      rightLinks: rightLinks
-    },
-    component: resolve => {
-      require(['../components/standards/Materials.vue'], resolve)
+      require(['../components/standards/Moisture.vue'], resolve)
     }
   },
   {
