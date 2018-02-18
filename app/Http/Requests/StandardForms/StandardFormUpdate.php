@@ -27,7 +27,8 @@ class StandardFormUpdate extends BaseRequest
             'title' => 'nullable|string',
             'additional_notes_show' => 'sometimes|required|in:0,1',
             'footer_text_show' => 'sometimes|required|in:0,1',
-            'signature' => 'sometimes|required|in:0,1',
+            'insured_signature' => 'nullable|string',
+            'company_signature' => 'nullable|string',
             'footer_text' => 'nullable|string'
         ];
 

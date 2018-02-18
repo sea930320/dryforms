@@ -25,7 +25,8 @@ class StandardForm extends Model
         'additional_notes_show',
         'footer_text_show',
         'footer_text',
-        'signature'
+        'insured_signature',
+        'company_signature'
     ];
 
     /**

@@ -27,11 +27,12 @@ Vue.use(VueConfig, {
 Vue.use(BootstrapVue)
 Vue.use(VueSession)
 Vue.use(Notifications)
-Vue.use(vueSignature)
 Vue.use(VueLodash, lodash)
 Vue.use(VeeValidate)
 Vue.use(FullCalendar)
 Vue.use(VueFroala)
+Vue.use(vueSignature)
+
 Vue.mixin(globalMixin)
 
 const bus = new Vue()

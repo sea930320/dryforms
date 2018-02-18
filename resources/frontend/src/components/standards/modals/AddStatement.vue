@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="standardsAddStatement" :title="modalName" class="text-left" @ok="store()" v-model="show">
+    <b-modal id="standardsAddStatement" :title="modalName" class="text-left" v-model="show">
         <div class="form-group">
             <label>Title:</label>
             <input type="text" name="title" class="form-control" :class="{'is-invalid': (errors.has('title'))}" v-validate data-vv-rules="required" v-model="title" placeholder="Enter statement title">

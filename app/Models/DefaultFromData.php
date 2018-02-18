@@ -20,7 +20,8 @@ class DefaultFromData extends Model
         'additional_notes_show',
         'footer_text_show',
         'footer_text',
-        'signature'
+        'insured_signature',
+        'company_signature'
     ];
 
     /**
@@ -29,6 +30,11 @@ class DefaultFromData extends Model
     public $visible = [
         'name',
         'title',
-        'statement'
+        'form_id',
+        'additional_notes_show',
+        'footer_text_show',
+        'footer_text',
+        'insured_signature',
+        'company_signature'
     ];
 }

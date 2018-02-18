@@ -14,9 +14,6 @@
                     <div v-for="item in form.statements" :key="item.id">
                         <label class="mt-3" v-text="item.title ? '* ' + item.title : '* Enter form body text'"></label>
                         <froala :tag="'textarea'" :config="config" v-model="item.statement"></froala>
-                        <!-- <button class="btn btn-xs btn-danger pull-right" @click="removeStatement(item.id)">
-                            <i class="fa fa-trash"></i> Delete
-                        </button> -->
                     </div>
                     <div class="mt-3">
                         <b-form-checkbox v-model="addNotes" @change="setAndFilter('additional_notes_show', $event)">Addtional notes.(Select if you wish to have Additional notes text box)</b-form-checkbox>  
@@ -26,8 +23,55 @@
                         <div v-if="form.footer_text_show">
                             <froala :tag="'textarea'" id="footerEditor" :config="config" v-model="form.footer_text" class="mb-3"></froala>
                         </div>
-                    </div>      
-                    <b-form-checkbox v-model="addSignature" @change="setAndFilter('signature', $event)">Owner/Occupant and Company electric signature.(Select if you wich to have electric signature)</b-form-checkbox>
+                    </div>
+                    <b-row class="info-bottom mt-3">
+                        <b-col cols="4">
+                            <div class="info-line-bottom">
+                                <label>Insured</label>
+                                <label class="entry">&nbsp;</label>
+                            </div>
+                            <div class="info-line-bottom">
+                                <label>Company</label>
+                                <label class="entry">&nbsp;</label>
+                            </div>
+                        </b-col>
+                        <b-col cols="4">
+                            <div class="info-line-bottom" @click="signatureModal('insured')">
+                                <label>Signature</label>
+                                <img v-if='form.insured_signature' :src='form.insured_signature'/>
+                                <label v-else class="entry">&nbsp;</label>
+                            </div>
+                            <div class="info-line-bottom" @click="signatureModal('company')">
+                                <label>Signature</label>
+                                <img v-if='form.company_signature' :src='form.company_signature'/>
+                                <label v-else class="entry">&nbsp;</label>
+                            </div>
+                        </b-col>
+                        <b-col cols="4">
+                            <div class="info-line-bottom">
+                                <label>Date</label>
+                                <label class="entry">&nbsp;</label>
+                            </div>
+                            <div class="info-line-bottom">
+                                <label>Date</label>
+                                <label class="entry">&nbsp;</label>
+                            </div>
+                        </b-col>
+                    </b-row>
+                    <b-modal id="standardsSignature" title="Electronic Sign Pad" class="text-left" v-model="showSignature">
+                        <vueSignature ref="signature" :sigOption="option" :w="'466px'" :h="'200px'"></vueSignature>
+                        <template slot="modal-footer">
+                            <b-btn variant="primary" @click="save">
+                                Ok
+                            </b-btn>
+                            <b-btn variant="info" @click="clear">
+                                Clear
+                            </b-btn>
+                            <b-btn variant="" @click="showSignature = false">
+                                Cancel
+                            </b-btn>
+                        </template>
+                    </b-modal>
                 </b-container>
             </div>
             <div class="card-footer"></div>
@@ -53,7 +97,6 @@
                 isLoaded: false,
                 addNotes: false,
                 addFooter: false,
-                addSignature: false,
                 config: {
                     key: this.$config.get('froala_key'),
                     events: {
@@ -61,6 +104,11 @@
                             console.log('initialized')
                         }
                     }
+                },
+                showSignature: false,
+                modal_type: '',
+                option: {
+                    penColor: 'rgb(0, 0, 0)'
                 }
             }
         },
@@ -104,8 +152,6 @@
                     this.form = formPerID[0].standard_form[0]
                     this.addNotes = (this.form.additional_notes_show === 1)
                     this.addFooter = (this.form.footer_text_show === 1)
-                    this.addSignature = (this.form.signature === 1)
-
                     apiStandardForm.show(formID)
                         .then(response => {
                             let statements = response.data.statements
@@ -125,6 +171,30 @@
                         this.setForm(this.$route.params.form_id)
                     })
                     .catch(this.handleErrorResponse)
+            },
+            signatureModal(type) {
+                this.modal_type = type
+                document.querySelector('#standardsSignature canvas').setAttribute('width', '466')
+                document.querySelector('#standardsSignature canvas').setAttribute('height', '200')
+                this.showSignature = true
+            },
+            save() {
+                var _this = this
+                debugger
+                var png = _this.$refs.signature.save()
+                if (_this.$refs.signature.isEmpty()) {
+                    png = ''
+                }
+                if (_this.modal_type === 'insured') {
+                    _this.form.insured_signature = png
+                } else {
+                    _this.form.company_signature = png
+                }
+                _this.showSignature = false
+            },
+            clear() {
+                var _this = this
+                _this.$refs.signature.clear()
             }
         },
         watch: {
@@ -149,10 +219,21 @@
         height: 400px;
         overflow: auto;
     }
-    // .content-container {
-    //     label {
-    //         color: white;
-    //         text-shadow: -2px 2px 10px #000000;
-    //     }
-    // }
+    .info-line-bottom label {
+        width: 90%;
+    }
+    .entry {
+        background: #E5E5E5;
+    }
+    .info-bottom label {
+        font-weight: 600;
+        height: 30px;
+    }
+    .info-bottom img {
+        height: 30px;
+        margin-bottom: 8px;
+    }
+    #standardsSignature .modal-dialog {
+        width: 500px !important;
+    }
 </style>

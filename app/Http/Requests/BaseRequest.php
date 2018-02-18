@@ -11,7 +11,7 @@ abstract class BaseRequest extends FormRequest
     public function validatedOnly(): array
     {
         return array_filter( $this->only(array_keys($this->rules())), function($input, $key) {
-            return $input || $input == '0';
+            return $input || $input == '0' || $input == '';
         }, ARRAY_FILTER_USE_BOTH);
     }
 

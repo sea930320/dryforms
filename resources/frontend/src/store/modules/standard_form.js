@@ -32,10 +32,11 @@ const mutations = {
                     company_id: form.company_id,
                     name: form.default_forms_data.name || form.form.name,
                     title: form.default_forms_data.title || form.form.name,
-                    additional_notes_show: 0,
-                    footer_text_show: 0,
-                    footer_text: null,
-                    signature: 0
+                    additional_notes_show: form.default_forms_data.additional_notes_show,
+                    footer_text_show: form.default_forms_data.footer_text_show,
+                    footer_text: form.default_forms_data.footer_text,
+                    insured_signature: form.default_forms_data.insured_signature,
+                    company_signature: form.default_forms_data.company_signature
                 }
                 form.standard_form.push(standardForm)
             }
