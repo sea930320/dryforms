@@ -6,6 +6,8 @@ use App\Http\Requests\Materials\MaterialIndex;
 use App\Http\Requests\Materials\MaterialStore;
 use App\Http\Requests\Materials\MaterialUpdate;
 use App\Models\StandardMaterial;
+use App\Models\DefaultMaterial;
+
 use Illuminate\Http\JsonResponse;
 
 class MaterialsController extends ApiController
@@ -13,16 +15,23 @@ class MaterialsController extends ApiController
     /**
      * @var StandardMaterial
      */
-    private $materials;
+    private $material;
+
+    /**
+     * @var DefaultMaterial
+     */
+    private $defaultMaterial;
 
     /**
      * MaterialsController constructor.
      *
-     * @param StandardMaterial $materials
+     * @param StandardMaterial $material
+     * @param DefaultMaterial $defaultMaterial
      */
-    public function __construct(StandardMaterial $materials)
+    public function __construct(StandardMaterial $material, DefaultMaterial $defaultMaterial)
     {
-        $this->materials = $materials;
+        $this->material = $material;
+        $this->defaultMaterial = $defaultMaterial;
     }
 
     /**
@@ -32,14 +41,18 @@ class MaterialsController extends ApiController
      */
     public function index(MaterialIndex $request): JsonResponse
     {
-        $provided_materials = $this->materials->where('type', 'system');
-        $manual_materials = $this->materials->where('company_id', auth()->user()->company->id);
-        $provided_materials = $provided_materials->get();
-        $manual_materials = $manual_materials->get();
-
+        if ($this->material->count() == 0) {
+            $defaultMaterials = $this->defaultMaterial->get();
+            foreach ($defaultMaterials as $key => $defaultMaterial) {
+                $this->material->create([
+                    'title' => $defaultMaterial['title'],
+                    'company_id' => auth()->user()->company->id
+                ]);
+            }
+        }
+        $materials = $this->material->get();
         return $this->respond([
-            'provided_materials' => $provided_materials,
-            'manual_materials'=> $manual_materials
+            'materials' => $materials
         ]);
     }
 
@@ -50,11 +63,8 @@ class MaterialsController extends ApiController
      */
     public function show(int $id): JsonResponse
     {
-        $material = $this->materials
-            ->where('company_id', auth()->user()->company->id)
-            ->orWhere('type', 'system')
+        $material = $this->material
             ->findOrFail($id);
-
         return $this->respond($material);
     }
 
@@ -65,9 +75,8 @@ class MaterialsController extends ApiController
      */
     public function store(MaterialStore $request): JsonResponse
     {
-        $material = $this->materials->create([
+        $material = $this->material->create([
             'title' => $request->get('title'),
-            'type' => $request->get('type'),
             'company_id' => auth()->user()->company->id,
         ]);
 
@@ -81,8 +90,8 @@ class MaterialsController extends ApiController
      */
     public function update(MaterialUpdate $request): JsonResponse
     {
-        $material = $this->materials
-            ->where('company_id', auth()->user()->company->id)
+
+        $material = $this->material
             ->findOrFail($request->input('material_id'));
         $material->update($request->validatedOnly());
 
@@ -96,7 +105,7 @@ class MaterialsController extends ApiController
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->materials->findOrFail($id)->delete();
+        $this->material->findOrFail($id)->delete();
 
         return $this->respond(['message' => 'Material successfully deleted']);
     }

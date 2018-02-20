@@ -6,11 +6,6 @@
             <input type="text" class="form-control" aria-describedby="emailHelp"
                    placeholder="Enter team name" v-model="team.name">
         </div>
-        <div class="form-group">
-            <label>Description:</label>
-            <input type="text" class="form-control" aria-describedby="emailHelp"
-                   placeholder="Enter short description" v-model="team.description">
-        </div>
     </b-modal>
 
 </template>
@@ -24,8 +19,7 @@
             this.$parent.$on('openCreateModal', () => {
                 this.team = {
                     id: null,
-                    name: null,
-                    description: null
+                    name: null
                 }
                 this.show = true
             })
@@ -40,8 +34,7 @@
                 show: false,
                 team: {
                     id: null,
-                    name: null,
-                    description: null
+                    name: null
                 }
             }
         },

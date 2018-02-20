@@ -11,11 +11,6 @@
             <input type="text" class="form-control" aria-describedby="emailHelp"
                    placeholder="Enter prefix" v-model="category.prefix">
         </div>
-        <div class="form-group">
-            <label>Description:</label>
-            <input type="text" class="form-control" aria-describedby="emailHelp"
-                   placeholder="Enter short description" v-model="category.description">
-        </div>
     </b-modal>
 
 </template>
@@ -32,8 +27,7 @@
                 this.category = {
                     id: null,
                     name: null,
-                    prefix: null,
-                    description: null
+                    prefix: null
                 }
                 this.show = true
             })
@@ -49,8 +43,7 @@
                 category: {
                     id: null,
                     name: null,
-                    prefix: null,
-                    description: null
+                    prefix: null
                 }
             }
         },

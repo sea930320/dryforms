@@ -8,9 +8,8 @@
                 <h6> Structure Dropdown Management </h6>
                 <hr/>
                 <b-row>
-                    <div class="col-md-6">
-                        <label>Manually added structures</label>
-                        <b-table ref="manualStructuresTable" :items="manualStructures" small striped hover foot-clone :fields="manualHeader" head-variant="" align-v="center">
+                    <div class="col-md-12">
+                        <b-table ref="structuresTable" :items="structures" small striped hover foot-clone :fields="header" head-variant="" align-v="center">
                             <template slot="no" slot-scope="data">
                                 {{ data.index + 1 }}
                             </template>
@@ -18,6 +17,8 @@
                                 <i class="fa fa-trash text-danger" @click="deleteStructure(row.item.id)"></i>
                             </template>
                         </b-table>
+                    </div>
+                    <div class="col-md-6">
                         <form data-vv-scope="form-structure">
                             <label>Add Structure:</label>
                             <b-input-group :size="template_size">
@@ -28,21 +29,13 @@
                             </b-input-group>
                         </form>
                     </div>
-                    <div class="col-md-6">
-                        <label>Provided structures</label>
-                        <b-table ref="providedStructuresTable" :items="providedStructures" small striped hover foot-clone :fields="providedHeader" head-variant="" align-v="center">
-                            <template slot="no" slot-scope="data">
-                                {{ data.index + 1 }}
-                            </template>
-                        </b-table>
-                    </div>
                 </b-row>
                 <h6 class="mt-5"> Material Dropdown Management </h6>
                 <hr/>
                 <b-row>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label>Manually added materials</label>
-                        <b-table ref="manualMaterialsTable" :items="manualMaterials" small striped hover foot-clone :fields="manualHeader" head-variant="" align-v="center">
+                        <b-table ref="materialsTable" :items="materials" small striped hover foot-clone :fields="header" head-variant="" align-v="center">
                             <template slot="no" slot-scope="data">
                                 {{ data.index + 1 }}
                             </template>
@@ -50,6 +43,8 @@
                                 <i class="fa fa-trash text-danger" @click="deleteMaterial(row.item.id)"></i>
                             </template>
                         </b-table>
+                    </div>
+                    <div class="col-md-6">
                         <form data-vv-scope="form-material">
                             <label>Add Material:</label>
                             <b-input-group :size="template_size">
@@ -59,14 +54,6 @@
                                 </b-input-group-button>
                             </b-input-group>
                         </form>
-                    </div>
-                    <div class="col-md-6">
-                        <label>Provided materials</label>
-                        <b-table ref="providedMaterialsTable" :items="providedMaterials" small striped hover foot-clone :fields="providedHeader" head-variant="" align-v="center">
-                            <template slot="no" slot-scope="data">
-                                {{ data.index + 1 }}
-                            </template>
-                        </b-table>
                     </div>
                 </b-row>
 			</div>
@@ -88,7 +75,7 @@ export default {
     },
     data() {
         return {
-            manualHeader: {
+            header: {
                 no: {
                     label: 'No',
                     'class': 'text-center',
@@ -105,24 +92,8 @@ export default {
                     'class': 'text-center'
                 }
             },
-            providedHeader: [
-                {
-                    text: 'No',
-                    sortable: false,
-                    key: 'no'
-                },
-                {
-                    text: 'Title',
-                    sortable: false,
-                    key: 'title'
-                }
-            ],
-            manualStructures: [],
-            providedStructures: [],
-            manualMaterials: [],
-            providedMaterials: [],
-            addFavoriteFromManual: [],
-            addFavoriteFromProvide: [],
+            structures: [],
+            materials: [],
             isLoaded: false,
             newStructure: '',
             newMaterial: ''
@@ -136,10 +107,8 @@ export default {
         ]
         return Promise.all(apis)
             .then(response => {
-                self.manualStructures = response[0].data.manual_structures
-                self.providedStructures = response[0].data.provided_structures
-                self.manualMaterials = response[1].data.manual_materials
-                self.providedMaterials = response[1].data.provided_materials
+                self.structures = response[0].data.structures
+                self.materials = response[1].data.materials
                 self.isLoaded = true
             })
             .catch(this.handleErrorResponse)
@@ -152,11 +121,10 @@ export default {
             }
             let self = this
             apiStandardStructure.store({
-                title: this.newStructure,
-                type: 'company'
+                title: this.newStructure
             })
             .then(function(response) {
-                self.manualStructures.push(response.data.structure)
+                self.structures.push(response.data.structure)
                 self.newStructure = ''
             })
             .catch(this.handleErrorResponse)
@@ -165,7 +133,7 @@ export default {
             let self = this
             apiStandardStructure.delete(id)
             .then(function(response) {
-                self.manualStructures.splice(self.manualStructures.findIndex(function(structure) {
+                self.structures.splice(self.structures.findIndex(function(structure) {
                     return structure.id === id
                 }), 1)
             })
@@ -178,11 +146,10 @@ export default {
             }
             let self = this
             apiStandardMaterials.store({
-                title: this.newMaterial,
-                type: 'company'
+                title: this.newMaterial
             })
             .then(function(response) {
-                self.manualMaterials.push(response.data.material)
+                self.materials.push(response.data.material)
                 self.newMaterial = ''
             })
             .catch(this.handleErrorResponse)
@@ -191,7 +158,7 @@ export default {
             let self = this
             apiStandardMaterials.delete(id)
             .then(function(response) {
-                self.manualMaterials.splice(self.manualMaterials.findIndex(function(material) {
+                self.materials.splice(self.materials.findIndex(function(material) {
                     return material.id === id
                 }), 1)
             })

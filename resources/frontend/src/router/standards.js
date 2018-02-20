@@ -71,6 +71,20 @@ const routes = (configRoute) => [
     }
   },
   {
+    path: '/standards/scope',
+    name: 'Project Scope',
+    props: {title: 'Scope'},
+    meta: {
+      title: 'Standards',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinksMain
+    },
+    component: resolve => {
+      require(['../components/standards/Scope.vue'], resolve)
+    }
+  },
+  {
     path: '/standards/form_id/:form_id',
     name: 'Standards Form',
     meta: {

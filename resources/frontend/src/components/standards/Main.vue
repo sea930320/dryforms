@@ -38,13 +38,11 @@
                         <b-col cols="4">
                             <div class="info-line-bottom" @click="signatureModal('insured')">
                                 <label>Signature</label>
-                                <img v-if='form.insured_signature' :src='form.insured_signature'/>
-                                <label v-else class="entry">&nbsp;</label>
+                                <label class="entry">&nbsp;</label>
                             </div>
                             <div class="info-line-bottom" @click="signatureModal('company')">
                                 <label>Signature</label>
-                                <img v-if='form.company_signature' :src='form.company_signature'/>
-                                <label v-else class="entry">&nbsp;</label>
+                                <label class="entry">&nbsp;</label>
                             </div>
                         </b-col>
                         <b-col cols="4">
@@ -58,7 +56,7 @@
                             </div>
                         </b-col>
                     </b-row>
-                    <b-modal id="standardsSignature" title="Electronic Sign Pad" class="text-left" v-model="showSignature">
+                    <!-- <b-modal id="standardsSignature" title="Electronic Sign Pad" class="text-left" v-model="showSignature">
                         <vueSignature ref="signature" :sigOption="option" :w="'466px'" :h="'200px'"></vueSignature>
                         <template slot="modal-footer">
                             <b-btn variant="primary" @click="save">
@@ -71,7 +69,7 @@
                                 Cancel
                             </b-btn>
                         </template>
-                    </b-modal>
+                    </b-modal> -->
                 </b-container>
             </div>
             <div class="card-footer"></div>
@@ -104,19 +102,22 @@
                             console.log('initialized')
                         }
                     }
-                },
-                showSignature: false,
-                modal_type: '',
-                option: {
-                    penColor: 'rgb(0, 0, 0)'
                 }
+                // showSignature: false,
+                // modal_type: '',
+                // option: {
+                //     penColor: 'rgb(0, 0, 0)'
+                // }
             }
         },
         created() {
             this.$on('reloadStatement', () => {
                 this.setForm(this.$route.params.form_id)
             })
-            this.$bus.$on('standards_save', () => {
+            this.$bus.$on('standards_save', this.save)
+        },
+        methods: {
+            save() {
                 if (this.form.id) {
                     apiStandardForm.patch(this.form.id, this.form)
                     .then(response => {
@@ -139,9 +140,7 @@
                         this.setForm(this.$route.params.form_id)
                     }).catch(this.handleErrorResponse)
                 }
-            })
-        },
-        methods: {
+            },
             setAndFilter(field, value) {
                 this.form[field] = (value ? 1 : 0)
                 if (field === 'footer_text_show' && !value) this.form.footer_text = null
@@ -156,7 +155,7 @@
                         .then(response => {
                             let statements = response.data.statements
                             if (statements.length === 0) {
-                                statements.push(formPerID[0].default_statements)
+                                statements = formPerID[0].default_statements
                             }
                             this.$set(this.form, 'statements', statements)
                             this.isLoaded = true
@@ -171,31 +170,34 @@
                         this.setForm(this.$route.params.form_id)
                     })
                     .catch(this.handleErrorResponse)
-            },
-            signatureModal(type) {
-                this.modal_type = type
-                document.querySelector('#standardsSignature canvas').setAttribute('width', '466')
-                document.querySelector('#standardsSignature canvas').setAttribute('height', '200')
-                this.showSignature = true
-            },
-            save() {
-                var _this = this
-                debugger
-                var png = _this.$refs.signature.save()
-                if (_this.$refs.signature.isEmpty()) {
-                    png = ''
-                }
-                if (_this.modal_type === 'insured') {
-                    _this.form.insured_signature = png
-                } else {
-                    _this.form.company_signature = png
-                }
-                _this.showSignature = false
-            },
-            clear() {
-                var _this = this
-                _this.$refs.signature.clear()
             }
+            // signatureModal(type) {
+            //     this.modal_type = type
+            //     document.querySelector('#standardsSignature canvas').setAttribute('width', '466')
+            //     document.querySelector('#standardsSignature canvas').setAttribute('height', '200')
+            //     this.showSignature = true
+            // },
+            // save() {
+            //     var _this = this
+            //     debugger
+            //     var png = _this.$refs.signature.save()
+            //     if (_this.$refs.signature.isEmpty()) {
+            //         png = ''
+            //     }
+            //     if (_this.modal_type === 'insured') {
+            //         _this.form.insured_signature = png
+            //     } else {
+            //         _this.form.company_signature = png
+            //     }
+            //     _this.showSignature = false
+            // },
+            // clear() {
+            //     var _this = this
+            //     _this.$refs.signature.clear()
+            // }
+        },
+        beforeDestroy () {
+            this.$bus.$off('standards_save', this.save)
         },
         watch: {
             '$store.state.StandardForm.formsOrder': function() {
@@ -227,12 +229,11 @@
     }
     .info-bottom label {
         font-weight: 600;
-        height: 30px;
     }
-    .info-bottom img {
-        height: 30px;
-        margin-bottom: 8px;
-    }
+    // .info-bottom img {
+    //     height: 30px;
+    //     margin-bottom: 8px;
+    // }
     #standardsSignature .modal-dialog {
         width: 500px !important;
     }

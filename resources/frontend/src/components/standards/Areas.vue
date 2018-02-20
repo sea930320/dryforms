@@ -6,9 +6,8 @@
 			</div>
 			<div class="card-body">
 			<b-row>
-				<div class="col-md-6">
-                    <label>Manually added areas</label>
-                    <b-table ref="manualAreasTable" :items="manualAreas" small striped hover foot-clone :fields="manualAreasHeader" head-variant="" align-v="center">
+				<div class="col-md-12">
+                    <b-table ref="areasTable" :items="areas" small striped hover foot-clone :fields="areasHeader" head-variant="" align-v="center">
                         <template slot="no" slot-scope="data">
                             {{ data.index + 1 }}
                         </template>
@@ -16,6 +15,8 @@
                             <i class="fa fa-trash text-danger" @click="deleteArea(row.item.id)"></i>
                         </template>
                     </b-table>
+				</div>
+				<div class="col-md-6">
                     <label>Add Area:</label>
                     <b-input-group :size="template_size">
                         <input type="text" class="form-control form-control-sm" placeholder="Input title" v-model="newArea" name="newArea" :class="{'is-invalid': errors.has('newArea')}" v-validate data-vv-rules="required">
@@ -23,14 +24,6 @@
                             <b-btn :size="template_size" :variant="'primary'" @click='addArea'>+</b-btn>
                         </b-input-group-button>
                     </b-input-group>
-				</div>
-				<div class="col-md-6">
-                    <label>Provided areas</label>
-                    <b-table ref="providedAreasTable" :items="providedAreas" small striped hover foot-clone :fields="providedAreasHeader" head-variant="" align-v="center">
-                        <template slot="no" slot-scope="data">
-                        {{ data.index + 1 }}
-                        </template>
-                    </b-table>
 				</div>
 			</b-row>      
 			</div>
@@ -51,7 +44,7 @@ export default {
     },
     data() {
         return {
-            manualAreasHeader: {
+            areasHeader: {
                 no: {
                     label: 'No',
                     'class': 'text-center',
@@ -68,22 +61,7 @@ export default {
                     'class': 'text-center'
                 }
             },
-            providedAreasHeader: [
-                {
-                    text: 'No',
-                    sortable: false,
-                    key: 'no'
-                },
-                {
-                    text: 'Title',
-                    sortable: false,
-                    key: 'title'
-                }
-            ],
-            manualAreas: [],
-            providedAreas: [],
-            addFavoriteFromManual: [],
-            addFavoriteFromProvide: [],
+            areas: [],
             isLoaded: false,
             newArea: ''
         }
@@ -92,8 +70,7 @@ export default {
         let self = this
         apiStandardArea.index()
         .then(function(response) {
-            self.manualAreas = response.data.manual_areas
-            self.providedAreas = response.data.provided_areas
+            self.areas = response.data.areas
             self.isLoaded = true
         })
         .catch(this.handleErrorResponse)
@@ -108,11 +85,10 @@ export default {
             }
             let self = this
             apiStandardArea.store({
-                title: this.newArea,
-                type: 'company'
+                title: this.newArea
             })
             .then(function(response) {
-                self.manualAreas.push(response.data.area)
+                self.areas.push(response.data.area)
                 self.newArea = ''
                 self.errors.clear()
             })
@@ -122,7 +98,7 @@ export default {
             let self = this
             apiStandardArea.delete(id)
             .then(function(response) {
-                self.manualAreas.splice(self.manualAreas.findIndex(function(area) {
+                self.areas.splice(self.areas.findIndex(function(area) {
                     return area.id === id
                 }), 1)
             })

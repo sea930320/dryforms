@@ -205,7 +205,7 @@ class EquipmentsController extends ApiController
             $serials = [['value'=>intval($request_params['serial'], 10)]];
             $valRet = $this->validateSerials($serials, $request_params['category_id'], $categoryPrefix);
             if (empty($valRet['exists'])) {
-                $request_params['serial'] = $categoryPrefix. str_pad(intval($request_params['serial'],10), Config::get('constants.equipment.serial_length'), "0", STR_PAD_LEFT);
+                $request_params['serial'] = $categoryPrefix. str_pad(intval($request_params['serial'],10), $this->config->get('constants.equipment.serial_length'), "0", STR_PAD_LEFT);
                 unset($request_params['category_id']);
             } else {
                 return $this->respond(['message' => 'exist']);

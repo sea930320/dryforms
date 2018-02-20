@@ -1,6 +1,6 @@
 <template>
     <b-list-group class="text-center">
-        <b-list-group-item v-for="link in $route.meta.rightLinks" :key="link.name" :class="link.mt ? 'mt-2': ''"  v-if="!isFormOrder || !isHiddenMenu(link.name)">
+        <b-list-group-item v-for="link in $route.meta.rightLinks" :key="link.name" :class="link.mt ? 'mt-2': ''">
             <router-link v-if="link.path" :to="link.path" class="pointer text-white text-center">
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
@@ -21,8 +21,15 @@
             }
         },
         methods: {
-            isHiddenMenu(menuName) {
-                return (this.formOrderHiddenMenu.indexOf(menuName) > -1)
+            methodCall(mth) {
+                return this[mth.section](mth.name)
+            },
+            standards(name) {
+                if (name === 'add_statement') {
+                    this.$bus.$emit('standards_add_statement')
+                } else if (name === 'save') {
+                    this.$bus.$emit('standards_save')
+                }
             }
         },
         watch: {

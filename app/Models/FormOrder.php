@@ -42,7 +42,7 @@ class FormOrder extends Model
      */
     public function default_statements()
     {
-        return $this->hasOne(DefaultStatement::class, 'form_id', 'form_id');
+        return $this->hasMany(DefaultStatement::class, 'form_id', 'form_id');
     }
 
     /**

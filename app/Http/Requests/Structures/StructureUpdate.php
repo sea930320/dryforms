@@ -21,7 +21,6 @@ class StructureUpdate extends BaseRequest
         return [
             'structure_id' => 'exists:standard_structures,id',
             'title' => 'required|string',
-            'type' => 'required|in:system,company',
             'company_id' => 'required|exists:companies,id'
         ];
     }

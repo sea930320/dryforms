@@ -6,6 +6,8 @@ use App\Http\Requests\Structures\StructureIndex;
 use App\Http\Requests\Structures\StructureStore;
 use App\Http\Requests\Structures\StructureUpdate;
 use App\Models\StandardStructure;
+use App\Models\DefaultStructure;
+
 use Illuminate\Http\JsonResponse;
 
 class StructuresController extends ApiController
@@ -13,16 +15,23 @@ class StructuresController extends ApiController
     /**
      * @var StandardStructure
      */
-    private $structures;
+    private $structure;
+
+    /**
+     * @var DefaultStructure
+     */
+    private $defaultStructure;
 
     /**
      * StructuresController constructor.
      *
-     * @param StandardStructure $structures
+     * @param StandardStructure $structure
+     * @param DefaultStructure $defaultStructure
      */
-    public function __construct(StandardStructure $structures)
+    public function __construct(StandardStructure $structure, DefaultStructure $defaultStructure)
     {
-        $this->structures = $structures;
+        $this->structure = $structure;
+        $this->defaultStructure = $defaultStructure;
     }
 
     /**
@@ -32,14 +41,18 @@ class StructuresController extends ApiController
      */
     public function index(StructureIndex $request): JsonResponse
     {
-        $provided_structures = $this->structures->where('type', 'system');
-        $manual_structures = $this->structures->where('company_id', auth()->user()->company->id);
-        $provided_structures = $provided_structures->get();
-        $manual_structures = $manual_structures->get();
-
+        if ($this->structure->count() == 0) {
+            $defaultStructures = $this->defaultStructure->get();
+            foreach ($defaultStructures as $key => $defaultStructure) {
+                $this->structure->create([
+                    'title' => $defaultStructure['title'],
+                    'company_id' => auth()->user()->company->id
+                ]);
+            }
+        }
+        $structures = $this->structure->get();
         return $this->respond([
-            'provided_structures' => $provided_structures,
-            'manual_structures'=> $manual_structures
+            'structures' => $structures
         ]);
     }
 
@@ -50,11 +63,8 @@ class StructuresController extends ApiController
      */
     public function show(int $id): JsonResponse
     {
-        $structure = $this->structures
-            ->where('company_id', auth()->user()->company->id)
-            ->orWhere('type', 'system')
+        $structure = $this->structure
             ->findOrFail($id);
-
         return $this->respond($structure);
     }
 
@@ -65,9 +75,8 @@ class StructuresController extends ApiController
      */
     public function store(StructureStore $request): JsonResponse
     {
-        $structure = $this->structures->create([
+        $structure = $this->structure->create([
             'title' => $request->get('title'),
-            'type' => $request->get('type'),
             'company_id' => auth()->user()->company->id,
         ]);
 
@@ -81,8 +90,7 @@ class StructuresController extends ApiController
      */
     public function update(StructureUpdate $request): JsonResponse
     {
-        $structure = $this->structures
-            ->where('company_id', auth()->user()->company->id)
+        $structure = $this->structure
             ->findOrFail($request->input('structure_id'));
         $structure->update($request->validatedOnly());
 
@@ -96,7 +104,7 @@ class StructuresController extends ApiController
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->structures->findOrFail($id)->delete();
+        $this->structure->findOrFail($id)->delete();
 
         return $this->respond(['message' => 'Structure successfully deleted']);
     }

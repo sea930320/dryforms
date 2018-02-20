@@ -40,10 +40,7 @@ class AlterUsersCompanyId extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::table('companies', function ($table) {
-            $table->dropForeign('companies_user_id_foreign');
-        });
-
+        
         Schema::table('users', function ($table) {
             $table->dropColumn('company_id');
         });

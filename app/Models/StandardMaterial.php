@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
 class StandardMaterial extends Model
 {
+    use BelongsToCompany;
     /**
      * @var string
      */
@@ -22,7 +24,6 @@ class StandardMaterial extends Model
     public $visible = [
         'id',
         'title',
-        'type',
         'company_id'
     ];
 }

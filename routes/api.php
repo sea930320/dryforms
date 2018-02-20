@@ -32,6 +32,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('roles', 'RolesController');
     $router->resource('standard/forms', 'StandardsController');
     $router->resource('standard/form_orders', 'FormOrdersController');
+    $router->resource('standard/scopes', 'StandardScopesController');
     $router->resource('areas', 'AreasController');
     $router->resource('standard/structures', 'StructuresController');
     $router->resource('standard/materials', 'MaterialsController');
@@ -41,6 +42,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->get('validate-serial/{serial}/category_id/{categoryId}', 'EquipmentsController@validateSerial');
     $router->post('standard/statement', ['uses' => 'StandardsController@statementStore', 'as' => 'standard.statement.store']);
     $router->delete('standard/statement/{id}', ['uses' => 'StandardsController@statementDelete', 'as' => 'standard.statement.delete']);
+    
     /** Account */
     $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);
     $router->post('account/password/change', ['uses' => 'AccountController@changePassword', 'as' => 'account.password.change']);

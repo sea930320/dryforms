@@ -51,11 +51,6 @@
                     sortable: true,
                     'class': 'text-center field-name'
                   },
-                  description: {
-                    label: 'Description',
-                    sortable: false,
-                    'class': 'text-center field-desc'
-                  },
                   action: {
                     label: 'Actions',
                     sortable: false,
@@ -131,10 +126,7 @@
             padding: .25rem;
         }
         .field-name {
-            width: 25%;
-        }
-        .field-desc {
-            width: 50%;
+            width: 75%;
         }
         .field-act {
             width: 25%;

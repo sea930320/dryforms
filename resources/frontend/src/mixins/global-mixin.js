@@ -25,17 +25,5 @@ export default {
         ]
       }
     }
-  },
-  methods: {
-    methodCall(mth) {
-      return this[mth.section](mth.name)
-    },
-    standards(name) {
-      if (name === 'add_statement') {
-        this.$bus.$emit('standards_add_statement')
-      } else if (name === 'save') {
-        this.$bus.$emit('standards_save')
-      }
-    }
   }
 }
