@@ -12,6 +12,15 @@
           <input type="text" class="form-control" v-model="form.title">
           <b-row class="mt-3 mb-3 ml-0 mr-0">
             <b-list-group class="col-md-5 draggable mr-3">
+              <b-list-group-item class="list-complete-item row fr-box">
+                <b-input-group size="sm">
+                  <div class="header-x text-center grey">
+                    X
+                  </div>
+                  <b-form-input :value="'Service'" class="grey text-center" disabled="disabled"></b-form-input>
+                  <b-form-input :value="'Units/Hr'" class="grey text-center" disabled="disabled"></b-form-input>
+                </b-input-group>
+              </b-list-group-item>
               <draggable v-model="items1" :options="{group:'project'}" @start="dragging = true" @end="updateOrder()">
                 <transition-group name="list-complete">           
                   <b-list-group-item v-for="(item, index) in items1" :key="index" class="list-complete-item row fr-box">
@@ -31,8 +40,8 @@
                         <div v-else class="header-x text-center grey">
                           X
                         </div>
-                        <b-form-input v-model="item.service" :class="item.is_header?'grey':''"></b-form-input>
-                        <b-form-input v-model="item.units" :class="item.is_header?'grey':''"></b-form-input>
+                        <b-form-input v-model="item.service" :class="item.is_header?'grey text-center':''"></b-form-input>
+                        <b-form-input v-model="item.units" :class="item.is_header?'grey text-center':''"></b-form-input>
                       </b-input-group>
                     </div>
                   </b-list-group-item>
@@ -40,6 +49,15 @@
               </draggable>
             </b-list-group>
             <b-list-group class="col-md-5 draggable ml-3 mr-3">
+              <b-list-group-item class="list-complete-item row fr-box">
+                <b-input-group size="sm">
+                  <div class="header-x text-center grey">
+                    X
+                  </div>
+                  <b-form-input :value="'Service'" class="grey text-center" disabled="disabled"></b-form-input>
+                  <b-form-input :value="'Units/Hr'" class="grey text-center" disabled="disabled"></b-form-input>
+                </b-input-group>
+              </b-list-group-item>
               <draggable v-model="items2" :options="{group:'project'}" @start="dragging = true" @end="updateOrder()">
                 <transition-group name="list-complete">
                   <b-list-group-item v-for="(item, index) in items2" :key="index" class="list-complete-item row fr-box">
@@ -59,8 +77,8 @@
                         <div v-else class="header-x text-center grey">
                           X
                         </div>
-                        <b-form-input v-model="item.service" :class="item.is_header?'grey':''"></b-form-input>
-                        <b-form-input v-model="item.units" :class="item.is_header?'grey':''"></b-form-input>
+                        <b-form-input v-model="item.service" :class="item.is_header?'grey text-center':''"></b-form-input>
+                        <b-form-input v-model="item.units" :class="item.is_header?'grey text-center':''"></b-form-input>
                       </b-input-group>
                     </div>
                   </b-list-group-item>
