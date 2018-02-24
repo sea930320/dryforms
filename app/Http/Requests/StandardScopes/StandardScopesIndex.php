@@ -24,7 +24,7 @@ class StandardScopesIndex extends BaseRequest
     public function rules()
     {
         return [
-            //
+            'curPageNum'=> 'nullable|numeric'
         ];
     }
 }

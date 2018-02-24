@@ -17,8 +17,11 @@ class DefaultScope extends Model
     public $fillable = [
         'selected',
         'service',
-        'units',
-        'is_header'
+        'is_header',
+        'qty',
+        'uom',
+        'page',
+        'no'
     ];
     /**
      * @var array
@@ -26,7 +29,18 @@ class DefaultScope extends Model
     public $visible = [
         'selected',
         'service',
-        'units',
-        'is_header'
+        'is_header',
+        'qty',
+        'uom',
+        'page',
+        'no'
     ];
+
+    /**
+     * Relation with unit_of_measure.
+     */
+    public function uom_info()
+    {
+        return $this->belongsTo(UnitOfMeasure::class, 'uom');
+    }
 }

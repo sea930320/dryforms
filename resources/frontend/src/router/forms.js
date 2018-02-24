@@ -1,66 +1,4 @@
-const leftLinks = [
-  {
-    path: '/forms/select',
-    name: 'Forms',
-    icon: require('../assets/icon-forms.png'),
-    mb: true
-  },
-  {
-    path: '/forms/callreport',
-    name: 'Call Report',
-    icon: require('../assets/icon-callreport.png')
-  },
-  {
-    path: '/forms/scope',
-    name: 'Project Scope',
-    icon: require('../assets/icon-scope.png')
-  },
-  {
-    path: '/forms/dailylog',
-    name: 'Daily Log',
-    icon: require('../assets/icon-dailylog.png')
-  },
-  {
-    path: '/forms/authorization',
-    name: 'Work Authorization',
-    icon: require('../assets/icon-workauth.png')
-  },
-  {
-    path: '/forms/antimicrobial',
-    name: 'Anti-Microbial',
-    icon: require('../assets/icon-antimicrobial.png')
-  },
-  {
-    path: '/forms/responsibility',
-    name: 'Customer Responsibility',
-    icon: require('../assets/icon-customer.png')
-  },
-  {
-    path: '/forms/moisturemap',
-    name: 'Moisture Map',
-    icon: require('../assets/icon-moisture.png')
-  },
-  {
-    path: '/forms/psyreport',
-    name: 'Psychometric Report',
-    icon: require('../assets/icon-psychometric.png')
-  },
-  {
-    path: '/forms/liability',
-    name: 'Release from Liability',
-    icon: require('../assets/icon-release.png')
-  },
-  {
-    path: '/forms/stoppage',
-    name: 'Work Stoppage',
-    icon: require('../assets/icon-workstop.png')
-  },
-  {
-    path: '/forms/certificate',
-    name: 'Certificate of Completion',
-    icon: require('../assets/icon-complete.png')
-  }
-]
+const leftLinks = []
 
 const rightLinks = [
   {
@@ -118,7 +56,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/callreport',
-    name: 'form-callreport',
+    name: 'Form Call Report',
     props: {title: 'Call Report'},
     meta: {
       title: 'Call Report',
@@ -132,7 +70,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/scope',
-    name: 'form-scope',
+    name: 'Form Project Scope',
     props: {title: 'Projectscope'},
     meta: {
       title: 'Project Scope',
@@ -146,7 +84,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/dailylog',
-    name: 'form-dailylog',
+    name: 'Form Daily Log',
     props: {title: 'dailylog'},
     meta: {
       title: 'Daily Log',
@@ -160,7 +98,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/authorization',
-    name: 'form-authorization',
+    name: 'Form Work Authorization',
     props: {title: 'authorization'},
     meta: {
       title: 'Work Authorization',
@@ -174,7 +112,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/antimicrobial',
-    name: 'form-antimicrobial',
+    name: 'Form Anti-Microbial',
     props: {title: 'antimicrobial'},
     meta: {
       title: 'Anti-microbial Authorization',
@@ -188,7 +126,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/responsibility',
-    name: 'form-responsibility',
+    name: 'Form Customer Responsibility',
     props: {title: 'Responsibility'},
     meta: {
       title: 'Customer Responsibility',
@@ -202,7 +140,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/moisturemap',
-    name: 'form-moisturemap',
+    name: 'Form Moisture Map',
     props: {title: 'moisturemap'},
     meta: {
       title: 'Moisture Map',
@@ -216,7 +154,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/psyreport',
-    name: 'form-psyreport',
+    name: 'Form Psychometric Report',
     props: {title: 'psyreport'},
     meta: {
       title: 'Psychometric Report',
@@ -230,7 +168,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/liability',
-    name: 'form-liability',
+    name: 'Form Release from Liability',
     props: {title: 'Liability'},
     meta: {
       title: 'Release from Liability',
@@ -244,7 +182,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/stoppage',
-    name: 'form-stoppage',
+    name: 'Form Work Stoppage',
     props: {title: 'Stoppage'},
     meta: {
       title: 'Work Stoppage',
@@ -258,7 +196,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/certificate',
-    name: 'form-certificate',
+    name: 'Form Certificate of Completion',
     props: {title: 'Certificate'},
     meta: {
       title: 'Certificate of Completion',
@@ -272,7 +210,7 @@ const routes = (configRoute) => [
   },
   {
     path: '/forms/areas',
-    name: 'form-areas',
+    name: 'Form Affected Areas',
     props: {title: 'Areas'},
     meta: {
       title: 'Affected Areas',

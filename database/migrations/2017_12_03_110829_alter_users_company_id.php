@@ -20,6 +20,8 @@ class AlterUsersCompanyId extends Migration
             $table->dropColumn('company_id');
         });
 
+        Schema::enableForeignKeyConstraints();
+
         Schema::table('users', function ($table) {
             $table->integer('company_id')->unsigned()->nullable()->default(null)->after('updated_at');
 
@@ -28,8 +30,6 @@ class AlterUsersCompanyId extends Migration
                 ->on('companies')
                 ->onDelete('cascade');
         });
-
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -39,21 +39,5 @@ class AlterUsersCompanyId extends Migration
      */
     public function down()
     {
-        Schema::disableForeignKeyConstraints();
-        
-        Schema::table('users', function ($table) {
-            $table->dropColumn('company_id');
-        });
-
-        Schema::table('users', function ($table) {
-            $table->integer('company_id')->unsigned()->after('updated_at');
-
-            $table->foreign('company_id')
-                ->references('id')
-                ->on('companies')
-                ->onDelete('cascade');
-        });
-
-        Schema::enableForeignKeyConstraints();
     }
 }

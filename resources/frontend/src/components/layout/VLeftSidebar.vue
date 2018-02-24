@@ -21,6 +21,21 @@
                 </router-link>
             </b-list-group-item>
         </template>
+        <template v-else-if="isForms === true">
+            <b-list-group-item class="bg-blue mb-2 list-complete-item">
+                <router-link :to="{name: 'Forms'}" class="pointer text-white">
+                    <div class="m-0"><img v-if="leftLinksIcon['Forms'] != ''" :src="leftLinksIcon['Forms']"> Forms </div>
+                </router-link>
+            </b-list-group-item>
+            <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="link.selected === '1'">
+                <router-link :to="{name: 'Form ' + link.form.name, params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+                    <div class="m-0">
+                        <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
+                        <span class="left-sidebar-ellipse" :class="icon-margin"> {{ link.standard_form[0].name }} </span>
+                    </div>
+                </router-link>
+            </b-list-group-item>
+        </template>
         <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
             <router-link :to="link.path" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                 <div class="m-0">
@@ -63,11 +78,18 @@
             } else {
                 this.isStandards = false
             }
+
+            if (this.$route.path.indexOf('forms') !== -1) {
+                this.isForms = true
+            } else {
+                this.isForms = false
+            }
         },
         data() {
             return {
                 leftLinks: [],
                 isStandards: null,
+                isForms: null,
                 leftLinksIcon: {}
             }
         },
@@ -98,6 +120,11 @@
                     this.fetchFormsOrder()
                 } else {
                     this.isStandards = false
+                }
+                if (this.$route.path.indexOf('forms') !== -1) {
+                    this.isForms = true
+                } else {
+                    this.isForms = false
                 }
             }
         }
@@ -139,6 +166,5 @@
         float: left;
         margin-left: 7px;
         cursor: pointer;
-        // color: white;
     }
 </style>

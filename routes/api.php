@@ -30,6 +30,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('forms', 'FormsController');
     $router->resource('users', 'UsersController');    
     $router->resource('roles', 'RolesController');
+    $router->resource('uoms', 'UomsController');
     $router->resource('standard/forms', 'StandardsController');
     $router->resource('standard/form_orders', 'FormOrdersController');
     $router->resource('standard/scopes', 'StandardScopesController');

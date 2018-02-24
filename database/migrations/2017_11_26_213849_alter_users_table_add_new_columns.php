@@ -33,16 +33,16 @@ class AlterUsersTableAddNewColumns extends Migration
      */
     public function down()
     {
-        Schema::table('users', function($table) {
-            $table->string('first_name')->nullable()->after('id');
+        // Schema::table('users', function($table) {
+        //     $table->string('first_name')->nullable()->after('id');
 
-            $table->dropColumn('first_name');
-            $table->dropColumn('last_name');
-            $table->dropColumn('address');
-            $table->dropColumn('city');
-            $table->dropColumn('state');
-            $table->dropColumn('zip');
-            $table->dropColumn('phone');
-        });
+        //     $table->dropColumn('first_name');
+        //     $table->dropColumn('last_name');
+        //     $table->dropColumn('address');
+        //     $table->dropColumn('city');
+        //     $table->dropColumn('state');
+        //     $table->dropColumn('zip');
+        //     $table->dropColumn('phone');
+        // });
     }
 }

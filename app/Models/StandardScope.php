@@ -20,19 +20,26 @@ class StandardScope extends Model
         'company_id',
         'selected',
         'service',
-        'units',
-        'is_header'
+        'is_header',
+        'qty',
+        'uom',
+        'page',
+        'no'
     ];
 
 	/**
      * @var array
      */
     public $visible = [
+        'id',
         'company_id',
         'selected',
         'service',
-        'units',
-        'is_header'
+        'is_header',
+        'qty',
+        'page',
+        'uom',
+        'no'
     ];
 
     /**
@@ -41,5 +48,13 @@ class StandardScope extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * Relation with unit_of_measure.
+     */
+    public function uom_info()
+    {
+        return $this->belongsTo(UnitOfMeasure::class, 'uom');
     }
 }

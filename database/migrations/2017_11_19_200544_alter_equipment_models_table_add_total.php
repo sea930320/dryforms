@@ -26,9 +26,5 @@ class AlterEquipmentModelsTableAddTotal extends Migration
      */
     public function down()
     {
-        Schema::table('equipment_models', function ($table) {
-            $table->dropColumn('total');
-            $table->integer('equipments_count')->after('name')->unsigned()->default(0);
-        });
     }
 }
