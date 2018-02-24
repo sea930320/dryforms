@@ -89,7 +89,15 @@
         noteRowStart: this.defLen,
         curPageNum: 0,
         pageCount: 0,
-        uoms: []
+        uoms: [],
+        config: {
+            key: this.$config.get('froala_key'),
+            events: {
+                'froalaEditor.initialized': function () {
+                    console.log('initialized')
+                }
+            }
+        }
       }
     },
     created() {
