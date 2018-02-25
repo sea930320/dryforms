@@ -3,14 +3,16 @@
         <b-row align-h="end">
             <b-col cols="2" class="text-center" style="font-size:14px; color: black;" v-if="pageIndex !== 'misc'">
                 Page: {{pageIndex + 1}} &nbsp;&nbsp;
-                <i class="fa fa-times" aria-hidden="true" style="cursor:pointer;" @click="deletePage"></i>
+                <b-button class='btn-remove-page' variant="danger" @click="deletePage" :disabled="isbusy">
+                    <i class="fa fa-times" aria-hidden="true" style="cursor:pointer;"></i>
+                </b-button>
                 <hr class="mt-0">
             </b-col>
             <b-col v-else cols="2" class="text-center" style="font-size:14px; color: black;">
                 Misc Page <hr class="mt-0">
             </b-col>
         </b-row>
-        <b-row class="mt-1 mb-3 ml-0 mr-0" v-if="leftPageScopes.length > 0">
+        <b-row class="mt-1 mb-3 ml-0 mr-0">
             <b-list-group class="col-md-6 draggable pr-3">
                 <b-list-group-item class="list-complete-item row fr-box mb-2">
                 <div class="header-x text-center header-background"> X </div>
@@ -33,17 +35,17 @@
                             </a>
                         </div>
                         <div class="row m-0">
-                            <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0" v-if="!item.is_header"> </b-form-checkbox>
+                            <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0" v-if="!item.is_header" @change="watchPendingBeforeScopeSave()"> </b-form-checkbox>
                             <div v-else class="header-x text-center grey" :class="index>=noteRowStart?'note':''"> X </div>
 
-                            <b-form-input v-model="item.service" :class="[item.is_header?'grey text-center header-service':'header-service', index>=noteRowStart?'note':'']"></b-form-input>
+                            <b-form-input v-model="item.service" :class="[item.is_header?'grey text-center header-service':'header-service', index>=noteRowStart?'note':'']" @input="watchPendingBeforeScopeSave()"></b-form-input>
 
-                            <select v-if='!item.is_header' v-model='item.uom' class='form-control header-uom pt-0 pb-0' :class="index>=noteRowStart?'note':''">
-                            <option v-for='(title,index) in uoms' :key='index' :value='index'> {{title}}</option>
+                            <select v-if='!item.is_header' v-model='item.uom' class='form-control header-uom pt-0 pb-0' :class="index>=noteRowStart?'note':''" @change="watchPendingBeforeScopeSave()">
+                                <option v-for='(title,index) in uoms' :key='index' :value='index'> {{title}}</option>
                             </select>
                             <div v-else class="header-uom text-center grey" :class="index>=noteRowStart?'note':''"> UOM </div>
 
-                            <b-form-input v-if="!item.is_header" v-model="item.qty" :class="['header-qty', index>=noteRowStart?'note':'']"></b-form-input>
+                            <b-form-input v-if="!item.is_header" v-model="item.qty" :class="['header-qty', index>=noteRowStart?'note':'']" @input="watchPendingBeforeScopeSave()"></b-form-input>
                             <div v-else class="header-qty text-center grey" :class="index>=noteRowStart?'note':''"> QTY </div>
                         </div>
                     </div>
@@ -73,17 +75,17 @@
                         </a>
                         </div>
                         <div class="row m-0">
-                            <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0" v-if="!item.is_header"> </b-form-checkbox>
+                            <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0" v-if="!item.is_header" @change="watchPendingBeforeScopeSave()"> </b-form-checkbox>
                             <div v-else class="header-x text-center grey" :class="index+defLen/2>=noteRowStart?'note':''"> X </div>
 
-                            <b-form-input v-model="item.service" :class="[item.is_header?'grey text-center header-service':'header-service', index+defLen/2>=noteRowStart?'note':'']"></b-form-input>
+                            <b-form-input v-model="item.service" :class="[item.is_header?'grey text-center header-service':'header-service', index+defLen/2>=noteRowStart?'note':'']" @input="watchPendingBeforeScopeSave()"></b-form-input>
 
-                            <select v-if='!item.is_header' v-model='item.uom' class='form-control header-uom pt-0 pb-0' :class="index+defLen/2>=noteRowStart?'note':''">
+                            <select v-if='!item.is_header' v-model='item.uom' class='form-control header-uom pt-0 pb-0' :class="index+defLen/2>=noteRowStart?'note':''" @change="watchPendingBeforeScopeSave()">
                             <option v-for='(title,index) in uoms' :key='index' :value='index'> {{title}}</option>
                             </select>
                             <div v-else class="header-uom text-center grey" :class="index+defLen/2>=noteRowStart?'note':''"> UOM </div>
 
-                            <b-form-input v-if="!item.is_header" v-model="item.qty" :class="['header-qty', index+defLen/2>=noteRowStart?'note':'']"></b-form-input>
+                            <b-form-input v-if="!item.is_header" v-model="item.qty" :class="['header-qty', index+defLen/2>=noteRowStart?'note':'']" @input="watchPendingBeforeScopeSave()"></b-form-input>
                             <div v-else class="header-qty text-center grey" :class="index+defLen/2>=noteRowStart?'note':''"> QTY </div>
                         </div>
                     </div>
@@ -99,6 +101,9 @@
     import draggable from 'vuedraggable'
     import ErrorHandler from '../../mixins/error-handler'
     import InfiniteLoading from 'vue-infinite-loading'
+    import apiStandardScope from '../../api/standard_scope'
+    import apiStandardForm from '../../api/standard_form'
+    import _ from 'lodash'
 
     export default {
         mixins: [ErrorHandler],
@@ -108,18 +113,25 @@
             return {
                 leftPageScopes: this.leftScope,
                 rightPageScopes: this.rightScope,
-                dragging: false
+                dragging: false,
+                pending: false,
+                log: {
+                    time: null
+                }
             }
         },
-        props: ['leftScope', 'rightScope', 'uoms', 'pageIndex', 'noteRowStart', 'defLen'],
+        props: ['leftScope', 'rightScope', 'uoms', 'pageIndex', 'noteRowStart', 'defLen', 'form', 'isbusy'],
+        created() {
+            this.$parent.$on('updateList', () => {
+                this.leftPageScopes = this.leftScope
+                this.rightPageScopes = this.rightScope
+            })
+        },
         methods: {
             updateOrder() {
                 this.dragging = false
-                this.$emit('changed', {
-                    pageIndex: this.pageIndex,
-                    leftPageScopes: this.leftPageScopes,
-                    rightPageScopes: this.rightPageScopes
-                })
+                if (this.log.time && (new Date().getTime() - this.log.time) < 500) return
+                this.watchPendingBeforePageSave()
             },
             added() {
                 let totLength = this.leftPageScopes.length + this.rightPageScopes.length
@@ -131,11 +143,10 @@
                     let fE = this.leftPageScopes.pop()
                     this.rightPageScopes.unshift(fE)
                 }
-                this.$emit('changed', {
-                    pageIndex: this.pageIndex,
-                    leftPageScopes: this.leftPageScopes,
-                    rightPageScopes: this.rightPageScopes
-                })
+                this.log = {
+                    time: new Date().getTime()
+                }
+                this.watchPendingBeforePageSave()
             },
             removed() {
                 let totLength = this.leftPageScopes.length + this.rightPageScopes.length
@@ -147,11 +158,8 @@
                     let fE = this.leftPageScopes.pop()
                     this.rightPageScopes.unshift(fE)
                 }
-                this.$emit('changed', {
-                    pageIndex: this.pageIndex,
-                    leftPageScopes: this.leftPageScopes,
-                    rightPageScopes: this.rightPageScopes
-                })
+                if (this.log.time && (new Date().getTime() - this.log.time) < 500) return
+                this.watchPendingBeforePageSave()
             },
             mouseOver(index, side) {
                 if (side === 'left' && index >= this.leftPageScopes.length) return
@@ -194,6 +202,7 @@
                         this.$set(this.rightPageScopes[index], 'is_header', 1)
                     }
                 }
+                this.watchPendingBeforeScopeSave()
             },
             removeItem(index, side) {
                 if (side === 'left') {
@@ -207,19 +216,114 @@
                     this.$set(this.rightPageScopes[index], 'selected', 0)
                     this.$set(this.rightPageScopes[index], 'uom', 0)
                 }
+                this.watchPendingBeforeScopeSave()
             },
             deletePage() {
                 this.$emit('deletePage', {
                     pageIndex: this.pageIndex
                 })
+            },
+            watchPendingBeforePageSave: _.throttle(function() {
+                let downCount = 15
+                if (this.pending) {
+                    var pendingCheck = setInterval(() => {
+                        if (downCount < 0) {
+                            clearInterval(pendingCheck)
+                            // notifiy error
+                        }
+                        downCount--
+                        if (!this.pending) {
+                            clearInterval(pendingCheck)
+                            this.saveScopes()
+                        }
+                    }, 100)
+                } else {
+                    this.saveScopes()
+                }
+            }, 300),
+            watchPendingBeforeScopeSave: _.debounce(function() {
+                let downCount = 15
+                if (this.pending) {
+                    var pendingCheck = setInterval(() => {
+                        if (downCount < 0) {
+                            clearInterval(pendingCheck)
+                            // notifiy error
+                        }
+                        downCount--
+                        if (!this.pending) {
+                            clearInterval(pendingCheck)
+                            this.saveScopes()
+                        }
+                    }, 100)
+                } else {
+                    this.saveScopes()
+                }
+            }, 200),
+            saveScopes() {
+                this.pending = true
+                let pageIndex = this.pageIndex === 'misc' ? -1 : this.pageIndex
+                let scopes = []
+                let no = 0
+                this.leftPageScopes.forEach((scope, index) => {
+                    scope.page = pageIndex + 1
+                    scope.no = ++no
+                    scopes.push(scope)
+                })
+                this.rightPageScopes.forEach((scope, index) => {
+                    scope.page = pageIndex + 1
+                    scope.no = ++no
+                    scopes.push(scope)
+                })
+
+                if (this.form.id) {
+                    const apis = [
+                        apiStandardScope.store({
+                            scopes: scopes
+                        }),
+                        apiStandardForm.patch(this.form.id, this.form)
+                    ]
+                    Promise.all(apis)
+                    .then(response => {
+                        this.refreshPageScopes(response[0].data.scopes)
+                        this.pending = false
+                    }).catch(this.handleErrorResponse)
+                } else {
+                    const apis = [
+                        apiStandardScope.store({
+                            scopes: scopes
+                        }),
+                        apiStandardForm.store(this.form)
+                    ]
+                    Promise.all(apis)
+                    .then(response => {
+                        this.refreshPageScopes(response[0].data.scopes)
+                        this.form.id = response[1].data.form.id
+                        this.pending = false
+                    }).catch(this.handleErrorResponse)
+                }
+            },
+            refreshPageScopes(scopes) {
+                let length = scopes.length
+                for (let i = 0; i < length; i++) {
+                    if (i < this.leftPageScopes.length) {
+                        this.leftPageScopes[i].id = scopes[i].id
+                    } else {
+                        this.rightPageScopes[i - this.leftPageScopes.length].id = scopes[i].id
+                    }
+                }
+                this.$emit('changed', {
+                    pageIndex: this.pageIndex,
+                    leftPageScopes: this.leftPageScopes,
+                    rightPageScopes: this.rightPageScopes
+                })
             }
         },
         watch: {
-            leftScope: function(val) {
-                this.leftPageScopes = val
+            leftScope: function(newVal, oldVal) {
+                if (!oldVal) this.leftPageScopes = newVal
             },
-            rightScope: function(val) {
-                this.rightPageScopes = val
+            rightScope: function(newVal, oldVal) {
+                if (!oldVal) this.rightPageScopes = newVal
             }
         }
     }

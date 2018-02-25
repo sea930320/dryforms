@@ -16,6 +16,8 @@
             :rightScope="rightScopes[page_index]"
             :pageIndex="page_index"
             :uoms="uoms"
+            :form="form"
+            :isbusy="isbusy"
             @changed="changed" @deletePage="deletePage">
           </scope-list>
           <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
@@ -23,7 +25,7 @@
               <div class="text-left">
                 <b-row class="mt-3" align-h="center">
                   <b-col cols="6" class="text-center">
-                    <b-button :size="template_size" variant="primary" @click="addNewPage">
+                    <b-button :size="template_size" variant="primary" @click="addNewPage" :disabled="isbusy">
                       Add New Page
                     </b-button>
                     <hr/>
@@ -36,6 +38,8 @@
                   :noteRowStart="noteRowStart"
                   :defLen="defLen"
                   :uoms="uoms"
+                  :form="form"
+                  :isbusy="isbusy"
                   @changed="changed">
                 </scope-list>
                 <div class="mt-3">
@@ -66,8 +70,8 @@
   import ErrorHandler from '../../mixins/error-handler'
   import '../../../node_modules/froala-editor/js/froala_editor.pkgd.min'
   import ScopeList from './ScopeList'
-  import apiStandardForm from '../../api/standard_form'
   import apiStandardScope from '../../api/standard_scope'
+  import apiStandardForm from '../../api/standard_form'
   import apiUom from '../../api/uom'
 
   export default {
@@ -85,7 +89,7 @@
         form: null,
         isLoaded: false,
         isbusy: false,
-        defLen: 40,
+        defLen: 50,
         noteRowStart: this.defLen,
         curPageNum: 0,
         pageCount: 0,
@@ -101,12 +105,162 @@
       }
     },
     created() {
-      this.$bus.$on('standards_save', this.save)
     },
     beforeDestroy () {
-      this.$bus.$off('standards_save', this.save)
     },
     methods: {
+      infiniteHandler($state) {
+        this.fetchNextPageScopes()
+      },
+      fetchNextPageScopes() {
+        this.curPageNum++
+        return apiStandardScope.index({curPageNum: this.curPageNum})
+          .then(response => {
+            this.pageCount = response.data.maxPage
+            // check if current Page is last page, if true fetch last page
+            if (this.curPageNum > this.pageCount) {
+              this.curPageNum = this.pageCount
+              this.loadingCompleted()
+              return 1
+            }
+            // if false add loaded scopes to left and right scopes variable
+            this.addLoadedScopes(response.data.curPageScopes)
+            return 0
+          })
+      },
+      addLoadedScopes(curPageScopes) {
+        let leftPageScopes = []
+        let rightPageScopes = []
+        let length = curPageScopes.length
+        for (let i = 0; i < this.defLen - length; i++) {
+          curPageScopes.push({
+            page: this.curPageNum,
+            service: '',
+            units: '',
+            uom: 0
+          })
+        }
+        length = curPageScopes.length
+
+        for (let i = 0; i < length; i++) {
+          curPageScopes[i].uom = curPageScopes[i].uom ? curPageScopes[i].uom : 0
+          if (i < length / 2) {
+            leftPageScopes.push(curPageScopes[i])
+          } else {
+            rightPageScopes.push(curPageScopes[i])
+          }
+        }
+
+        this.leftScopes.push(leftPageScopes)
+        this.rightScopes.push(rightPageScopes)
+        this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
+      },
+      loadingCompleted() {
+        apiStandardScope.index({curPageNum: 0})
+          .then(response => {
+            this.pageCount = response.data.maxPage
+            let miscPageScopes = response.data.curPageScopes
+            let length = miscPageScopes.length
+            for (let i = 0; i < this.defLen - length; i++) {
+              miscPageScopes.push({
+                page: 0,
+                service: '',
+                units: '',
+                uom: 0
+              })
+            }
+            length = miscPageScopes.length
+            this.noteRowStart = this.form.additional_notes_show === 1 ? length * 3 / 4 : length
+
+            for (let i = 0; i < length; i++) {
+              miscPageScopes[i].uom = miscPageScopes[i].uom ? miscPageScopes[i].uom : 0
+              if (i < length / 2) {
+                this.leftMiscScopes.push(miscPageScopes[i])
+              } else {
+                this.rightMiscScopes.push(miscPageScopes[i])
+              }
+            }
+            this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
+          }).catch(this.handleErrorResponse)
+      },
+      changed(payload) {
+        if (payload.pageIndex !== 'misc') {
+          this.leftScopes[payload.pageIndex] = payload.leftPageScopes
+          this.rightScopes[payload.pageIndex] = payload.rightPageScopes
+        } else {
+          this.leftMiscScopes = payload.leftPageScopes
+          this.rightMiscScopes = payload.rightPageScopes
+        }
+      },
+      addNewPage() {
+        this.isbusy = true
+        let scopes = []
+        let no = 0
+
+        for (let i = 0; i < this.defLen; i++) {
+          scopes.push({
+            page: this.curPageNum + 1,
+            service: '',
+            units: '',
+            uom: 0,
+            no: ++no
+          })
+        }
+        if (this.form.id) {
+            const apis = [
+                apiStandardScope.store({
+                    scopes: scopes
+                }),
+                apiStandardForm.patch(this.form.id, this.form)
+            ]
+            Promise.all(apis)
+            .then(response => {
+                this.refreshNewPageScopes(response[0].data.scopes)
+            }).catch(this.handleErrorResponse)
+        } else {
+            const apis = [
+                apiStandardScope.store({
+                    scopes: scopes
+                }),
+                apiStandardForm.store(this.form)
+            ]
+            Promise.all(apis)
+            .then(response => {
+                this.refreshNewPageScopes(response[0].data.scopes)
+                this.form.id = response[1].data.form.id
+            }).catch(this.handleErrorResponse)
+        }
+      },
+      refreshNewPageScopes(scopes) {
+        let leftPageScopes = []
+        let rightPageScopes = []
+        let length = scopes.length
+
+        for (let i = 0; i < length; i++) {
+          scopes[i].uom = scopes[i].uom ? scopes[i].uom : 0
+          if (i < length / 2) {
+            leftPageScopes.push(scopes[i])
+          } else {
+            rightPageScopes.push(scopes[i])
+          }
+        }
+        this.pageCount++
+        this.curPageNum = this.pageCount
+        this.leftScopes.push(leftPageScopes)
+        this.rightScopes.push(rightPageScopes)
+        this.isbusy = false
+      },
+      deletePage(payload) {
+        let pageIndex = payload.pageIndex
+        this.leftScopes.splice(pageIndex, 1)
+        this.rightScopes.splice(pageIndex, 1)
+        this.pageCount--
+        this.curPageNum = this.pageCount
+        apiStandardScope.delete(pageIndex + 1)
+        .then(response => {
+          this.$emit('updateList')
+        }).catch(this.handleErrorResponse)
+      },
       setAndFilter(field, value) {
         this.form[field] = (value ? 1 : 0)
         if (field === 'footer_text_show' && !value) this.form.footer_text = null
@@ -116,242 +270,6 @@
           } else {
             this.noteRowStart = this.defLen
           }
-        }
-      },
-      save() {
-        if (this.isbusy) return
-        this.isbusy = true
-        let scopes = []
-        this.leftScopes.forEach((leftScope, pageIndex) => {
-          let no = 0
-          leftScope.forEach((scope, index) => {
-            scope.page = pageIndex + 1
-            scope.no = ++no
-            scopes.push(scope)
-          })
-        })
-        this.rightScopes.forEach((rightScope, pageIndex) => {
-          let no = this.leftScopes[pageIndex].length
-          rightScope.forEach((scope, index) => {
-            scope.page = pageIndex + 1
-            scope.no = ++no
-            scopes.push(scope)
-          })
-        })
-        let miscno = 0
-        this.leftMiscScopes.forEach((scope, index) => {
-          scope.page = 0
-          scope.no = ++miscno
-          scopes.push(scope)
-        })
-        this.rightMiscScopes.forEach((scope, index) => {
-          scope.page = 0
-          scope.no = ++miscno
-          scopes.push(scope)
-        })
-        if (this.form.id) {
-            const apis = [
-                apiStandardScope.store({
-                  scopes: scopes
-                }),
-                apiStandardForm.patch(this.form.id, this.form)
-            ]
-            Promise.all(apis)
-            .then(response => {
-                this.initScopes()
-                this.$notify({
-                    type: 'success',
-                    title: 'Success',
-                    text: 'Successfully saved'
-                })
-            }).catch(this.handleErrorResponse)
-        } else {
-            const apis = [
-                apiStandardScope.store({
-                  scopes: scopes
-                }),
-                apiStandardForm.store(this.form)
-            ]
-            Promise.all(apis)
-            .then(response => {
-                this.form.id = response[1].data.form.id
-                this.initScopes()
-                this.$notify({
-                    type: 'success',
-                    title: 'Success',
-                    text: 'Successfully saved'
-                })
-            }).catch(this.handleErrorResponse)
-        }
-      },
-      initScopes() {
-        const apis = []
-        for (let i = 1; i < this.pageCount + 2; i++) {
-          apis.push(apiStandardScope.index({curPageNum: i}))
-        }
-        this.curPageNum = 0
-        Promise.all(apis)
-          .then(responses => {
-            responses.forEach((response, index) => {
-              let curPageScopes = response.data.curPageScopes
-              if (response.data.from === 'default') {
-                let length = curPageScopes.length
-                for (let i = 0; i < this.defLen - length; i++) {
-                  curPageScopes.push({
-                    page: this.curPageNum + 1,
-                    service: '',
-                    units: '',
-                    uom: 0
-                  })
-                }
-              }
-              this.addLoadedScopes(curPageScopes, true)
-            })
-            this.isbusy = false
-          }).catch(this.handleErrorResponse)
-      },
-      setForm(formID) {
-        let formPerID = this.$store.getters.formPerID(formID)
-        if (formPerID.length !== 0) {
-            this.form = formPerID[0].standard_form[0]
-            this.addNotes = (this.form.additional_notes_show === 1)
-            this.addFooter = (this.form.footer_text_show === 1)
-            return apiStandardScope.index({curPageNum: this.curPageNum + 1})
-              .then(response => {
-                this.pageCount = response.data.maxPage
-                let curPageScopes = response.data.curPageScopes
-                if (response.data.from === 'default') {
-                  let length = curPageScopes.length
-                  for (let i = 0; i < this.defLen - length; i++) {
-                    curPageScopes.push({
-                      page: this.curPageNum + 1,
-                      service: '',
-                      units: '',
-                      uom: 0
-                    })
-                  }
-                }
-                this.addLoadedScopes(curPageScopes)
-                this.isLoaded = true
-                this.isbusy = false
-              })
-        } else {
-            this.form = null
-        }
-      },
-      addLoadedScopes(curPageScopes, fromInit = false) {
-        if (this.curPageNum + 1 > this.pageCount) {
-          this.curPageNum = this.pageCount
-          return apiStandardScope.index({curPageNum: 0})
-            .then(response => {
-              this.pageCount = response.data.maxPage
-              let curPageScopes = response.data.curPageScopes
-              if (response.data.from === 'default') {
-                let length = curPageScopes.length
-                for (let i = 0; i < this.defLen - length; i++) {
-                  curPageScopes.push({
-                    page: 0,
-                    service: '',
-                    units: '',
-                    uom: 0
-                  })
-                }
-              }
-              this.loadingCompleted(curPageScopes)
-              if (!fromInit) this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
-            }).catch(this.handleErrorResponse)
-        }
-        if (this.curPageNum === 0) {
-          this.leftScopes = []
-          this.rightScopes = []
-        }
-        let length = curPageScopes.length
-        let leftPageScopes = []
-        let rightPageScopes = []
-        // for (let i = 0; i < this.defLen - length; i++) {
-        //   curPageScopes.push({
-        //     page: this.curPageNum + 1,
-        //     service: '',
-        //     units: '',
-        //     uom: 0
-        //   })
-        // }
-        // length = curPageScopes.length
-        for (let i = 0; i < length / 2; i++) {
-          curPageScopes[i].uom = curPageScopes[i].uom ? curPageScopes[i].uom : 0
-          leftPageScopes.push(curPageScopes[i])
-        }
-        for (let i = Math.ceil(length / 2); i < length; i++) {
-          curPageScopes[i].uom = curPageScopes[i].uom ? curPageScopes[i].uom : 0
-          rightPageScopes.push(curPageScopes[i])
-        }
-        this.leftScopes.push(leftPageScopes)
-        this.rightScopes.push(rightPageScopes)
-        this.curPageNum++
-        if (!fromInit) this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
-      },
-      loadingCompleted(miscPageScopes) {
-        this.noteRowStart = this.form.additional_notes_show === 1 ? this.defLen * 3 / 4 : this.defLen
-        this.leftMiscScopes = []
-        this.rightMiscScopes = []
-        let length = miscPageScopes.length
-        // for (let i = 0; i < this.defLen - length; i++) {
-        //   miscPageScopes.push({
-        //     page: 0,
-        //     service: '',
-        //     units: '',
-        //     uom: 0
-        //   })
-        // }
-        // length = miscPageScopes.length
-        for (let i = 0; i < length / 2; i++) {
-          miscPageScopes[i].uom = miscPageScopes[i].uom ? miscPageScopes[i].uom : 0
-          this.leftMiscScopes.push(miscPageScopes[i])
-        }
-        for (let i = Math.ceil(length / 2); i < length; i++) {
-          miscPageScopes[i].uom = miscPageScopes[i].uom ? miscPageScopes[i].uom : 0
-          this.rightMiscScopes.push(miscPageScopes[i])
-        }
-      },
-      infiniteHandler($state) {
-        this.setForm(2)
-      },
-      addNewPage() {
-        let leftPageScopes = []
-        let rightPageScopes = []
-        for (let i = 0; i < this.defLen / 2; i++) {
-          leftPageScopes.push({
-            page: this.pageCount,
-            service: '',
-            units: '',
-            uom: 0
-          })
-          rightPageScopes.push({
-            page: this.pageCount,
-            service: '',
-            units: '',
-            uom: 0
-          })
-        }
-        this.$set(this.leftScopes, this.pageCount, leftPageScopes)
-        this.$set(this.rightScopes, this.pageCount, rightPageScopes)
-        this.pageCount++
-        this.curPageNum = this.pageCount
-      },
-      deletePage(payload) {
-        let pageIndex = payload.pageIndex
-        this.pageCount--
-        this.curPageNum = this.pageCount
-        this.leftScopes.splice(pageIndex, 1)
-        this.rightScopes.splice(pageIndex, 1)
-      },
-      changed(payload) {
-        if (payload.pageIndex !== 'misc') {
-          this.leftScopes[payload.pageIndex] = payload.leftPageScopes
-          this.rightScopes[payload.pageIndex] = payload.rightPageScopes
-        } else {
-          this.leftMiscScopes = payload.leftPageScopes
-          this.rightMiscScopes = payload.rightPageScopes
         }
       }
     },
@@ -373,7 +291,7 @@
           } else {
             this.form = null
           }
-        })
+        }).catch(this.handleErrorResponse)
       }
     }
   }

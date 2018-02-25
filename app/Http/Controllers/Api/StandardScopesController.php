@@ -37,19 +37,19 @@ class StandardScopesController extends ApiController
      */
     public function index(StandardScopesIndex $request): JsonResponse
     {
-    	$standard_scope = $this->standard_scope
+    	if ($this->standard_scope->count() == 0) {
+    		$default_scopes = $this->default_scope->get()->toArray();
+    		foreach ($default_scopes as $key => $scope) {
+	            $scope['company_id'] = auth()->user()->company_id;
+		        $this->standard_scope->create($scope);
+	        }
+    	}
+    	$scopes = $this->standard_scope
     		->where('page', $request->get('curPageNum'))
     		->orderBy('no')
     		->get();
-    	$default_scope = $this->default_scope
-    		->where('page', $request->get('curPageNum'))
-    		->orderBy('no')
-    		->get();
-
-    	$scopes = $this->standard_scope->count() > 0 ? $standard_scope : $default_scope;
-    	$maxPage = $this->standard_scope->count() > 0 ? $this->standard_scope->max('page') : $this->default_scope->max('page');
-    	$from = $this->standard_scope->count() > 0 ? 'standard' : 'default';
-        return $this->respond(['curPageScopes' => $scopes, 'maxPage' => $maxPage, 'from' => $from]);
+    	$maxPage = $this->standard_scope->max('page');
+        return $this->respond(['curPageScopes' => $scopes, 'maxPage' => $maxPage]);
     }
 
     /**
@@ -60,16 +60,38 @@ class StandardScopesController extends ApiController
     public function store(StandardScopesStore $request): JsonResponse
     {
     	$scopes = $request->get('scopes');
+    	$res_scopes = [];
     	foreach ($scopes as $key => $scope) {
             $scope['company_id'] = auth()->user()->company_id;
             if ($scope['uom'] == 0)
             	$scope['uom'] = null;
-            if (!array_key_exists('id', $scope) || !$scope['id'])
-	            $this->standard_scope->create($scope);
-	        else
+            if (!array_key_exists('id', $scope) || !$scope['id']) {
+	            $res_scope = $this->standard_scope->create($scope);
+            }
+	        else {
 	        	$this->standard_scope->findOrFail($scope['id'])->update($scope);
+	        	$res_scope = $scope;
+	        }
+	        array_push($res_scopes, $res_scope);
         }
 
-        return $this->respond(['message' => 'Standard Scopes successfully saved']);
+        return $this->respond(['message' => 'Standard Scopes successfully saved', 'scopes' => $res_scopes]);
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $this->standard_scope->where('page', $id)->delete();
+        $maxPage = $this->standard_scope->max('page');
+        for ($page = $id + 1; $page <= $maxPage; $page++) {
+        	$this->standard_scope
+        		->where('page', $page)
+        		->update(['page' => $page - 1]);
+        }
+        return $this->respond(['message' => 'Scope Page successfully deleted']);
     }
 }

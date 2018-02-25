@@ -78,7 +78,7 @@ const routes = (configRoute) => [
       title: 'Standards',
       roles: ['customer'],
       leftLinks: leftLinks,
-      rightLinks: rightLinksMain
+      rightLinks: rightLinks
     },
     component: resolve => {
       require(['../components/standards/Scope.vue'], resolve)
