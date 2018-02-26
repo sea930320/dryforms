@@ -206,6 +206,9 @@
             uom: 0,
             no: ++no
           })
+          if (i === 0 || i === Math.floor(this.defLen / 2)) {
+            scopes[i].is_header = 1
+          }
         }
         if (this.form.id) {
             const apis = [
