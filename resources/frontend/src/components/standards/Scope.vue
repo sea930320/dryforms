@@ -7,9 +7,9 @@
       <div class="card-body text-left pt-3 pb-3">
         <b-container class="content-container">
           <label>* Enter side menu name</label>
-          <input type="text" class="form-control mb-3" v-model="form.name">
+          <input type="text" class="form-control mb-3" v-model="form.name" @input="saveForm">
           <label>* Enter form title</label>
-          <input type="text" class="form-control" v-model="form.title">
+          <input type="text" class="form-control" v-model="form.title" @input="saveForm">
           <scope-list  class="mt-4 mb-3"
             v-for="(page_index) in _.range(curPageNum)" :key="page_index"
             :leftScope="leftScopes[page_index]" 
@@ -48,7 +48,7 @@
                 <div>
                     <b-form-checkbox v-model="addFooter" @change="setAndFilter('footer_text_show', $event)">Footer Text.(Select if you wish to have a footer text)</b-form-checkbox> 
                     <div v-if="form.footer_text_show">
-                        <froala :tag="'textarea'" id="footerEditor" :config="config" v-model="form.footer_text" class="mb-3"></froala>
+                        <froala :tag="'textarea'" id="footerEditor" :config="config" v-model="form.footer_text"  @input="saveForm" class="mb-3"></froala>
                     </div>
                 </div>
               </div>
@@ -65,6 +65,7 @@
 <script type="text/babel">
   import draggable from 'vuedraggable'
   import InfiniteLoading from 'vue-infinite-loading'
+  import _ from 'lodash'
 
   import Loading from '../layout/Loading'
   import ErrorHandler from '../../mixins/error-handler'
@@ -271,7 +272,20 @@
             this.noteRowStart = this.defLen
           }
         }
-      }
+        this.saveForm()
+      },
+      saveForm: _.debounce(function() {
+        if (this.form.id) {
+          apiStandardForm.patch(this.form.id, this.form)
+          .then(response => {
+          }).catch(this.handleErrorResponse)
+        } else {
+          apiStandardForm.store(this.form)
+          .then(response => {
+            this.form.id = response.data.form.id
+          }).catch(this.handleErrorResponse)
+        }
+      }, 500)
     },
     watch: {
       '$store.state.StandardForm.formsOrder': function() {

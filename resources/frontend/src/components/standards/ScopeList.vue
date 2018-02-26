@@ -14,12 +14,6 @@
         </b-row>
         <b-row class="mt-1 mb-3 ml-0 mr-0">
             <b-list-group class="col-md-6 draggable pr-3">
-                <b-list-group-item class="list-complete-item row fr-box mb-2">
-                <div class="header-x text-center header-background"> X </div>
-                <div class="header-service text-center header-background"> Service </div>
-                <div class="header-uom text-center header-background"> UOM </div>
-                <div class="header-qty text-center header-background"> QTY </div>
-                </b-list-group-item>
                 <draggable v-model="leftPageScopes" :options="{group:'project'}" @start="dragging = true" @end="updateOrder()" @add="added" @remove="removed">
                 <transition-group name="list-complete">           
                     <b-list-group-item v-for="(item, index) in leftPageScopes" :key="index" class="list-complete-item row fr-box">
@@ -54,12 +48,6 @@
                 </draggable>
             </b-list-group>
             <b-list-group class="col-md-6 draggable pl-3">
-                <b-list-group-item class="list-complete-item row fr-box mb-2">
-                <div class="header-x text-center header-background"> X </div>
-                <div class="header-service text-center header-background"> Service </div>
-                <div class="header-uom text-center header-background"> UOM </div>
-                <div class="header-qty text-center header-background"> QTY </div>
-                </b-list-group-item>
                 <draggable v-model="rightPageScopes" :options="{group:'project'}" @start="dragging = true" @end="updateOrder()" @add="added()" @remove="removed()">
                 <transition-group name="list-complete">
                     <b-list-group-item v-for="(item, index) in rightPageScopes" :key="index" class="list-complete-item row fr-box">
