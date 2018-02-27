@@ -91,11 +91,6 @@
                         sortable: true,
                         'class': 'text-center field-prefix'
                     },
-                    description: {
-                        label: 'Description',
-                        sortable: true,
-                        'class': 'text-center field-desc'
-                    },
                     action: {
                         label: 'Actions',
                         sortable: false,
@@ -180,12 +175,9 @@
             padding: .25rem;
         }
         .field-name {
-            width: 25%;
+            width: 50%;
         }
         .field-prefix {
-            width: 25%;
-        }
-        .field-desc {
             width: 25%;
         }
         .field-act {

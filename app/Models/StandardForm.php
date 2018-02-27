@@ -21,8 +21,12 @@ class StandardForm extends Model
         'form_id',
         'name',
         'title',
-        'statement',
-        'company_id'
+        'company_id',
+        'additional_notes_show',
+        'footer_text_show',
+        'footer_text',
+        'insured_signature',
+        'company_signature'
     ];
 
     /**

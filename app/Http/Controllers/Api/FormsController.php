@@ -34,7 +34,7 @@ class FormsController extends ApiController
      */
     public function index(): JsonResponse
     {
-        $forms = $this->form->paginate(20);
+        $forms = $this->form->get();
 
         return $this->respond($forms);
     }

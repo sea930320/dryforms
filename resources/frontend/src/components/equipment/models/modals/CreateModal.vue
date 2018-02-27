@@ -13,11 +13,6 @@
                 <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
             </select>
         </div>
-        <div class="form-group">
-            <label>Description:</label>
-            <input type="text" class="form-control" aria-describedby="emailHelp"
-                   placeholder="Enter short description" v-model="model.description">
-        </div>
     </b-modal>
 
 </template>
@@ -34,8 +29,7 @@
                 this.model = {
                     id: null,
                     name: null,
-                    category_id: '',
-                    description: null
+                    category_id: ''
                 }
                 this.show = true
             })
@@ -60,8 +54,7 @@
                 model: {
                     id: null,
                     name: null,
-                    category_id: null,
-                    description: null
+                    category_id: null
                 }
             }
         },

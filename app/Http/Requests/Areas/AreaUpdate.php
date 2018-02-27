@@ -21,7 +21,6 @@ class AreaUpdate extends BaseRequest
         return [
             'area_id' => 'exists:areas,id',
             'title' => 'required|string',
-            'type' => 'required|in:system,company',
             'company_id' => 'required|exists:companies,id'
         ];
     }

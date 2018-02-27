@@ -5,8 +5,9 @@ use App\Http\Requests\Areas\AreasIndex;
 use App\Http\Requests\Areas\AreaStore;
 use App\Http\Requests\Areas\AreaUpdate;
 use App\Models\Area;
+use App\Models\DefaultArea;
+
 use Illuminate\Http\JsonResponse;
-use Williamoliveira\ArrayQueryBuilder\ArrayBuilder;
 
 class AreasController extends ApiController
 {
@@ -16,28 +17,42 @@ class AreasController extends ApiController
     private $area;
 
     /**
+     * @var DefaultArea
+     */
+    private $defaultArea;
+
+    /**
      * AreasController constructor.
      *
      * @param Area $area
+     * @param DefaultArea $defaultArea
      */
-    public function __construct(Area $area)
+    public function __construct(Area $area, DefaultArea $defaultArea)
     {
         $this->area = $area;
+        $this->defaultArea = $defaultArea;
     }
 
     /**
      * @param AreasIndex $request
-     * @param ArrayBuilder $arrayBuilder
      *
      * @return JsonResponse
      */
-    public function index(AreasIndex $request, ArrayBuilder $arrayBuilder): JsonResponse
+    public function index(AreasIndex $request): JsonResponse
     {
-        $query = $this->area->newQuery();
-        $query = $arrayBuilder->apply($query, $request->all());
-        $areas = $query->paginate($request->get('per_page') ?? 20);
-
-        return $this->respond($areas);
+        if ($this->area->count() == 0) {
+            $defaultAreas = $this->defaultArea->get();
+            foreach ($defaultAreas as $key => $defaultArea) {
+                $this->area->create([
+                    'title' => $defaultArea['title'],
+                    'company_id' => auth()->user()->company->id
+                ]);
+            }
+        }
+        $areas = $this->area->get();
+        return $this->respond([
+            'areas' => $areas
+        ]);
     }
 
     /**
@@ -48,8 +63,6 @@ class AreasController extends ApiController
     public function show(int $id): JsonResponse
     {
         $area = $this->area
-            ->where('company_id', auth()->user()->company->id)
-            ->orWHere('type', 'system')
             ->findOrFail($id);
 
         return $this->respond($area);
@@ -64,8 +77,7 @@ class AreasController extends ApiController
     {
         $area = $this->area->create([
             'title' => $request->get('title'),
-            'type' => $request->get('type'),
-            'company_id' => $request->get('company_id'),
+            'company_id' => auth()->user()->company->id,
         ]);
 
         return $this->respond(['message' => 'Area successfully created', 'area' => $area]);
@@ -79,7 +91,6 @@ class AreasController extends ApiController
     public function update(AreaUpdate $request): JsonResponse
     {
         $area = $this->area
-            ->where('company_id', auth()->user()->company->id)
             ->findOrFail($request->input('area_id'));
         $area->update($request->validatedOnly());
 

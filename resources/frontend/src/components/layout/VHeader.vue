@@ -14,7 +14,7 @@
       <b-navbar-nav class="right-nav ml-auto">
         <b-nav-item v-if="!authorized" to="/login" class="font-weight-bold mt-4">Login</b-nav-item>
         <b-nav-item v-if="!authorized" to="/register" class="font-weight-bold mt-4 mr-3">Register</b-nav-item>
-        <b-nav-item v-if="authorized" class="dashboard text-center p-2" to="/dashboard">
+        <b-nav-item v-if="authorized" class="dashboard text-center p-2" @click="gotoAdmin">
           <img :src="dashbordImg">
         </b-nav-item>
         <b-nav-item v-if="authorized" v-on:click="logout()" class="logout w-16 mt-4">
@@ -76,14 +76,20 @@
           this.authorized = sess.exists() && sess.get('apiToken')
         }
     },
-    methods: {}
+    methods: {
+        gotoAdmin() {
+          window.location.href = '/admin'
+        }
+    }
   }
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
   $break-extra: 1200px;
   $nav-bg-dark: #515763;
+  // $side-bg-dark: rgba(0, 0, 0, 0.3);
   $side-bg-dark: #0d1722;
+  $left-side-width: 16.666667%;
 
   .navbar {
     background-color: $side-bg-dark;
@@ -108,7 +114,7 @@
         .dashboard {
           background-color: #046ac3;
           position: absolute;
-          right: 16%;
+          right: $left-side-width;
           height: inherit;
         }
         .fa-sign-out {
@@ -137,10 +143,10 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 16%;
+      width: $left-side-width;
     }
   }
   .w-16 {
-    width: 16%;
+    width: $left-side-width;
   }
 </style>

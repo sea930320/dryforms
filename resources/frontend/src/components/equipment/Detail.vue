@@ -134,10 +134,12 @@
     import EditModal from './modals/Edit'
     import RemoveModal from './modals/Remove'
 
+    import ErrorHandler from '../../mixins/error-handler'
     import _ from 'lodash'
 
     export default {
-        name: 'Settings',
+        mixins: [ErrorHandler],
+        name: 'Detail',
         components: {EditModal, RemoveModal, Loading},
         data() {
             return {
@@ -318,7 +320,7 @@
                 }
                 var pad = '0000000000'
                 equipment.serial.number = equipment.serial.number.replace(new RegExp('^[0]+'), '')
-                equipment.serial.number = equipment.serial.number.slice(0, 10)
+                equipment.serial.number = equipment.serial.number.slice(0, pad.length)
                 equipment.serial.number = pad.substring(0, pad.length - equipment.serial.number.length) + equipment.serial.number
                 if (equipment.serial.original === equipment.serial.prefix + ' ' + equipment.serial.number) {
                     equipment.serial.validate = true

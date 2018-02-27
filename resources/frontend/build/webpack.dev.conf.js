@@ -127,7 +127,10 @@ const webpackConfig = merge(baseWebpackConfig, {
             children: true,
             minChunks: 3
         }),
-
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery'
+        }),
         // copy custom static assets
         new CopyWebpackPlugin([
             {
@@ -142,11 +145,6 @@ const webpackConfig = merge(baseWebpackConfig, {
             },
             {
                 from: path.resolve(__dirname, '../node_modules/bootstrap-vue/dist/bootstrap-vue.css'),
-                to: config.build.assetsSubDirectory + '/vendor/',
-                ignore: ['.*']
-            },
-            {
-                from: path.resolve(__dirname, '../node_modules/fullcalendar/dist/fullcalendar.min.css'),
                 to: config.build.assetsSubDirectory + '/vendor/',
                 ignore: ['.*']
             },

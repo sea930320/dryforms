@@ -37,21 +37,4 @@ const router = new VueRouter({
     ]
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    var sess = router.app.$session
-
-    if (sess.exists() && sess.get('apiToken')) {
-      next()
-    } else {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      })
-    }
-  } else {
-    next()
-  }
-})
-
 export default router

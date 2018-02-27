@@ -100,6 +100,7 @@
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .standards-calendar {
+    @import 'fullcalendar/dist/fullcalendar.min.css';
     .card-body {
         background: #f4f4f4;
     }

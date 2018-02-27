@@ -19,9 +19,7 @@ class AreaStore extends BaseRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
-            'type' => 'required|in:system,company',
-            'company_id' => 'required|exists:companies,id'
+            'title' => 'required|string'
         ];
     }
 }

@@ -1,10 +1,12 @@
 <?php
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
 class Area extends Model
 {
+    use BelongsToCompany;
     /**
      * @var string
      */
@@ -21,7 +23,6 @@ class Area extends Model
     public $visible = [
         'id',
         'title',
-        'type',
         'company_id'
     ];
 }

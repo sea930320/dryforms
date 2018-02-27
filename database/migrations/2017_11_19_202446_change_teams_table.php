@@ -34,6 +34,8 @@ class ChangeTeamsTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('teams');
+        Schema::enableForeignKeyConstraints();
     }
 }

@@ -16,33 +16,27 @@ class AreasSeeder extends Seeder
         $areas = [
             [
                 'title' => 'Area 1',
-                'type' => 'company',
                 'company_id' => 2
             ],
             [
                 'title' => 'Area 2',
-                'type' => 'company',
                 'company_id' => 2
             ],
             [
                 'title' => 'Area 3',
-                'type' => 'system',
-                'company_id' => null
+                'company_id' => 1
             ],
             [
                 'title' => 'Area 4',
-                'type' => 'company',
                 'company_id' => 3
             ],
             [
                 'title' => 'Area 5',
-                'type' => 'company',
                 'company_id' => 2
             ],
             [
                 'title' => 'Area 6',
-                'type' => 'system',
-                'company_id' => null
+                'company_id' => 1
             ],
 
         ];
