@@ -39,6 +39,9 @@ class UsersController extends ApiController
         $this->hasher = $hasher;
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function index(): JsonResponse
     {
         $users = $this->user->with(['role', 'teams'])
