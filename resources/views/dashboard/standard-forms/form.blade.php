@@ -45,18 +45,24 @@
                                 <span class="text-danger">{{ $errors->first('title') }}</span>
                             @endif
                         </div>
-
-                        <div class="form-group">
-                            <label>Form Statement</label>
-                            <input type="hidden" name="statement" value="">
-                            <textarea class="form-control" id="summernote">{{ $form->statement }}</textarea>
-                            @if($errors->has('statement'))
-                                <span class="text-danger">{{ $errors->first('statement') }}</span>
-                            @endif
-                        </div>
+                        <hr>
+                        <label>Form Statements</label>
+                        @foreach($form->default_statements as $defaultStatement)                            
+                            <div class="form-group">
+                                @isset($form)
+                                    <input type="hidden" name="statement_ids[]" value="{{$defaultStatement->id}}">
+                                @endisset
+                                <input type="text" class="form-control" name="statement_titles[]" @isset($form) value="{{$defaultStatement->title}}" @endisset>                                
+                                <textarea class="form-control statements" name="statement_texts[]">
+                                @isset($form)
+                                    {{ $defaultStatement->statement }}
+                                @endisset
+                                </textarea>
+                            </div>
+                        @endforeach
 
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-sm btn-primary" id="submitForm">Edit</button>
+                            <button type="submit" class="btn btn-sm btn-primary" id="submitForm">Save</button>
                         </div>
                     </form>
                 </div>
@@ -64,18 +70,21 @@
         </div>
     </div>
 @endsection
-
+@section('after_styles')
+    <style>
+        .fr-view p{
+            font-size: inherit;
+        }
+    </style>
+@endsection
 @section('after_scripts')
     <script>
         $(document).ready(function() {
-            $('#summernote').summernote({
-                height: 400
-            });
-            $('#submitForm').on('click', function(e) {
-                e.preventDefault();
-                var content = $('#summernote').summernote('code');
-                $('input[name="statement"]').val(content)
-                $('form').submit();
+            $('.statements').froalaEditor({
+                key: "{{ config('constants.froala_key') }}",
+                height: 400,
+                fontSizeDefaultSelection: '14',
+                fontSizeSelection: true 
             })
         });
     </script>

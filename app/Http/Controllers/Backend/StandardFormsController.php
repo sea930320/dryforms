@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\DefaultFromData;
+use App\Models\DefaultStatement;
+
 use App\Http\Requests\Standards\FormUpdate;
 use Prologue\Alerts\Facades\Alert;
 
@@ -15,13 +17,19 @@ class StandardFormsController extends Controller
     private $defaultFormData;
 
     /**
+     * @var DefaultStatement
+     */
+    private $defaultStatement;
+    /**
      * StandardFormsController constructor.
      *
      * @param DefaultFromData $defaultFromData
+     * @param DefaultStatement $defaultStatement
      */
-    public function __construct(DefaultFromData $defaultFromData)
+    public function __construct(DefaultFromData $defaultFromData, DefaultStatement $defaultStatement)
     {
         $this->defaultFormData = $defaultFromData;
+        $this->defaultStatement = $defaultStatement;
     }
 
     /**
@@ -29,7 +37,7 @@ class StandardFormsController extends Controller
      */
     public function index()
     {
-        $forms = $this->defaultFormData->paginate(20);
+        $forms = $this->defaultFormData->with(['default_statements'])->paginate(20);
 
         return view('dashboard.standard-forms.index', compact('forms'));
     }
@@ -41,7 +49,7 @@ class StandardFormsController extends Controller
      */
     public function edit(int $id)
     {
-        $form = $this->defaultFormData->findOrFail($id);
+        $form = $this->defaultFormData->with(['default_statements'])->findOrFail($id);
 
         return view('dashboard.standard-forms.form', compact('form'));
     }
@@ -56,9 +64,19 @@ class StandardFormsController extends Controller
         $form = $this->defaultFormData->findOrFail($request->get('id'));
         $form->title = $request->get('title');
         $form->name = $request->get('name');
-        $form->statement = $request->get('statement');
         $form->save();
-
+        if ($request->has('statement_ids')) {
+            $statement_ids = $request->get('statement_ids');
+            $statement_titles = $request->get('statement_titles');
+            $statement_texts = $request->get('statement_texts');
+            foreach ($statement_ids as $key => $id) {
+                $defaultStatement = $this->defaultStatement->find($id);
+                $defaultStatement->update([
+                    'title' => $statement_titles[$key],
+                    'statement' => $statement_texts[$key]
+                ]);
+            }
+        }
         Alert::success('Form successfully updated')->flash();
 
         return redirect()->route('forms.index')->with('alerts', Alert::all());

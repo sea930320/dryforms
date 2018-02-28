@@ -35,6 +35,15 @@ class DefaultFromData extends Model
         'footer_text_show',
         'footer_text',
         'insured_signature',
-        'company_signature'
+        'company_signature',
+        'default_statements'
     ];
+
+    /**
+     * Relation with default_statements.
+     */
+    public function default_statements()
+    {
+        return $this->hasMany(DefaultStatement::class, 'form_id', 'form_id');
+    }
 }

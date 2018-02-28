@@ -24,12 +24,20 @@ class FormUpdate extends BaseRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'form_id' => 'exists:forms,id',
             'name' => ['required', 'string'],
-            'title' => ['required', 'string'],
-            'statement' => ['nullable', 'string'],
+            'title' => ['required', 'string']
         ];
+        if ($this->request->has('statement_ids')) {
+            foreach ($this->request->get('statement_ids') as $key => $value) {
+                $rules['statement_ids.' . $key] = 'sometimes|required|exists:default_statements,id';
+                $rules['statement_titles.' . $key] = 'sometimes|required|string';
+                $rules['statement_texts.' . $key] = 'sometimes|nullable|string';
+            }
+        }
+
+        return $rules;
     }
 
     /**
