@@ -47,12 +47,19 @@
                         </div>
                         <hr>
                         <label>Form Statements</label>
-                        @foreach($form->default_statements as $defaultStatement)                            
+                        @foreach($form->default_statements as $key=>$defaultStatement)                            
                             <div class="form-group">
                                 @isset($form)
                                     <input type="hidden" name="statement_ids[]" value="{{$defaultStatement->id}}">
                                 @endisset
-                                <input type="text" class="form-control" name="statement_titles[]" @isset($form) value="{{$defaultStatement->title}}" @endisset>                                
+
+                                <input type="text" class="form-control" name="statement_titles[]" @isset($form) value="{{$defaultStatement->title}}" @endisset>
+                                @if($errors->first("statement_titles.$key"))
+                                    <span class="text-danger">
+                                        The statement titles field is required.
+                                    </span>
+                                @endif
+
                                 <textarea class="form-control statements" name="statement_texts[]">
                                 @isset($form)
                                     {{ $defaultStatement->statement }}

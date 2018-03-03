@@ -100,4 +100,10 @@ class UnitsOfMeasureController extends Controller
 
         return redirect()->route('units-of-measure.index')->with('alerts', Alert::all());
     }
+
+    public function jsonResult()
+    {
+        $uoms = $this->uom->get();
+        return response()->json(['uoms' => $uoms], 200);
+    }
 }

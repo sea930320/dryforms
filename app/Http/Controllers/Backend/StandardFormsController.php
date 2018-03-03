@@ -37,7 +37,7 @@ class StandardFormsController extends Controller
      */
     public function index()
     {
-        $forms = $this->defaultFormData->with(['default_statements'])->paginate(20);
+        $forms = $this->defaultFormData->with(['default_statements', 'form'])->paginate(20);
 
         return view('dashboard.standard-forms.index', compact('forms'));
     }

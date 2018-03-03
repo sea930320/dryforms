@@ -38,6 +38,14 @@ class DefaultFromData extends Model
         'company_signature',
         'default_statements'
     ];
+    
+    /**
+     * Relation with forms.
+     */
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
+    }
 
     /**
      * Relation with default_statements.

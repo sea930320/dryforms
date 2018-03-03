@@ -18,7 +18,7 @@
         <div class="col-md-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <div class="box-title">Forms ({{ $forms->total() }})</div>
+                    <div class="box-title">Forms</div>
                 </div>
 
                 <div class="box-body">
@@ -32,18 +32,29 @@
                         </thead>
                         <tbody>
                         @foreach($forms as $form)
-                            <tr>
-                                <td>{{ $form->name }}</td>
-                                <td>{{ $form->title }}</td>
-                                <td>
-                                    @if($form->default_statements->count() > 0)
+                            @if($form->default_statements->count() > 0)
+                                <tr>
+                                    <td>{{ $form->name }}</td>
+                                    <td>{{ $form->title }}</td>
+                                    <td>
                                         <a class="btn btn-xs btn-default pull-right" href="{{ route('forms.edit', $form->id) }}">
                                             <i class="fa fa-edit"></i> Edit
                                         </a>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                </tr>
+                            @elseif($form->form->name==='Project Scope')
+                                <?php?>
+                                <tr>
+                                    <td>{{ $form->name }}</td>
+                                    <td>{{ $form->title }}</td>
+                                    <td>
+                                        <a class="btn btn-xs btn-default pull-right" href="{{ route('scopes.index') }}">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach                        
                         </tbody>
                     </table>
                 </div>

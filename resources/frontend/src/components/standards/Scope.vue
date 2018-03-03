@@ -10,7 +10,7 @@
           <input type="text" class="form-control mb-3" v-model="form.name" @input="saveForm">
           <label>* Enter form title</label>
           <input type="text" class="form-control" v-model="form.title" @input="saveForm">
-          <scope-list  class="mt-4 mb-3"
+          <scope-list class="mt-4 mb-3"
             v-for="(page_index) in _.range(curPageNum)" :key="page_index"
             :leftScope="leftScopes[page_index]" 
             :rightScope="rightScopes[page_index]"

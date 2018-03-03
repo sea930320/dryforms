@@ -17,32 +17,32 @@
                 <draggable v-model="leftPageScopes" :options="{group:'project'}" @start="dragging = true" @end="updateOrder()" @add="added" @remove="removed">
                 <transition-group name="list-complete">           
                     <b-list-group-item v-for="(item, index) in leftPageScopes" :key="index" class="list-complete-item row fr-box">
-                    <div @mouseover="mouseOver(index, 'left')" @mouseleave="mouseLeave(index, 'left')">
-                        <div class="fr-quick-insert" :class="item.hover?'fr-visible':''">
-                            <a class="fr-floating-btn" role="button" tabindex="-1" @click="setHeader(index, 'left')">
-                                <i class="fa fa-header" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <div class="fr-quick-insert fr-quick-right" :class="item.hover?'fr-visible':''">
-                            <a class="fr-floating-btn" role="button" tabindex="-1" @click="removeItem(index, 'left')">
-                                <i class="fa fa-times" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <div class="row m-0">
-                            <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0" v-if="!item.is_header" @change="watchPendingBeforeScopeSave()"> </b-form-checkbox>
-                            <div v-else class="header-x text-center grey" :class="index>=noteRowStart?'note':''"> X </div>
+                        <div @mouseover="mouseOver(index, 'left')" @mouseleave="mouseLeave(index, 'left')">
+                            <div class="fr-quick-insert" :class="item.hover?'fr-visible':''">
+                                <a class="fr-floating-btn" role="button" tabindex="-1" @click="setHeader(index, 'left')">
+                                    <i class="fa fa-header" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                            <div class="fr-quick-insert fr-quick-right" :class="item.hover?'fr-visible':''">
+                                <a class="fr-floating-btn" role="button" tabindex="-1" @click="removeItem(index, 'left')">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                            <div class="row m-0">
+                                <b-form-checkbox v-model="item.selected" value="1" unchecked-value="0" v-if="!item.is_header" @change="watchPendingBeforeScopeSave()"></b-form-checkbox>
+                                <div v-else class="header-x text-center grey" :class="index>=noteRowStart?'note':''"> X </div>
 
-                            <b-form-input v-model="item.service" :class="[item.is_header?'grey text-center header-service':'header-service', index>=noteRowStart?'note':'']" @input="watchPendingBeforeScopeSave()"></b-form-input>
+                                <b-form-input v-model="item.service" :class="[item.is_header?'grey text-center header-service':'header-service', index>=noteRowStart?'note':'']" @input="watchPendingBeforeScopeSave()"></b-form-input>
 
-                            <select v-if='!item.is_header' v-model='item.uom' class='form-control header-uom pt-0 pb-0' :class="index>=noteRowStart?'note':''" @change="watchPendingBeforeScopeSave()">
-                                <option v-for='(title,index) in uoms' :key='index' :value='index'> {{title}}</option>
-                            </select>
-                            <div v-else class="header-uom text-center grey" :class="index>=noteRowStart?'note':''"> UOM </div>
+                                <select v-if='!item.is_header' v-model='item.uom' class='form-control header-uom pt-0 pb-0' :class="index>=noteRowStart?'note':''" @change="watchPendingBeforeScopeSave()">
+                                    <option v-for='(title,index) in uoms' :key='index' :value='index'> {{title}}</option>
+                                </select>
+                                <div v-else class="header-uom text-center grey" :class="index>=noteRowStart?'note':''"> UOM </div>
 
-                            <b-form-input v-if="!item.is_header" v-model="item.qty" :class="['header-qty', index>=noteRowStart?'note':'']" @input="watchPendingBeforeScopeSave()"></b-form-input>
-                            <div v-else class="header-qty text-center grey" :class="index>=noteRowStart?'note':''"> QTY </div>
+                                <b-form-input v-if="!item.is_header" v-model="item.qty" :class="['header-qty', index>=noteRowStart?'note':'']" @input="watchPendingBeforeScopeSave()"></b-form-input>
+                                <div v-else class="header-qty text-center grey" :class="index>=noteRowStart?'note':''"> QTY </div>
+                            </div>
                         </div>
-                    </div>
                     </b-list-group-item>
                 </transition-group>              
                 </draggable>

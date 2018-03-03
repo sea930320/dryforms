@@ -13,13 +13,18 @@
 
 //Auth::routes();
 
-Route::middleware(['auth'])->prefix('admin')->group(function() {
-    Route::resource('users', 'Backend\UsersController');
-    Route::resource('plans', 'Backend\PlansController');
-    Route::resource('coupons', 'Backend\CouponsController');
-    Route::resource('standard/forms', 'Backend\StandardFormsController');
+Route::middleware(['auth'])->namespace('Backend')->prefix('admin')->group(function() {
+    Route::resource('users', 'UsersController');
+    Route::resource('plans', 'PlansController');
+    Route::resource('coupons', 'CouponsController');
+    Route::resource('standard/forms', 'StandardFormsController');
+    Route::resource('standard/scopes', 'StandardScopesController');
+    Route::resource('units-of-measure', 'UnitsOfMeasureController');
 
-    Route::resource('units-of-measure', 'Backend\UnitsOfMeasureController');
+// ------------------API-----------------//
+    Route::get('uoms/jsonResult', 'UnitsOfMeasureController@jsonResult');
+    Route::get('standard-scopes/form', 'StandardScopesController@form');
+    Route::post('standard-scopes/form-update', 'StandardScopesController@formUpdate');
 });
 
 Route::middleware([])->namespace('Frontend')->group(function() {

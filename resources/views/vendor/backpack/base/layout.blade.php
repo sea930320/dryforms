@@ -183,6 +183,8 @@
 
     <script src="{{ asset('js') }}/vendor/vendor.min.js"></script>
 
+    @yield('after_vendor_scripts')
+    
     <!-- JavaScripts -->
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>

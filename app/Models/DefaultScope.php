@@ -27,6 +27,7 @@ class DefaultScope extends Model
      * @var array
      */
     public $visible = [
+        'id',
         'selected',
         'service',
         'is_header',

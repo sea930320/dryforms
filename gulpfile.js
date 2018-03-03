@@ -36,6 +36,8 @@ gulp.task('vendor-js', function () {
         './node_modules/angular-route/angular-route.js',
         './node_modules/angular-local-storage/dist/angular-local-storage.js',
         './node_modules/froala-editor/js/froala_editor.pkgd.min.js',
+        './node_modules/ng-infinite-scroll/build/ng-infinite-scroll.min.js',
+        './node_modules/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js'
     ])
         .pipe(concat('vendor.min.js'))
         .pipe(gulpif(isProduction(), uglify({mangle: false, output: {
