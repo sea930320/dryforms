@@ -21,6 +21,6 @@ class DefaultMaterial extends Model
      * @var array
      */
     public $visible = [
-        'title'
+        'id', 'title'
     ];
 }

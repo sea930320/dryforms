@@ -53,8 +53,19 @@
                                         </a>
                                     </td>
                                 </tr>
+                            @elseif($form->form->name==='Moisture Map')
+                                <?php?>
+                                <tr>
+                                    <td>{{ $form->name }}</td>
+                                    <td>{{ $form->title }}</td>
+                                    <td>
+                                        <a class="btn btn-xs btn-default pull-right" href="{{ route('moisture-map') }}">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                    </td>
+                                </tr>
                             @endif
-                        @endforeach                        
+                        @endforeach
                         </tbody>
                     </table>
                 </div>

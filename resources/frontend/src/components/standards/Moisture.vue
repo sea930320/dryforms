@@ -34,7 +34,6 @@
                 <hr/>
                 <b-row>
                     <div class="col-md-12">
-                        <label>Manually added materials</label>
                         <b-table ref="materialsTable" :items="materials" small striped hover foot-clone :fields="header" head-variant="" align-v="center">
                             <template slot="no" slot-scope="data">
                                 {{ data.index + 1 }}

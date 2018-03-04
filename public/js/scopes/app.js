@@ -2,12 +2,8 @@ var app = angular.module('scopesApp', ['infinite-scroll', 'dndLists'], function(
 	$interpolateProvider.startSymbol('<%');
 	$interpolateProvider.endSymbol('%>');
 }).config(function($sceDelegateProvider) {
-    $sceDelegateProvider.resourceUrlWhitelist([
-        // Allow same origin resource loads.
-        'self',
-        // Allow loading from our assets domain.  Notice the difference between * and **.
-        'https://api.reddit.com/**'
-    ]);
+    // $sceDelegateProvider.resourceUrlWhitelist([
+    // ]);
 });
 
 app.factory('State', function() {
@@ -30,13 +26,10 @@ function MainCtrl($rootScope,$scope, $http, $q, State) {
     $scope.leftMiscScopes = [];
     $scope.rightMiscScopes = [];
     $scope.defLen = 50;
-    $scope.noteRowStart = this.defLen;
     $scope.state = State;
     $scope.pending = false;
     $scope.isbusy = false;
-    // $scope.$watch('models', function(model) {
-    //     $scope.modelAsJson = angular.toJson(model, true);
-    // }, true);
+
     $scope.$on('removeEle', function(evt, data) {
         if (data.page_index === 'misc') {
             if (data.side === 'left') {
@@ -206,7 +199,6 @@ function MainCtrl($rootScope,$scope, $http, $q, State) {
                     })
                 }
                 length = miscPageScopes.length
-                // $scope.noteRowStart = $scope.form.additional_notes_show === 1 ? length * 3 / 4 : length
 
                 for (let i = 0; i < length; i++) {
                     miscPageScopes[i].uom = miscPageScopes[i].uom ? miscPageScopes[i].uom : 0

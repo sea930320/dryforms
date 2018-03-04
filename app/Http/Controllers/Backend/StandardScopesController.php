@@ -39,7 +39,7 @@ class StandardScopesController extends Controller
      */
     public function index()
     {    	
-        return view('dashboard.standard-forms.scopes.index');
+        return view('dashboard.standard-forms.scope');
     }
 
     /**

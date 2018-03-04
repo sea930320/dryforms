@@ -21,6 +21,6 @@ class DefaultStructure extends Model
      * @var array
      */
     public $visible = [
-        'title'
+        'id', 'title'
     ];
 }
