@@ -66,6 +66,15 @@
                                 </tr>
                             @endif
                         @endforeach
+                            <tr>
+                                <td> Affected Areas </td>
+                                <td> Affected Areas </td>
+                                <td>
+                                    <a class="btn btn-xs btn-default pull-right" href="{{ route('areas-page') }}">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

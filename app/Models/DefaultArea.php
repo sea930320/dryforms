@@ -21,6 +21,7 @@ class DefaultArea extends Model
      * @var array
      */
     public $visible = [
+        'id', 
         'title'
     ];
 }
