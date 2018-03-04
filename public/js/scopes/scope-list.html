@@ -1,0 +1,116 @@
+<div class="row">
+    <div class="col-md-10">
+    </div>
+    <div class="col-md-2 text-center" style="font-size:14px; color: black;" ng-if="pageIndex !== 'misc'">
+        Page: {{pageIndex + 1}} &nbsp;&nbsp;
+        <button class='btn-remove-page' ng-click="deletePage()">
+            <i class="fa fa-times" aria-hidden="true" style="cursor:pointer;"></i>
+        </button>
+        <hr style="margin: 10px !important">
+    </div>
+    <div class="col-md-2 text-center" style="font-size:14px; color: black;" ng-if="pageIndex === 'misc'">
+        Misc Page <hr style="margin: 10px !important">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 draggable">
+        <ul class="list-group" 
+            dnd-list="leftPageScopes" dnd-inserted="updateOrder(index, external, 'left')">
+            <li class="list-group-item" ng-repeat='(index, scope) in leftPageScopes'
+                dnd-draggable="scope"
+                dnd-effect-allowed="move"
+                dnd-selected="selectedScope(scope)"
+                ng-class="{'selected': selected === scope}"
+                dnd-dragstart="dragStart(scope, index, 'left')">
+                <div ng-mouseover="mouseOver(index, 'left')" ng-mouseleave="mouseLeave(index, 'left')">
+                    <div class="fr-quick-insert" ng-class="{'fr-visible': scope.hover}">
+                        <a class="fr-floating-btn" role="button" tabindex="-1" ng-click="setHeader(index, 'left')">
+                            <i class="fa fa-header" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="fr-quick-insert fr-quick-right" ng-class="{'fr-visible': scope.hover}">
+                        <a class="fr-floating-btn" role="button" tabindex="-1" ng-click="removeItem(index, 'left')">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <table class="table table-bordered table-sm">
+                        <tr>
+                            <td class="header-x" ng-class="{'grey text-center': scope.is_header}">
+                                <div class="checkbox" ng-if="!scope.is_header">
+                                    <label>
+                                        <input type="checkbox" ng-true-value="1" ng-false-value="'0'" ng-model="scope.selected" ng-change="watchPendingBeforeScopeSave()"/>
+                                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                    </label>
+                                </div>
+                                <div ng-if="scope.is_header"> X </div>
+                            </td>
+                            <td class="header-service" ng-class="{'grey text-center': scope.is_header}">
+                                <input type="text" class="form-control" ng-model="scope.service" ng-change="watchPendingBeforeScopeSave()">
+                            </td>
+                            <td class="header-uom" ng-class="{'grey text-center': scope.is_header}">
+                                <select ng-model='scope.uom' class="form-control" ng-if='!scope.is_header' ng-change="watchPendingBeforeScopeSave()">
+                                    <option ng-repeat='(index, title) in uoms' ng-value="index"> <%title%></option>
+                                </select>
+                                <div ng-if='scope.is_header'> UOM </div>
+                            </td>
+                            <td class="header-qty" ng-class="{'grey text-center': scope.is_header}">
+                                <input type="text" ng-if='!scope.is_header' class="form-control" ng-model="scope.qty" ng-change="watchPendingBeforeScopeSave()">
+                                <div ng-if='scope.is_header'> QTY </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6 draggable">
+        <ul class="list-group" 
+            dnd-list="rightPageScopes" dnd-inserted="updateOrder(index, external, 'right')">            
+            <li class="list-group-item" ng-repeat='(index, scope) in rightPageScopes'
+                dnd-draggable="scope"
+                dnd-effect-allowed="move"
+                dnd-selected="selectedScope(scope)"
+                ng-class="{'selected': selected === scope}"
+                dnd-dragstart="dragStart(scope, index, 'right')">
+                <div ng-mouseover="mouseOver(index, 'right')" ng-mouseleave="mouseLeave(index, 'right')">
+                    <div class="fr-quick-insert" ng-class="{'fr-visible': scope.hover}">
+                        <a class="fr-floating-btn" role="button" tabindex="-1" ng-click="setHeader(index, 'right')">
+                            <i class="fa fa-header" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="fr-quick-insert fr-quick-right" ng-class="{'fr-visible': scope.hover}">
+                        <a class="fr-floating-btn" role="button" tabindex="-1" ng-click="removeItem(index, 'right')">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <table class="table table-bordered table-sm">
+                        <tr>
+                            <td class="header-x" ng-class="{'grey text-center': scope.is_header}">
+                                <div class="checkbox" ng-if="!scope.is_header">
+                                    <label>
+                                        <input type="checkbox" ng-true-value="1" ng-false-value="'0'" ng-model="scope.selected" ng-change="watchPendingBeforeScopeSave()"/>
+                                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                    </label>
+                                </div>
+                                <div ng-if="scope.is_header"> X </div>
+                            </td>
+                            <td class="header-service" ng-class="{'grey text-center': scope.is_header}">
+                                <input type="text" class="form-control" ng-model="scope.service"  ng-change="watchPendingBeforeScopeSave()">
+                            </td>
+                            <td class="header-uom" ng-class="{'grey text-center': scope.is_header}">
+                                <select ng-model='scope.uom' class="form-control" ng-if='!scope.is_header'  ng-change="watchPendingBeforeScopeSave()">
+                                    <option ng-repeat='(index, title) in uoms' ng-value="index"> <%title%></option>
+                                </select>
+                                <div ng-if='scope.is_header'> UOM </div>
+                            </td>
+                            <td class="header-qty" ng-class="{'grey text-center': scope.is_header}">
+                                <input type="text" ng-if='!scope.is_header' class="form-control" ng-model="scope.qty"  ng-change="watchPendingBeforeScopeSave()">
+                                <div ng-if='scope.is_header'> QTY </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
