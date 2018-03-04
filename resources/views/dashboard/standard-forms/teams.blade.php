@@ -3,12 +3,12 @@
 @section('header')
     <section class="content-header">
         <h1>
-            Areas Management
+            Teams Management
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ url(config('backpack.base.route_prefix', 'admin')) }}">{{ config('backpack.base.project_name') }}</a></li>
             <li><a href="{{ route('forms.index') }}">Forms</a></li>
-            <li class="active">Edit Affected Areas</li>
+            <li class="active">Edit Teams</li>
         </ol>
     </section>
 @endsection
@@ -22,36 +22,26 @@
             <br>
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <div class="box-title">Edit Affected Areas</div>
+                    <div class="box-title">Edit Teams</div>
                 </div>
-                <div class="box-body" ng-app="areaApp" ng-controller="areaCtrl">
+                <div class="box-body" ng-app="teamsApp" ng-controller="teamsCtrl">
                     <div ng-if="loading" class="loader">
                     </div>
                     <div ng-if="!loading">
-                        <div class="form-group">
-                            <label>Menu Name *</label>
-                            <input type="text" class="form-control" ng-model="form.name" ng-change="saveForm()">
-                        </div>
-                        <div class="form-group">
-                            <label>Form Title *</label>
-                            <input type="text" class="form-control" ng-model="form.title" ng-change="saveForm()">
-                        </div>
-
                         <div class="control-panel">
-                            <label> Affected Areas Management </label>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table class="table table-striped table-hover areasTable text-center thead-dark" align-v="center">
+                                    <table class="table table-striped table-hover teamsTable text-center thead-dark" align-v="center">
                                         <tr>
                                             <th> No </th>
-                                            <th> Title </th>
+                                            <th> Name </th>
                                             <th> Actions </th>
                                         </tr>
-                                        <tr ng-repeat='(index, area) in areas'>
+                                        <tr ng-repeat='(index, team) in teams'>
                                             <td> <% index+1 %> </td>
-                                            <td> <%area.title%> </td>
+                                            <td> <%team.name%> </td>
                                             <td>
-                                                <button class="btn" ng-click="deleteArea(area.id)"> 
+                                                <button class="btn" ng-click="deleteTeam(team.id)"> 
                                                     <i class="fa fa-trash text-danger"></i>
                                                 </button>
                                             </td>
@@ -60,9 +50,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Add Area"  ng-model="newArea">
+                                        <input type="text" class="form-control" placeholder="Add Team"  ng-model="newTeam">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" ng-click="addArea()" ng-disabled="newArea===''">
+                                            <button class="btn btn-primary" type="button" ng-click="addTeam()" ng-disabled="newTeam===''">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
@@ -123,5 +113,5 @@
     </style>
 @endsection
 @section('after_vendor_scripts')
-    <script src="{{ asset('js/areas/app.js') }}"></script>
+    <script src="{{ asset('js/teams/app.js') }}"></script>
 @endsection

@@ -19,12 +19,14 @@ Route::middleware(['auth'])->namespace('Backend')->prefix('admin')->group(functi
     Route::resource('coupons', 'CouponsController');
     Route::resource('standard/forms', 'StandardFormsController');
     Route::resource('standard/scopes', 'StandardScopesController');    
-    Route::get('standard/moisture-map', 'StandardMoistureMapController@index')->name('moisture-map');
-    Route::get('standard/areas/page', 'StandardAffectedAreasController@areaPage')->name('areas-page');
+    Route::get('standard/moisture', 'StandardMoistureMapController@index')->name('moisture-page');
+    Route::get('standard/area', 'StandardAffectedAreasController@areaPage')->name('areas-page');
+    Route::get('standard/team', 'StandardTeamsController@teamsPage')->name('teams-page');
     Route::resource('units-of-measure', 'UnitsOfMeasureController');
 
 // ------------------API-----------------//
     Route::resource('standard/areas', 'StandardAffectedAreasController');
+    Route::resource('standard/teams', 'StandardTeamsController');
     Route::resource('standard/structure', 'StardardMoistureMapStructureController');
     Route::resource('standard/material', 'StardardMoistureMapMaterialController');
     Route::get('uoms/jsonResult', 'UnitsOfMeasureController@jsonResult');

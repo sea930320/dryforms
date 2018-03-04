@@ -59,7 +59,7 @@
                                     <td>{{ $form->name }}</td>
                                     <td>{{ $form->title }}</td>
                                     <td>
-                                        <a class="btn btn-xs btn-default pull-right" href="{{ route('moisture-map') }}">
+                                        <a class="btn btn-xs btn-default pull-right" href="{{ route('moisture-page') }}">
                                             <i class="fa fa-edit"></i> Edit
                                         </a>
                                     </td>
@@ -71,6 +71,24 @@
                                 <td> Affected Areas </td>
                                 <td>
                                     <a class="btn btn-xs btn-default pull-right" href="{{ route('areas-page') }}">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered table-hover" style="margin-top: 30px">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> Crews / Teams </td>
+                                <td>
+                                    <a class="btn btn-xs btn-default pull-right" href="{{ route('teams-page') }}">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
                                 </td>

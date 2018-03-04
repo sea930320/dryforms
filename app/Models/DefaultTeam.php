@@ -4,23 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DefaultMaterial extends Model
+class DefaultTeam extends Model
 {
     /**
      * @var string
      */
-    public $table = 'default_materials';
+    public $table = 'default_teams';
 
     /**
      * @var array
      */
     public $fillable = [
-        'title'
+        'name'
     ];
     /**
      * @var array
      */
     public $visible = [
-        'id', 'title'
+        'id', 'name'
     ];
 }
