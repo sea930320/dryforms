@@ -4,41 +4,45 @@
       <b-row>
         <b-col cols="3" class="text-left">
           <b-form-select v-model="selectedYear" :options="years" id="select_year"></b-form-select>
-          <b-form-select v-model="selectedStatus" :options="status" class="mt-2"></b-form-select>
+          <b-form-select v-model="selectedStatus" :options="statuses" class="mt-2"></b-form-select>
         </b-col>
         <b-col cols="6" class="text-center">
-          <img :src="companyLogo" alt="Company Logo">
+          <img v-if="company.logo" :src="company.logo" alt="Company Logo" height="90">
+          <img v-else :src="companyLogo" alt="Company Logo" height="90">
         </b-col>
         <b-col cols="3" class="text-right">
-          <input type="text" class="form-control" placeholder="Search..." v-model="searchText">
+          <input type="text" class="form-control" placeholder="Search..." v-model="filter" @input="filtering()">
         </b-col>
       </b-row>
       <div class="card text-center mt-3">
         <div class="card-header">
         </div>
         <div class="card-body text-left p-0">
-          <table class="table table-sm table-bordered table-striped table-hover no-margin text-center">
-            <thead>
-              <tr>
-                <th>Owner/Insured</th>
-                <th>Address</th>
-                <th>Phone</th>
-                <th>Assigned To</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in projects" :key="item.id">
-                <td>{{ item.owner }}</td>
-                <td>{{ item.address }}</td>
-                <td>{{ item.phone }}</td>
-                <td>{{ item.assingedto }}</td>
-                <td>{{ item.status }}</td>
-                <td>{{ item.action }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <b-table ref="projectTable" :busy.sync="isBusy" :items="getModel" small
+                    striped hover foot-clone :fields="fields" :current-page="currentPage" :per-page="perPage"
+                    :filter="filter" head-variant="">
+              <template slot="insured" slot-scope="row">
+                  {{ row.item.owner.first_name + ' ' + row.item.owner.last_name}}
+              </template>
+              <template slot="assigned" slot-scope="row">
+                  {{ row.item.assignee ? row.item.assignee.name: ''}}
+              </template>
+              <template slot="status" slot-scope="row">
+                  {{ row.item.status_info.name }}
+              </template>
+              <template slot="actions" slot-scope="row">
+                <button class="btn btn-xs btn-default">
+                  <i class="fa fa-pencil"></i> Edit
+                </button>
+                <button class="btn btn-xs btn-danger">
+                  <i class="fa fa-trash"></i> Remove
+                </button>
+              </template>
+          </b-table>
+          <div class="justify-content-center row-margin-tweak row">
+              <b-pagination v-if="!isBusy" :size="template_size" :total-rows="count" :per-page="perPage" limit="5" v-model="currentPage"/>
+              <div v-else>...</div>
+          </div>
         </div>
         <div class="card-footer text-muted">
         </div>
@@ -49,54 +53,133 @@
 </template>
 
 <script type="text/babel">
+  import { mapActions } from 'vuex'
   import Loading from '../layout/Loading'
+  import apiProjects from '../../api/projects'
+  import apiProjectStatus from '../../api/project_status'
 
   export default {
     components: { Loading },
     data () {
       return {
-        isLoaded: false,
         selectedYear: new Date().getFullYear(),
-        selectedStatus: 1,
-        searchText: '',
+        selectedStatus: null,
         companyLogo: require('../../assets/fallback-logo.jpg'),
-        years: [
-          { value: '2015', text: '2015' },
-          { value: '2016', text: '2016' },
-          { value: '2017', text: '2017' }
-        ],
-        status: [
-          { text: 'In-Progress', value: 1 },
-          { text: 'Completed', value: 2 },
-          { text: 'Deleted', value: 3 }
-        ],
-        projects: []
+        years: [],
+        statuses: [],
+        fields: {
+          insured: {
+            label: 'Owner/Insured',
+            sortable: false,
+            'class': 'text-center'
+          },
+          address: {
+            label: 'Address',
+            sortable: false,
+            'class': 'text-center'
+          },
+          phone: {
+            label: 'Phone',
+            sortable: false,
+            'class': 'text-center'
+          },
+          assigned: {
+            label: 'Assigned To',
+            sortable: false,
+            'class': 'text-center'
+          },
+          status: {
+            label: 'Status',
+            sortable: false,
+            'class': 'text-center'
+          },
+          actions: {
+            label: 'Action',
+            sortable: false,
+            'class': 'text-center'
+          }
+        },
+        filter: '',
+        isBusy: false,
+        currentPage: 1,
+        perPage: 2,
+        count: 0,
+        projects: null
       }
     },
     watch: {
       selectedYear: function () {
-        this.loadData()
+        this.$refs.projectTable.refresh()
       },
       selectedStatus: function () {
-        this.loadData()
-      },
-      searchText: function () {
-        this.loadData()
+        this.$refs.projectTable.refresh()
       }
     },
     created () {
       this.$nextTick(() => {
-        this.loadData()
+        this.initData()
       })
       this.$on('reloadData', () => {
-        this.loadData()
+        this.initData()
       })
     },
     methods: {
-      loadData () {
-        setTimeout(() => {
-          this.isLoaded = true
-        }, 2000)
+      ...mapActions([
+          'fetchUser'
+      ]),
+      initData() {
+        this.fetchUser()
+        this.years = []
+        for (let year = new Date().getFullYear(); year >= 2015; year--) {
+          this.years.push({
+            value: year,
+            text: year
+          })
+        }
+        const apis = [
+          apiProjects.index(),
+          apiProjectStatus.index()
+        ]
+        Promise.all(apis)
+          .then(response => {
+            this.projects = response[0].data.data || []
+            this.count = response[0].data.total
+            let statuses = response[1].data.statuses
+            this.statuses = [{
+              text: '----Select Status----',
+              value: null
+            }]
+            statuses.forEach(status => {
+              this.statuses.push({
+                text: status.name,
+                value: status.id
+              })
+            })
+          })
+      },
+      getModel(ctx) {
+        let data = {
+            page: ctx.currentPage,
+            filter: ctx.filter,
+            per_page: ctx.perPage,
+            status: this.selectedStatus,
+            year: this.selectedYear
+        }
+        return apiProjects.index(data)
+          .then(response => {
+            let items = response.data.data
+            this.count = response.data.total
+            this.projects = items || []
+            return (this.projects)
+          })
+      }
+    },
+    computed: {
+      company: function() {
+        return this.$store.state.User.company
+      },
+      isLoaded: function() {
+        return this.company.length !== 0 && Array.isArray(this.projects)
       }
     }
   }

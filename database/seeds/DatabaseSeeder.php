@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AreasSeeder::class);
         $this->call(DefaultFormsDataSeeder::class);
         $this->call(DefaultStatementsSeeder::class);
+        $this->call(ProjectStatusSeeder::class);
     }
 }

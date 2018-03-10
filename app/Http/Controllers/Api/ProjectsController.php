@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Projects\ProjectsIndex;
 use App\Http\Requests\Projects\ProjectStore;
 use App\Http\Requests\Projects\ProjectUpdate;
+
+use App\Services\QueryBuilder;
+use App\Services\QueryBuilders\ProjectModelQueryBuilder;
+
 use App\Models\Project;
 
 class ProjectsController extends ApiController
@@ -25,13 +29,19 @@ class ProjectsController extends ApiController
     }
 
     /**
-     * @param ProjectsIndex $index
+     * @param ProjectsIndex $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(ProjectsIndex $index)
+    public function index(ProjectsIndex $request)
     {
-        $projects = $this->project->paginate(20);
+        $queryParams = $request->validatedOnly();
+        $projects = $this->project;
+
+        $queryBuilder = new ProjectModelQueryBuilder();
+        $projects = $queryBuilder->setQuery($projects->query())->setQueryParams($queryParams);
+
+        $projects = $projects->paginate($request->get('per_page'));
 
         return $this->respond($projects);
     }

@@ -16,7 +16,11 @@ class ProjectsIndex extends BaseRequest
     public function rules()
     {
         return [
-
+            'status' => 'nullable|exists:project_status,id',            
+            'page' => 'nullable|integer',
+            'per_page' => 'nullable|integer',
+            'filter' => 'nullable|string',
+            'year' => 'nullable|integer'
         ];
     }
 }

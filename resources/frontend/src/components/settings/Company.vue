@@ -1,8 +1,8 @@
 <template>
     <div class="settings-company">
         <my-upload field="img"
-          width="240"
-          height="60"
+          width="200"
+          height="90"
           url=""
           lang-type="en"
           v-model="image.show"
@@ -20,7 +20,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group logo-preview"  v-if="company.logo">
-                                    <img :src="company.logo" height="60">
+                                    <img :src="company.logo" height="90">
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-sm" @click.prevent="imageUpload">

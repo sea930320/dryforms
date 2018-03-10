@@ -39,7 +39,8 @@ class Project extends Model
 
         'company',
         'owner',
-        'assignee'
+        'assignee',
+        'status_info'
     ];
 
     /**
@@ -48,7 +49,8 @@ class Project extends Model
     public $with = [
         'company',
         'owner',
-        'assignee'
+        'assignee',
+        'status_info'
     ];
 
     /**
@@ -72,6 +74,14 @@ class Project extends Model
      */
     public function assignee()
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(Team::class, 'assigned_to');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function status_info()
+    {
+        return $this->belongsTo(ProjectStatus::class, 'status');
     }
 }

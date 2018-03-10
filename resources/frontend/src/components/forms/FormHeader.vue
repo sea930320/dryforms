@@ -1,19 +1,22 @@
 <template>
     <b-row>
         <b-col class="text-left">
-            <img :src="companyLogo" alt="Company Logo">
+            <img v-if="company.logo" :src="company.logo" alt="Company Logo" height="90">
+            <img v-else :src="companyLogo" alt="Company Logo" height="90">
         </b-col>
         <b-col class="text-right">
-            <h5 class="m-0">{{ title }}</h5>
-            <p class="m-0">{{ street }}</p>
-            <p class="m-0">{{ city }} {{ state }} {{ zipcode }}</p>
-            <p class="m-0">{{ phone }}</p>
-            <p class="m-0">{{ email }}</p>
+            <h5 class="m-0">{{ company.name ? company.name : '' }}</h5>
+            <p class="m-0">{{ company.street ? company.street : '' }}</p>
+            <p class="m-0">{{ company.city ? company.city : '' }} {{ company.state ? company.state : '' }} {{ company.zip ? company.zip : '' }}</p>
+            <p class="m-0">{{ company.phone ? company.phone : '' }}</p>
+            <p class="m-0">{{ company.email ? company.email : '' }}</p>
         </b-col>
     </b-row>
 </template>
 
 <script type="text/babel">
+    import { mapActions } from 'vuex'
+
     export default {
         name: 'form-header',
         data() {
@@ -27,6 +30,19 @@
                 phone: '702-591-8889',
                 email: 'readyfloodrestoration@gmail.com'
             }
+        },
+        created() {
+            this.fetchUser()
+        },
+        computed: {
+          company: function() {
+              return this.$store.state.User.company
+          }
+        },
+        methods: {
+            ...mapActions([
+                'fetchUser'
+            ])
         }
     }
 </script>
