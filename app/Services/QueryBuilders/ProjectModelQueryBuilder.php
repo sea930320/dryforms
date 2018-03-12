@@ -39,7 +39,7 @@ class ProjectModelQueryBuilder extends QueryBuilder
             //     $query->where('name', 'like', "%{$params['category_name']}%");
             // });
         }
-
+        $this->query->orderBy('id', 'desc');
         return $this->query;
     }
 }

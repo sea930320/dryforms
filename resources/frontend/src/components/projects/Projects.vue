@@ -31,7 +31,7 @@
                   {{ row.item.status_info ? row.item.status_info.name: '' }}
               </template>
               <template slot="actions" slot-scope="row">
-                <button class="btn btn-xs btn-default">
+                <button class="btn btn-xs btn-default" @click='editProject(row.item.id)'>
                   <i class="fa fa-pencil"></i> Edit
                 </button>
                 <button class="btn btn-xs btn-danger">
@@ -104,7 +104,7 @@
         filter: '',
         isBusy: false,
         currentPage: 1,
-        perPage: 2,
+        perPage: 20,
         count: 0,
         projects: null
       }
@@ -174,6 +174,15 @@
             this.projects = items || []
             return (this.projects)
           })
+      },
+      editProject(projectId) {
+        this.$router.push({
+          name: 'Form Call Report',
+          params: {
+            project_id: projectId,
+            form_id: 1
+          }
+        })
       }
     },
     computed: {

@@ -65,7 +65,8 @@
         }
         apiProjects.store({
           company_id: this.user.company_id,
-          owner_id: this.user.id
+          owner_id: this.user.id,
+          status: 1
         }).then((res) => {
           let projectId = res.data.project.id
           projectForms.forEach((projectForm) => {
