@@ -78,7 +78,8 @@
             this.$router.push({
               name: 'Form Call Report',
               params: {
-                project_id: projectId
+                project_id: projectId,
+                form_id: 1
               }
             })
           })
