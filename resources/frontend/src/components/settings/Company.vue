@@ -1,8 +1,8 @@
 <template>
     <div class="settings-company">
         <my-upload field="img"
-          width="200"
-          height="90"
+          width="180"
+          height="81"
           url=""
           lang-type="en"
           v-model="image.show"
