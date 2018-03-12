@@ -63,12 +63,15 @@
 <script type="text/babel">
     import FormHeader from './FormHeader'
     import Notes from './Notes'
+    import apiProjectCallReports from '../../api/project_call_reports'
 
     export default {
         components: {FormHeader, Notes},
         props: ['title'],
         data() {
             return {
+                projectId: null,
+                formId: null,
                 customerTypes: [
                     {text: 'Residential', value: 'residential'},
                     {text: 'Commercial', value: 'commercial'},
@@ -189,6 +192,19 @@
                 }
             }
         },
+        created() {
+            this.projectId = this.$route.params.project_id
+            this.formId = this.$route.params.form_id
+            this.init()
+        },
+        methods: {
+            init() {
+                apiProjectCallReports.index({
+                    project_id: this.projectId
+                }).then(res => {
+                })
+            }
+        },
         watch: {
             sameJobAddress: function () {
                 if (this.sameJobAddress) {
@@ -209,6 +225,12 @@
                 } else {
                     this.formModel3.ownerName = ''
                 }
+            }
+        },
+        computed: {
+            projectFormPerID: function() {
+                let projectForms = this.$store.getters.projectFormPerID(this.formId)
+                return projectForms.length > 0 ? projectForms[0] : null
             }
         }
     }

@@ -22,10 +22,10 @@ class ProjectStore extends BaseRequest
         return [
             'company_id' => 'required|exists:companies,id',
             'owner_id' => 'required|exists:users,id',
-            'assigned_to' => 'nullable|exists:users,id',
+            'assigned_to' => 'nullable|exists:teams,id',
             'address' => 'nullable',
             'phone' => 'nullable',
-            'status' => 'required',
+            'status' => 'nullable',
         ];
     }
 }

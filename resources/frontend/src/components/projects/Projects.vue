@@ -28,7 +28,7 @@
                   {{ row.item.assignee ? row.item.assignee.name: ''}}
               </template>
               <template slot="status" slot-scope="row">
-                  {{ row.item.status_info.name }}
+                  {{ row.item.status_info ? row.item.status_info.name: '' }}
               </template>
               <template slot="actions" slot-scope="row">
                 <button class="btn btn-xs btn-default">
@@ -57,8 +57,10 @@
   import Loading from '../layout/Loading'
   import apiProjects from '../../api/projects'
   import apiProjectStatus from '../../api/project_status'
+  import ErrorHandler from '../../mixins/error-handler'
 
   export default {
+    mixins: [ErrorHandler],
     components: { Loading },
     data () {
       return {
@@ -155,7 +157,7 @@
                 value: status.id
               })
             })
-          })
+          }).catch(this.handleErrorResponse)
       },
       getModel(ctx) {
         let data = {

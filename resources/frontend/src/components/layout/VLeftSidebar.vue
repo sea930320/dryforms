@@ -27,8 +27,8 @@
                     <div class="m-0"><img v-if="leftLinksIcon['Forms'] != ''" :src="leftLinksIcon['Forms']"> Forms </div>
                 </router-link>
             </b-list-group-item>
-            <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="link.selected === '1'">
-                <router-link :to="{name: 'Form ' + link.form.name, params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+            <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="link.selected === '1' || (projectSelectedForms && projectSelectedForms[link.form_id])">
+                <router-link :to="{name: 'Form ' + link.form.name, params: {project_id: projectId, form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                     <div class="m-0">
                         <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
                         <span class="left-sidebar-ellipse" :class="icon-margin"> {{ link.standard_form[0].name }} </span>
@@ -52,6 +52,7 @@
     import {mapActions} from 'vuex'
     import Loading from './Loading'
     import apiStandardForm from '../../api/standard_form'
+    import apiProjectForms from '../../api/project_forms'
 
     import _ from 'lodash'
     import ErrorHandler from '../../mixins/error-handler'
@@ -90,7 +91,9 @@
                 leftLinks: [],
                 isStandards: null,
                 isForms: null,
-                leftLinksIcon: {}
+                leftLinksIcon: {},
+                projectSelectedForms: null,
+                projectId: null
             }
         },
         methods: {
@@ -123,6 +126,19 @@
                 }
                 if (this.$route.path.indexOf('forms') !== -1) {
                     this.isForms = true
+                    this.fetchFormsOrder()
+                    this.projectId = this.$route.params.project_id
+                    apiProjectForms.index({
+                        project_id: this.projectId
+                    }).then((response) => {
+                        let projectForms = response.data
+                        this.$store.state.ProjectForm.projectForms = projectForms
+                        this.$store.state.ProjectForm.projectId = this.projectId
+                        this.projectSelectedForms = []
+                        projectForms.forEach(projectForm => {
+                            this.projectSelectedForms[projectForm.form_id] = true
+                        })
+                    })
                 } else {
                     this.isForms = false
                 }

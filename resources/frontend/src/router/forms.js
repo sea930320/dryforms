@@ -55,7 +55,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/callreport',
+    path: '/forms/:project_id/callreport/:form_id',
     name: 'Form Call Report',
     props: {title: 'Call Report'},
     meta: {
@@ -69,7 +69,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/scope',
+    path: '/forms/:project_id/scope/:form_id',
     name: 'Form Project Scope',
     props: {title: 'Projectscope'},
     meta: {
@@ -83,7 +83,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/dailylog',
+    path: '/forms/:project_id/dailylog/:form_id',
     name: 'Form Daily Log',
     props: {title: 'dailylog'},
     meta: {
@@ -97,7 +97,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/authorization',
+    path: '/forms/:project_id/authorization/:form_id',
     name: 'Form Work Authorization',
     props: {title: 'authorization'},
     meta: {
@@ -111,7 +111,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/antimicrobial',
+    path: '/forms/:project_id/antimicrobial/:form_id',
     name: 'Form Anti-Microbial',
     props: {title: 'antimicrobial'},
     meta: {
@@ -125,7 +125,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/responsibility',
+    path: '/forms/:project_id/responsibility/:form_id',
     name: 'Form Customer Responsibility',
     props: {title: 'Responsibility'},
     meta: {
@@ -139,7 +139,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/moisturemap',
+    path: '/forms/:project_id/moisturemap/:form_id',
     name: 'Form Moisture Map',
     props: {title: 'moisturemap'},
     meta: {
@@ -153,7 +153,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/psyreport',
+    path: '/forms/:project_id/psyreport/:form_id',
     name: 'Form Psychometric Report',
     props: {title: 'psyreport'},
     meta: {
@@ -167,7 +167,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/liability',
+    path: '/forms/:project_id/liability/:form_id',
     name: 'Form Release from Liability',
     props: {title: 'Liability'},
     meta: {
@@ -181,7 +181,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/stoppage',
+    path: '/forms/:project_id/stoppage/:form_id',
     name: 'Form Work Stoppage',
     props: {title: 'Stoppage'},
     meta: {
@@ -195,7 +195,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/certificate',
+    path: '/forms/:project_id/certificate/:form_id',
     name: 'Form Certificate of Completion',
     props: {title: 'Certificate'},
     meta: {
@@ -209,7 +209,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/areas',
+    path: '/forms/:project_id/areas/:form_id',
     name: 'Form Affected Areas',
     props: {title: 'Areas'},
     meta: {

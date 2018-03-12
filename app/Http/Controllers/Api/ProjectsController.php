@@ -10,6 +10,7 @@ use App\Services\QueryBuilder;
 use App\Services\QueryBuilders\ProjectModelQueryBuilder;
 
 use App\Models\Project;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProjectsController extends ApiController
 {
@@ -33,7 +34,7 @@ class ProjectsController extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(ProjectsIndex $request)
+    public function index(ProjectsIndex $request): JsonResponse
     {
         $queryParams = $request->validatedOnly();
         $projects = $this->project;

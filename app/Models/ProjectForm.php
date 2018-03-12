@@ -5,43 +5,36 @@ namespace App\Models;
 use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class ProjectForm extends Model
 {
     use BelongsToCompany;
 
     /**
      * @var string
      */
-    public $table = 'projects';
+    public $table = 'project_forms';
 
     /**
      * @var array
      */
     public $fillable = [
+    	'form_id',
         'company_id',
-        'owner_id',
-        'assigned_to',
-        'address',
-        'phone',
-        'status'
+        'project_id'
     ];
 
     /**
      * @var array
      */
     public $visible = [
-        'id',
         'company_id',
-        'owner_id',
-        'assigned_to',
-        'address',
-        'phone',
-        'status',
+        'form_id',
+        'project_id',
 
         'company',
-        'owner',
-        'assignee',
-        'status_info'
+        'default_form_data',
+        'standard_form',
+        'project'
     ];
 
     /**
@@ -49,9 +42,9 @@ class Project extends Model
      */
     public $with = [
         'company',
-        'owner',
-        'assignee',
-        'status_info'
+        'default_form_data',
+        'standard_form',
+        'project'
     ];
 
     /**
@@ -65,24 +58,24 @@ class Project extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function owner()
+    public function default_form_data()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->hasOne(DefaultFromData::class, 'form_id', 'form_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function assignee()
+    public function standard_form()
     {
-        return $this->belongsTo(Team::class, 'assigned_to');
+        return $this->hasOne(DefaultFromData::class, 'form_id', 'form_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function status_info()
+    public function project()
     {
-        return $this->belongsTo(ProjectStatus::class, 'status');
+        return $this->belongsTo(Project::class);
     }
 }
