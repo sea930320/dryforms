@@ -246,8 +246,10 @@
                     let resData = Object.entries(res[0].data[0])
                     this.callReport = res[0].data[0]
 
-                    this.project = this.callReport.project
-                    this.assignee = this.callReport.assignee
+                    this.project = this.callReport.project ? this.callReport.project : null
+                    this.assignee = this.callReport.assignee ? this.callReport.assignee : {
+                        id: null
+                    }
                     let self = this
                     resData.forEach(function(field) {
                         let fieldKey = _.camelCase(field[0])
