@@ -307,11 +307,16 @@
 
                 if (this.callReport === null) {
                     apiProjectCallReports.store(finalCallReport).then((res) => {
+<<<<<<< HEAD
+=======
+                        debugger
+>>>>>>> 709eb489a9bafbc7b4020db6ba3ae9c776e263b0
                         this.assignee = res.data.projectCallReport.assignee ? res.data.projectCallReport.assignee : {
                             id: null
                         }
                         this.callReport = res.data.projectCallReport
                         this.project = res.data.projectCallReport.project ? res.data.projectCallReport.project : null
+<<<<<<< HEAD
                         this.$notify({
                             type: 'success',
                             text: res.data.message
@@ -323,6 +328,11 @@
                             type: 'success',
                             text: res.data.message
                         })
+=======
+                    }).catch(this.handleErrorResponse)
+                } else {
+                    apiProjectCallReports.patch(this.callReport.id, finalCallReport).then((res) => {
+>>>>>>> 709eb489a9bafbc7b4020db6ba3ae9c776e263b0
                     }).catch(this.handleErrorResponse)
                 }
             }
