@@ -27,7 +27,10 @@ const rightLinks = [
     icon: require('../assets/icon-print.png')
   },
   {
-    path: 'save',
+    methodCall: {
+      section: 'forms',
+      name: 'save'
+    },
     name: 'Save',
     icon: require('../assets/icon-save.png')
   },
