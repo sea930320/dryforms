@@ -40,4 +40,30 @@ class ProjectCallReportsController extends ApiController
         	->get();
         return $this->respond($projectCallReport);
     }
+
+     /**
+     * @param ProjectCallReportStore $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(ProjectCallReportStore $request)
+    {
+        $projectCallReport = $this->projectCallReport->create($request->validatedOnly());
+
+        return $this->respond(['message' => 'Project Call Report successfully created', 'projectCallReport' => $projectCallReport]);
+    }
+
+    /**
+     * @param ProjectCallReportUpdate $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(ProjectCallReportUpdate $request)
+    {
+        $projectCallReport = $this->projectCallReport->findOrFail($request->input('call_report_id'));
+        $projectCallReport->update($request->validatedOnly());
+
+        return $this->respond(['message' => 'Project Call Report successfully updated', 'projectCallReport' => $projectCallReport]);
+    }
+
 }
