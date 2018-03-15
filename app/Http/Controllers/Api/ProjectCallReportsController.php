@@ -76,7 +76,8 @@ class ProjectCallReportsController extends ApiController
             'owner_name' => $request->get('insured_name'),
             'address' => $request->get('billing_address'),
             'phone' => $request->get('insured_cell_phone') ? $request->get('insured_cell_phone') : ($request->get('insured_home_phone') ? $request->get('insured_home_phone') : ($request->get('insured_work_phone') ? $request->get('insured_work_phone'): '')),
-            'status' => $request->get('date_completed') ? 3 : ($request->get('date_contacted') ? 2 : 1)
+            'status' => $request->get('date_completed') ? 3 : ($request->get('date_contacted') ? 2 : 1),
+            'assigned_to' => $request->get('assigned_to')
         ]);
 
         return $this->respond(['message' => 'Project Call Report successfully updated', 'projectCallReport' => $projectCallReport, 'project' => $project]);
