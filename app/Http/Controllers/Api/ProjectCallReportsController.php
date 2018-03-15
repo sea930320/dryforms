@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\ProjectCallReport;
+use App\Models\Project;
 use Illuminate\Http\JsonResponse;
 
 use App\Http\Requests\ProjectCallReport\ProjectCallReportIndex;
@@ -17,13 +18,20 @@ class ProjectCallReportsController extends ApiController
     private $projectCallReport;
 
     /**
+     * @var Project
+     */
+    private $project;
+
+    /**
      * ProjectCallReportsController constructor.
      *
      * @param ProjectCallReport $projectCallReport
+     * @param Project $project
      */
-    public function __construct(ProjectCallReport $projectCallReport)
+    public function __construct(ProjectCallReport $projectCallReport, Project $project)
     {
         $this->projectCallReport = $projectCallReport;
+        $this->project = $project;
     }
 
     /**
@@ -63,7 +71,15 @@ class ProjectCallReportsController extends ApiController
         $projectCallReport = $this->projectCallReport->findOrFail($request->input('call_report_id'));
         $projectCallReport->update($request->validatedOnly());
 
-        return $this->respond(['message' => 'Project Call Report successfully updated', 'projectCallReport' => $projectCallReport]);
+        $project = $this->project->findOrFail($request->get('project_id'));
+        $project->update([
+            'owner_name' => $request->get('insured_name'),
+            'address' => $request->get('billing_address'),
+            'phone' => $request->get('insured_cell_phone') ? $request->get('insured_cell_phone') : ($request->get('insured_home_phone') ? $request->get('insured_home_phone') : ($request->get('insured_work_phone') ? $request->get('insured_work_phone'): '')),
+            'status' => $request->get('date_completed') ? 3 : ($request->get('date_contacted') ? 2 : 1)
+        ]);
+
+        return $this->respond(['message' => 'Project Call Report successfully updated', 'projectCallReport' => $projectCallReport, 'project' => $project]);
     }
 
 }

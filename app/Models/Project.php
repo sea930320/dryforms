@@ -19,7 +19,7 @@ class Project extends Model
      */
     public $fillable = [
         'company_id',
-        'owner_id',
+        'owner_name',
         'assigned_to',
         'address',
         'phone',
@@ -32,16 +32,16 @@ class Project extends Model
     public $visible = [
         'id',
         'company_id',
-        'owner_id',
+        'owner_name',
         'assigned_to',
         'address',
         'phone',
         'status',
 
         'company',
-        'owner',
         'assignee',
-        'status_info'
+        'status_info',
+        // 'project_call_report'
     ];
 
     /**
@@ -49,7 +49,6 @@ class Project extends Model
      */
     public $with = [
         'company',
-        'owner',
         'assignee',
         'status_info'
     ];
@@ -60,14 +59,6 @@ class Project extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function owner()
-    {
-        return $this->belongsTo(User::class, 'owner_id');
     }
 
     /**
@@ -84,5 +75,13 @@ class Project extends Model
     public function status_info()
     {
         return $this->belongsTo(ProjectStatus::class, 'status');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function project_call_report()
+    {
+        return $this->hasOne(ProjectCallReport::class);
     }
 }

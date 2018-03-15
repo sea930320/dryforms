@@ -22,7 +22,7 @@
                     striped hover foot-clone :fields="fields" :current-page="currentPage" :per-page="perPage"
                     :filter="filter" head-variant="">
               <template slot="insured" slot-scope="row">
-                  {{ row.item.owner.first_name + ' ' + row.item.owner.last_name}}
+                  {{ row.item.owner_name }}
               </template>
               <template slot="assigned" slot-scope="row">
                   {{ row.item.assignee ? row.item.assignee.name: ''}}

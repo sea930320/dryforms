@@ -23,10 +23,7 @@ class ProjectModelQueryBuilder extends QueryBuilder
             $filter = $params['filter'];
             $this->query->where(function($query) use ($filter) {
                 $query
-                    ->whereHas('owner', function ($query) use ($filter) {
-                        $query->where('first_name', 'like', "%$filter%")
-                            ->orWhere('last_name', 'like', "%$filter%");
-                    })
+                    ->where('owner_name', 'like', "%$filter%%")
                     ->orWhereHas('assignee', function($query) use ($filter) {
                         $query->where('name', 'like', "%$filter%");
                     })

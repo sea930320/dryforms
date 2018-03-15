@@ -11,6 +11,7 @@ use App\Services\QueryBuilders\ProjectModelQueryBuilder;
 
 use App\Models\Project;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Database\QueryException;
 
 class ProjectsController extends ApiController
 {
@@ -38,7 +39,6 @@ class ProjectsController extends ApiController
     {
         $queryParams = $request->validatedOnly();
         $projects = $this->project;
-
         $queryBuilder = new ProjectModelQueryBuilder();
         $projects = $queryBuilder->setQuery($projects->query())->setQueryParams($queryParams);
 

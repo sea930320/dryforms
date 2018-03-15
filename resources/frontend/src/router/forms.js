@@ -26,14 +26,14 @@ const rightLinks = [
     name: 'Print',
     icon: require('../assets/icon-print.png')
   },
-  {
-    methodCall: {
-      section: 'forms',
-      name: 'save'
-    },
-    name: 'Save',
-    icon: require('../assets/icon-save.png')
-  },
+  // {
+  //   methodCall: {
+  //     section: 'forms',
+  //     name: 'save'
+  //   },
+  //   name: 'Save',
+  //   icon: require('../assets/icon-save.png')
+  // },
   {
     path: '/forms/areas',
     name: 'Affected Areas',
