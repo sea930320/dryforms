@@ -29,6 +29,10 @@ const rightLinksMain = [
     icon: require('../assets/icon-calendar.png')
   },
   {
+    path: '/standards/dailylog',
+    name: 'Daily Log'
+  },
+  {
     methodCall: {
       section: 'standards',
       name: 'save'
@@ -48,6 +52,10 @@ const rightLinks = [
     path: '/standards/calendar',
     name: 'Calendar',
     icon: require('../assets/icon-calendar.png')
+  },
+  {
+    path: '/standards/dailylog',
+    name: 'Daily Log'
   }
 ]
 
@@ -150,6 +158,20 @@ const routes = (configRoute) => [
     },
     component: resolve => {
       require(['../components/standards/right-link/Calendar.vue'], resolve)
+    }
+  },
+  {
+    path: '/standards/dailylog',
+    name: 'Daily Log',
+    props: {title: 'Daily Log'},
+    meta: {
+      title: 'Daily Log',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/standards/Dailylog.vue'], resolve)
     }
   }
 ]

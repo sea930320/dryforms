@@ -11,12 +11,34 @@
 </template>
 
 <script type="text/babel">
+    import apiProjectCallReports from '../../api/project_call_reports'
+
     export default {
         data() {
             return {
+                projectId: null,
+                formId: null,
                 ownerName: 'Jimmy Smith',
                 jobAddress: '905 Pastel Dusk Court Henderson, Nevada 89012',
                 claimNumber: '1234567'
+            }
+        },
+        created() {
+            this.projectId = this.$route.params.project_id
+            this.formId = this.$route.params.form_id
+            this.init()
+        },
+        methods: {
+            init() {
+                apiProjectCallReports.index({
+                    project_id: this.projectId
+                }).then(res => {
+                    if (res.data.length > 0) {
+                        this.ownerName = res.data[0].insured_name
+                        this.jobAddress = res.data[0].billing_address
+                        this.claimNumber = res.data[0].insurance_claim_no
+                    }
+                })
             }
         }
     }

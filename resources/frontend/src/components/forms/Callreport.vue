@@ -282,6 +282,7 @@
                     apiTeams.index()
                 ]
                 Promise.all(apis).then(res => {
+                    this.isLoaded = true
                     this.teams = res[1].data.data
                     if (res[0].data.length === 0) {
                         this.assignee = {
@@ -322,7 +323,6 @@
                                 self.selectedJobType.push(self.jobTypesMatch[fieldKey])
                             }
                         }
-                        self.isLoaded = true
                     })
                 })
             },

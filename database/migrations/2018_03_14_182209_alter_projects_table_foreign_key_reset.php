@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterProjectsTable extends Migration
+class AlterProjectsTableForeignKeyReset extends Migration
 {
     /**
      * Run the migrations.
@@ -37,7 +37,6 @@ class AlterProjectsTable extends Migration
             $table->dropColumn('owner_name');
             
         });        
-        Schema::enableForeignKeyConstraints();
 
         Schema::table('projects', function (Blueprint $table) {
             $table->integer('owner_id')->unsigned();
@@ -46,5 +45,6 @@ class AlterProjectsTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
         });
+        Schema::enableForeignKeyConstraints();
     }
 }
