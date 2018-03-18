@@ -45,8 +45,10 @@ class ProjectDailylogsController extends ApiController
 
         $projectDailylog = $this->projectDailylog
         	->where('project_id', $queryParams['project_id'])
+        	->where('is_copied', $queryParams['is_copied'])
+        	->where('form_id', $queryParams['form_id'])
         	->get();
-        	
+
         return $this->respond($projectDailylog);
     }
 
@@ -58,9 +60,10 @@ class ProjectDailylogsController extends ApiController
     public function store(ProjectDailylogStore $request): JsonResponse
     {
     	$queryParams = $request->validatedOnly();
+    	$queryParams['company_id'] = auth()->user()->company_id;
         $projectDailylog = $this->projectDailylog->create($queryParams);
 
-        return $this->respond(['message' => 'Project Dailylog successfully created']);
+        return $this->respond(['message' => 'Project Dailylog successfully created', 'projectDailylog' => $projectDailylog]);
     }
 
     /**
@@ -70,10 +73,11 @@ class ProjectDailylogsController extends ApiController
      */
     public function update(ProjectDailylogUpdate $request): JsonResponse
     {
-
-        $projectDailylog = $this->projectDailylog
+    	$projectDailylog = $this->projectDailylog
             ->findOrFail($request->input('id'));
-        $projectDailylog->update($request->validatedOnly());
+        $queryParams = $request->validatedOnly();
+        unset($queryParams['id']);
+        $projectDailylog->update($queryParams);
 
         return $this->respond(['message' => 'Project Dailylog successfully updated', 'projectDailylog' => $projectDailylog]);
     }

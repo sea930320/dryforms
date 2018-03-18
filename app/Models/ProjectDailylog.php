@@ -29,6 +29,7 @@ class ProjectDailylog extends Model
      * @var array
      */
     public $visible = [
+    	'id',
         'company_id',
         'form_id',
         'project_id',

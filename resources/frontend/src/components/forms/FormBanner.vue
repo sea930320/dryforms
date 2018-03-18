@@ -18,9 +18,9 @@
             return {
                 projectId: null,
                 formId: null,
-                ownerName: 'Jimmy Smith',
-                jobAddress: '905 Pastel Dusk Court Henderson, Nevada 89012',
-                claimNumber: '1234567'
+                ownerName: '',
+                jobAddress: '',
+                claimNumber: ''
             }
         },
         created() {

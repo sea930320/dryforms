@@ -26,7 +26,7 @@ class ProjectCallReportUpdate extends BaseRequest
         return [
             'call_report_id' => 'required|exists:project_call_reports,id',
             'project_id' => 'required|exists:projects,id',
-            'company_id' => 'required|exists:companies,id',
+            'company_id' => 'sometimes|required|exists:companies,id',
             'contact_name' => 'required|string',
             'contact_phone' => 'required|string',
             'site_phone' => 'nullable|string',

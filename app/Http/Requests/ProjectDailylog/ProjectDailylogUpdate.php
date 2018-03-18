@@ -24,7 +24,12 @@ class ProjectDailylogUpdate extends BaseRequest
     public function rules()
     {
         return [
-            //
+            'id' => 'required|exists:project_dailylogs,id',
+            'form_id' => 'sometimes|required|exists:forms,id',
+            'company_id' => 'sometimes|required|exists:companies,id',
+            'project_id' => 'sometimes|required|exists:projects,id',
+            'is_copied'=>'sometimes|required|in:0,1',            
+            'notes'=>'nullable|string'
         ];
     }
 }
