@@ -6,7 +6,7 @@
             <div class="dropdown-divider"></div>
             <form-banner class="mt-2"></form-banner>
             <div class="dropdown-divider"></div>
-            <div v-html="authContent"></div>
+            <statement></statement>            
             <notes class="mt-3"></notes>
             <footer-text class="mt-3"></footer-text>
             <signature class="mt-3"></signature>
@@ -20,12 +20,25 @@
     import Notes from './Notes'
     import FooterText from './FooterText'
     import Signature from './Signature'
+    import Statement from './Statement'
+    import ErrorHandler from '../../mixins/error-handler'
 
     export default {
-        components: {FormHeader, FormBanner, Notes, FooterText, Signature},
+        mixins: [ErrorHandler],
+        name: 'project authorization',
+        components: {FormHeader, FormBanner, Notes, FooterText, Signature, Statement},
         data() {
             return {
                 authContent: '<h2>Work Authorization Data</h2>'
+            }
+        },
+        created() {
+            this.$nextTick(() => {
+                this.init()
+            })
+        },
+        methods: {
+            init() {
             }
         }
     }

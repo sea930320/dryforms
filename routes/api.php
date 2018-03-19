@@ -36,6 +36,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('project/forms', 'ProjectFormsController');
     $router->resource('project/call_reports', 'ProjectCallReportsController');
     $router->resource('project/dailylog', 'ProjectDailylogsController');
+    $router->resource('project/statement', 'ProjectStatementsController');
     $router->resource('standard/forms', 'StandardsController');
     $router->resource('standard/form_orders', 'FormOrdersController');
     $router->resource('standard/scopes', 'StandardScopesController');
