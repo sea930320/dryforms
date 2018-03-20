@@ -7,9 +7,9 @@
             <form-banner class="mt-2"></form-banner>
             <div class="dropdown-divider"></div>
             <statement></statement>            
-            <notes class="mt-3"></notes>
-            <footer-text class="mt-3"></footer-text>
+            <notes class="mt-3"></notes>            
             <signature class="mt-3"></signature>
+            <footer-text class="mt-3"></footer-text>
         </div>
     </div>
 </template>

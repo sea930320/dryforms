@@ -24,7 +24,12 @@ class ProjectStatementUpdate extends BaseRequest
     public function rules()
     {
         return [
-            //
+            'project_id' => 'required|exists:projects,id',
+            'form_id' => 'required|exists:forms,id',
+            'company_id' => 'required|exists:companies,id',
+            'id' => 'required|exists:project_statements,id',
+            'statement' => 'nullable|string',
+            'title' => 'sometimes|nullable|string'
         ];
     }
 }
