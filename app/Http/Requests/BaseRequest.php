@@ -23,7 +23,6 @@ abstract class BaseRequest extends FormRequest
         return array_filter($this->only(array_keys($this->rules())));
     }
 
-
     /**
      * @return bool
      */
