@@ -1,6 +1,9 @@
+import apiProjectCallReports from '../../api/project_call_reports'
+
 const state = {
     projectForms: [],
-    projectId: null
+    projectId: null,
+    callReport: null
 }
 
 const getters = {
@@ -14,9 +17,21 @@ const getters = {
 }
 
 const actions = {
+    fetchCallReport ({dispatch, commit}) {
+        apiProjectCallReports.index({
+            project_id: this.state.ProjectForm.projectId
+        }).then(res => {
+            if (res.data.length > 0) {
+                commit('setCallReport', res.data[0])
+            }
+        })
+    }
 }
 
 const mutations = {
+    setCallReport (state, callReport) {
+        state.callReport = callReport
+    }
 }
 
 export default {

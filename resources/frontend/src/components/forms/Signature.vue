@@ -1,10 +1,8 @@
 <template>
-
     <b-container>
-
         <b-row>
             <b-col cols="3" class="text-left pt-4">
-                <h6>Owner/Occupant:</h6>
+                <h6>Owner/Insured:</h6>
                 <p>{{ ownerName }}</p>
             </b-col>
             <b-col cols="6">
@@ -13,7 +11,7 @@
                         <i class="fa fa-times" @click="clearOwner"></i>
                     </b-col>
                     <b-col cols="8">
-                        <vueSignature ref="ownerSignature" :h="'80px'" class="signature"></vueSignature>
+                        <vueSignature ref="ownerSignature" :h="'80px'" :sigOption="onwerSignOption" class="signature" @onEnd='drawup()'></vueSignature>
                     </b-col>
                 </b-row>
             </b-col>
@@ -22,7 +20,6 @@
                 <p>{{ time }}</p>
             </b-col>
         </b-row>
-
         <b-row>
             <b-col cols="3" class="text-left pt-4">
                 <h6>Company:</h6>
@@ -34,7 +31,7 @@
                         <i class="fa fa-times" @click="clearCompany"></i>
                     </b-col>
                     <b-col cols="8">
-                        <vueSignature ref="companySignature" :h="'80px'" class="signature"></vueSignature>
+                        <vueSignature ref="companySignature" :h="'80px'" :sigOption="companySignOption" class="signature"></vueSignature>
                     </b-col>
                 </b-row>
             </b-col>
@@ -43,33 +40,33 @@
                 <p>{{ time }}</p>
             </b-col>
         </b-row>
-
     </b-container>
-
 </template>
 
 <script type="text/babel">
     export default {
         data() {
             return {
-                ownerName: 'Jimmy Smith',
-                companyName: 'Flood out',
                 date: '12/12/2017',
                 time: '0:00:00',
-                signOption: {
-                    penColor: 'rgb(0, 0, 0)'
+                ownerSignaturePng: '',
+                companySignaturePng: '',
+                onwerSignOption: {
+                    penColor: 'rgb(255, 0, 0)',
+                    onEnd: this.saveOwnerSignature
+                },
+                companySignOption: {
+                    penColor: 'rgb(255, 0, 0)',
+                    onEnd: this.saveCompanySignature
                 }
             }
         },
         methods: {
-            saveSignature() {
-                var _this = this
-                var png = _this.$refs.ownerSignature.save()
-                var jpeg = _this.$refs.ownerSignature.save('image/jpeg')
-                var svg = _this.$refs.ownerSignature.save('image/svg+xml')
-                console.log(png)
-                console.log(jpeg)
-                console.log(svg)
+            saveOwnerSignature() {
+                this.ownerSignaturePng = this.$refs.ownerSignature.save()
+            },
+            saveCompanySignature() {
+                this.companySignaturePng = this.$refs.companySignature.save()
             },
             clearOwner() {
                 var _this = this
@@ -78,6 +75,25 @@
             clearCompany() {
                 var _this = this
                 _this.$refs.companySignature.clear()
+            },
+            drawup() {
+                debugger
+            }
+        },
+        computed: {
+            ownerName: function() {
+                return this.$store.state.ProjectForm.callReport ? this.$store.state.ProjectForm.callReport.insured_name : ''
+            },
+            companyName: function() {
+                return this.$store.state.User.company.length !== 0 ? this.$store.state.User.company.name : ''
+            },
+            isLoaded: function() {
+                return this.$store.state.User.company.length !== 0 && this.$store.state.ProjectForm.callReport
+            }
+        },
+        watch: {
+            ownerSignaturePng: function(newVal, oldVal) {
+                debugger
             }
         }
     }

@@ -11,16 +11,13 @@
 </template>
 
 <script type="text/babel">
-    import apiProjectCallReports from '../../api/project_call_reports'
+    import { mapActions } from 'vuex'
 
     export default {
         data() {
             return {
                 projectId: null,
-                formId: null,
-                ownerName: '',
-                jobAddress: '',
-                claimNumber: ''
+                formId: null
             }
         },
         created() {
@@ -29,17 +26,24 @@
             this.init()
         },
         methods: {
+            ...mapActions([
+                'fetchCallReport'
+            ]),
             init() {
-                apiProjectCallReports.index({
-                    project_id: this.projectId
-                }).then(res => {
-                    if (res.data.length > 0) {
-                        this.ownerName = res.data[0].insured_name
-                        this.jobAddress = res.data[0].billing_address
-                        this.claimNumber = res.data[0].insurance_claim_no
-                    }
-                })
+                this.$store.state.ProjectForm.projectId = this.$route.params.project_id
+                this.fetchCallReport()
             }
+        },
+        computed: {
+          ownerName: function() {
+              return this.$store.state.ProjectForm.callReport ? this.$store.state.ProjectForm.callReport.insured_name : ''
+          },
+          jobAddress: function() {
+              return this.$store.state.ProjectForm.callReport ? this.$store.state.ProjectForm.callReport.billing_address : ''
+          },
+          claimNumber: function() {
+              return this.$store.state.ProjectForm.callReport ? this.$store.state.ProjectForm.callReport.insurance_claim_no : ''
+          }
         }
     }
 </script>
