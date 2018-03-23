@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 
 use App\Http\Requests\ProjectForm\ProjectFormIndex;
 use App\Http\Requests\ProjectForm\ProjectFormStore;
+use App\Http\Requests\ProjectForm\ProjectFormSignatureUpdate;
 use App\Http\Requests\ProjectFooterText\ProjectFooterTextIndex;
 
 class ProjectFormsController extends ApiController
@@ -107,7 +108,25 @@ class ProjectFormsController extends ApiController
                 ]);
             }
         }
+    }
 
-        
+    /**
+     * @param ProjectFormSignatureUpdate $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setSignature(ProjectFormSignatureUpdate $request)
+    {
+        $project_id = $request->input('project_id');
+        $form_id = $request->input('form_id');
+        $queryParams = $request->validatedOnly();
+        unset($queryParams['id']);
+
+        $projectForm = $this->projectForm
+            ->where('project_id', $project_id)
+            ->where('form_id', $form_id);
+        $projectForm->update($queryParams);
+
+        return $this->respond(['message' => 'Project Signature successfully updated', 'projectForm' => $projectForm->first()]);
     }
 }

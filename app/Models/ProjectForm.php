@@ -20,7 +20,9 @@ class ProjectForm extends Model
     public $fillable = [
     	'form_id',
         'company_id',
-        'project_id'
+        'project_id',
+        'insured_signature',
+        'company_signature'
     ];
 
     /**
@@ -30,6 +32,9 @@ class ProjectForm extends Model
         'company_id',
         'form_id',
         'project_id',
+        'insured_signature',
+        'company_signature',
+        'updated_at',
 
         'company',
         'default_form_data',

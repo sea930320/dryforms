@@ -29,7 +29,6 @@
         components: {FormHeader, FormBanner, Notes, FooterText, Signature, Statement},
         data() {
             return {
-                authContent: '<h2>Work Authorization Data</h2>'
             }
         },
         created() {
