@@ -3,13 +3,11 @@
     <b-modal id="createCategory" :title="modalName" class="text-left" @ok="store()" v-model="show">
         <div class="form-group">
             <label>Name:</label>
-            <input type="text" class="form-control" aria-describedby="emailHelp"
-                   placeholder="Enter category name" v-model="category.name">
+            <input type="text" class="form-control" placeholder="Enter category name" v-model="category.name">
         </div>
         <div class="form-group">
             <label>Prefix:</label>
-            <input type="text" class="form-control" aria-describedby="emailHelp"
-                   placeholder="Enter prefix" v-model="category.prefix">
+            <input type="text" class="form-control" placeholder="Enter prefix" v-model="category.prefix">
         </div>
     </b-modal>
 

@@ -8,7 +8,7 @@
             <b-row>
                 <b-col class="text-left">Instrument Make: Flir 501</b-col>
                 <b-col>Instrument Model: 5654319</b-col>
-                <b-col class="text-right">Setting: <8%</b-col>
+                <b-col class="text-right">Setting: </b-col>
             </b-row>
             <b-row>
                 <b-col>

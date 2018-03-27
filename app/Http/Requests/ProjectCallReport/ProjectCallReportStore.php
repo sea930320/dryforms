@@ -26,8 +26,8 @@ class ProjectCallReportStore extends BaseRequest
         return [
             'project_id' => 'required|exists:projects,id',
             'company_id' => 'required|exists:companies,id',
-            'contact_name' => 'required|string',
-            'contact_phone' => 'required|string',
+            'contact_name' => 'nullable|string',
+            'contact_phone' => 'nullable|string',
             'site_phone' => 'nullable|string',
             'date_contacted' => 'nullable|date_format:"Y-m-d"',
             'time_contacted' => 'nullable|date_format:"H:i:s"',

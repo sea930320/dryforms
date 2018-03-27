@@ -25,7 +25,7 @@ class ProjectDailylogIndex extends BaseRequest
     {
         return [
             'project_id' => 'required|exists:projects,id',
-            'form_id' => 'required|exists:forms,id',
+            'form_id' => 'sometimes|required|exists:forms,id',
             'is_copied'=>'sometimes|required|in:0,1'
         ];
     }

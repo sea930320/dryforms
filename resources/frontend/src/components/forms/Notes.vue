@@ -1,5 +1,5 @@
 <template>
-    <b-row>
+    <b-row v-if="enabled">
         <b-col class="text-left">
             <h6>Additional notes:</h6>
             <b-form-textarea :rows="3" @input='updateNotes()' v-model='dailylog.notes'></b-form-textarea>
@@ -17,6 +17,7 @@
         name: 'notes',
         data() {
             return {
+                enabled: false,
                 dailylog: {
                     id: null,
                     project_id: null,
@@ -33,14 +34,13 @@
         },
         methods: {
             init() {
-                apiProjectDailylogs.index({
+                apiProjectDailylogs.show(this.dailylog.form_id, {
                     project_id: this.dailylog.project_id,
                     is_copied: 1,
                     form_id: this.dailylog.form_id
                 }).then(res => {
-                    if (res.data.length > 0) {
-                        this.dailylog = res.data[0]
-                    }
+                    this.enabled = res.data.is_enable
+                    this.dailylog = res.data.project_daily_log ? res.data.project_daily_log[0] : null
                 }).catch(this.handleErrorResponse)
             },
             updateNotes: _.debounce(function() {
@@ -51,7 +51,8 @@
                 } else {
                     apiProjectDailylogs.store(this.dailylog)
                     .then(res => {
-                        this.dailylog = res.data.projectDailylog
+                        this.enabled = res.data.is_enable
+                        this.dailylog = res.data.project_daily_log[0]
                     }).catch(this.handleErrorResponse)
                 }
             }, 500)

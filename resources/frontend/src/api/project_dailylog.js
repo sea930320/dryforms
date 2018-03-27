@@ -12,8 +12,8 @@ export default {
     patch (id, data) {
         return axios.patch(dailylogResource + '/' + id, data)
     },
-    show(id) {
-        return axios.get(dailylogResource + '/' + id)
+    show(id, data) {
+        return axios.get(dailylogResource + '/' + id, {params: data})
     },
     delete(id) {
         return axios.delete(dailylogResource + '/' + id)
