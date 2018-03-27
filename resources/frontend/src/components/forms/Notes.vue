@@ -46,7 +46,7 @@
                             id: null,
                             project_id: this.$route.params.project_id,
                             form_id: this.$route.params.form_id,
-                            notes: "",
+                            notes: '',
                             is_copied: 1
                         }
                 }).catch(this.handleErrorResponse)
