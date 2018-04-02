@@ -80,6 +80,10 @@ axios.interceptors.response.use(response => {
         Vue.prototype.$session.remove('apiToken')
         vue.$router.push('/logout')
     }
+    if (res.data.message === 'Server Error') {
+        Vue.prototype.$session.remove('apiToken')
+        vue.$router.push('/logout')
+    }
     return Promise.reject(res)
 })
 

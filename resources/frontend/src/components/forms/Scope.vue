@@ -1,31 +1,87 @@
 <template>
-    <div class="card">
-        <div class="card-body text-center">
-            <form-header></form-header>
-            <h4 class="mb-2">{{ $route.meta.title }}</h4>
-            <div class="dropdown-divider"></div>
-            <form-banner></form-banner>
-            <table class="text-xs-center">
-                <tr>
-                    <th colspan="2" class="bg-grey">Bedroom 1</th>
-                </tr>
-                <tr>
-                    <td class="w-50 bg-grey">Overall Square Feet</td>
-                    <td class="w-50"><input type="text"/></td>
-                </tr>
-            </table>
-            <scope-table class="mt-3"></scope-table>
+    <div class="standards-scope">
+        <div class="card" v-if="isLoaded">
+            <div class="card-body text-center">
+                <form-header></form-header>
+                <h4 class="mb-2">{{ $route.meta.title }}</h4>
+                <div class="dropdown-divider"></div>
+                <form-banner></form-banner>            
+                <div v-for="(area_index) in _.range(curAreaNum)" :key="area_index.id">
+                    <div class="bg-grey p-1">
+                        <h5 class="m-0"> {{projectAreas[area_index].standard_area.title}} </h5>
+                    </div>
+                    <scope-list class="mt-1 mb-5"
+                        :projectScopes="projectScopes"
+                    ></scope-list>
+                </div>
+                <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
+                    <div slot="no-more">
+                        
+                        <footer-text class="mt-0"></footer-text>
+                    </div>
+                </infinite-loading>
+            </div>        
         </div>
+        <loading v-else></loading>
     </div>
 </template>
 
 <script type="text/babel">
     import FormHeader from './FormHeader'
     import FormBanner from './FormBanner'
-    import ScopeTable from './ScopeTable'
+    import ScopeList from './ScopeList'
+    import FooterText from './FooterText'
+    import apiProjectAreas from '../../api/project_areas'
+    import apiStandardScope from '../../api/standard_scope'
+    import ErrorHandler from '../../mixins/error-handler'
+    import Loading from '../layout/Loading'
+    import InfiniteLoading from 'vue-infinite-loading'
 
     export default {
-        components: {FormHeader, FormBanner, ScopeTable}
+        mixins: [ErrorHandler],
+        components: {FormHeader, FormBanner, ScopeList, Loading, InfiniteLoading, FooterText},
+        data() {
+            return {
+                projectAreas: [],
+                curAreaNum: 0,
+                projectScopes: [],
+                miscScopes: [],
+                project_id: null,
+                isLoaded: false
+            }
+        },
+        created() {
+            this.init()
+        },
+        methods: {
+            init: function() {
+                this.project_id = this.$route.params.project_id
+                const apis = [
+                    apiProjectAreas.index({
+                        project_id: this.project_id
+                    }),
+                    apiStandardScope.index({curPageNum: this.curPageNum})
+                ]
+                Promise.all(apis)
+                .then(res => {
+                    this.projectAreas = res[0].data.project_areas
+                    this.miscScopes = res[1].data.misc_scopes
+                    this.projectScopes = Object.values(res[1].data.project_scopes)
+                    this.isLoaded = true
+                }).catch(this.handleErrorResponse)
+            },
+            infiniteHandler($state) {
+                this.fetchNextPageScopes()
+            },
+            fetchNextPageScopes() {
+                this.curAreaNum++
+                if (this.curAreaNum > this.projectAreas.length - 1) {
+                    this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
+                } else {
+                    this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
+                }
+            }
+        }
     }
 </script>
 

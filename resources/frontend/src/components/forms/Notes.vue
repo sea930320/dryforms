@@ -40,15 +40,17 @@
                     form_id: this.dailylog.form_id
                 }).then(res => {
                     this.enabled = res.data.is_enable
-                    this.dailylog = res.data.project_daily_log.length > 0
-                        ? res.data.project_daily_log[0]
-                        : {
-                            id: null,
-                            project_id: this.$route.params.project_id,
-                            form_id: this.$route.params.form_id,
-                            notes: '',
-                            is_copied: 1
-                        }
+                    if (this.enabled && res.data.project_daily_log) {
+                        this.dailylog = res.data.project_daily_log.length > 0
+                            ? res.data.project_daily_log[0]
+                            : {
+                                id: null,
+                                project_id: this.$route.params.project_id,
+                                form_id: this.$route.params.form_id,
+                                notes: '',
+                                is_copied: 1
+                            }
+                    }
                 }).catch(this.handleErrorResponse)
             },
             updateNotes: _.debounce(function() {

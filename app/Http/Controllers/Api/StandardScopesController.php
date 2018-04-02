@@ -44,12 +44,33 @@ class StandardScopesController extends ApiController
 		        $this->standard_scope->create($scope);
 	        }
     	}
-    	$scopes = $this->standard_scope
-    		->where('page', $request->get('curPageNum'))
-    		->orderBy('no')
-    		->get();
-    	$maxPage = $this->standard_scope->max('page');
-        return $this->respond(['curPageScopes' => $scopes, 'maxPage' => $maxPage]);
+        if ($request->get('curPageNum') !== null) {
+            $scopes = $this->standard_scope
+                ->where('page', $request->get('curPageNum'))
+                ->orderBy('no')
+                ->get();
+            $maxPage = $this->standard_scope->max('page');
+            return $this->respond([
+                'curPageScopes' => $scopes,
+                'maxPage' => $maxPage
+            ]);
+        } else {
+            $scopes = $this->standard_scope
+                ->with('uom_info')
+                ->orderBy('no')
+                ->where('page', '<>', 0)
+                ->get()
+                ->groupBy('page');
+            $miscScopes = $this->standard_scope
+                ->with('uom_info')
+                ->orderBy('no')
+                ->where('page', 0)
+                ->get();
+            return $this->respond([
+                'project_scopes' => $scopes,
+                'misc_scopes' => $miscScopes
+            ]);
+        }
     }
 
     /**

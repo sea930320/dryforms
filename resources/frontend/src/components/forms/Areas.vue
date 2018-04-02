@@ -1,24 +1,12 @@
 <template>
-    <div class="card">
-        <div class="card-header">
-            {{ $route.meta.title }}
-        </div>
-        <div class="card-body">
-            <b-row align-h="around">
-                <b-col cols="4">
-                    <b-form-checkbox v-model="favArea">Favorites areas</b-form-checkbox>
-                </b-col>
-                <b-col cols="4">
-                    <b-form-checkbox v-model="provArea">Provided areas</b-form-checkbox>
-                </b-col>
-            </b-row>
+    <b-modal id="selectForm" :title="$route.meta.title" v-model="showModal" size="lg" @ok="saveArea">
+        <div v-if="isLoaded">
             <b-row align-h="around">
                 <b-col cols="4" class="text-center">
                     <h6>Selected affected areas</h6>
                     <div class="wrapper">
                         <b-list-group class="text-left">
-                            <b-list-group-item v-for="item in selectedAreas" :key="item.value" :active="!item.selected"
-                                               @click="deselectArea(item.value)">{{ item.name }}
+                            <b-list-group-item v-for="item in projectAreas" :key="item.id" :active="!item.selected" @click="deselectArea(item.id)">{{ item.title }}
                             </b-list-group-item>
                         </b-list-group>
                     </div>
@@ -31,8 +19,7 @@
                     <h6>Choose affected areas</h6>
                     <div class="wrapper">
                         <b-list-group class="text-left">
-                            <b-list-group-item v-for="item in areas" :key="item.value" :active="item.selected"
-                                               @click="selectArea(item.value)">{{ item.name }}
+                            <b-list-group-item v-for="item in standardAreas" :key="item.id" :active="item.selected"  @click="selectArea(item.id)">{{ item.title }}
                             </b-list-group-item>
                         </b-list-group>
                     </div>
@@ -42,73 +29,109 @@
                     </div>
                 </b-col>
             </b-row>
-            <div class="text-center">
-                <h6> Add area to list</h6>
-                <input type="text" v-model="newArea">
-                <button @click="increaseArea()"><i class="fa fa-plus"></i></button>
-            </div>
+            <b-row align-h="center">
+                <b-col cols="4" class="text-center">
+                    <h6>Add area to list</h6>
+                    <b-input-group :size="template_size">
+                        <input type="text" class="form-control form-control-sm" name="newArea" placeholder="Input Area" v-model="newArea.title" :class="{'is-invalid': errors.has('newArea')}" v-validate data-vv-rules="required">
+                        <b-input-group-append>
+                            <b-btn :size="template_size" variant="primary" @click="addNewArea()">
+                                <i class="fa fa-plus"></i>
+                            </b-btn>
+                        </b-input-group-append>
+                    </b-input-group>
+                </b-col>
+            </b-row>
         </div>
-        <div class="card-footer text-right">
-            <b-button variant="primary">Save</b-button>
-        </div>
-    </div>
+        <loading v-else></loading>
+    </b-modal>
 </template>
 
 <script type="text/babel">
+    import Loading from '../layout/Loading'
+    import apiProjectAreas from '../../api/project_areas'
+    import ErrorHandler from '../../mixins/error-handler'
+
     export default {
+        mixins: [ErrorHandler],
+        components: {
+            Loading
+        },
         data() {
             return {
-                favArea: true,
-                provArea: false,
-                selectedAreas: [],
-                areas: [],
-                favoriteAreas: [
-                    {name: 'Master Bedroom', value: 1, selected: false},
-                    {name: 'Master Bathroom', value: 2, selected: false}
-                ],
-                providedAreas: [
-                    {name: 'Bedroom 1', value: 1, selected: false},
-                    {name: 'Bathroom 2', value: 2, selected: false}
-                ]
+                showModal: true,
+                projectAreas: [],
+                standardAreas: [],
+                project_id: null,
+                isLoaded: false,
+                newArea: {
+                    title: '',
+                    project_id: ''
+                }
             }
         },
+        created() {
+            this.init()
+        },
         watch: {
-            favArea: function () {
-                this.provArea = !this.favArea
-                if (this.favArea) {
-                    this.areas = this.favoriteAreas
-                } else {
-                    this.areas = this.providedAreas
+            showModal: function () {
+                if (this.showModal) {
+                    this.init()
                 }
-            },
-            provArea: function () {
-                this.favArea = !this.provArea
-                if (this.provArea) {
-                    this.areas = this.providedAreas
-                } else {
-                    this.areas = this.favoriteAreas
-                }
+                if (!this.showModal) this.$router.go(-1)
             }
         },
         methods: {
+            init: function() {
+                this.project_id = this.$route.params.project_id
+                this.newArea.project_id = this.project_id
+                apiProjectAreas.index({
+                    project_id: this.project_id
+                }).then(res => {
+                    this.projectAreas = res.data.project_areas
+                    this.standardAreas = res.data.standard_areas
+                    this.projectAreas.forEach(projectArea => {
+                        projectArea.title = projectArea.standard_area.title
+                        projectArea.selected = true
+                    })
+                    this.standardAreas.forEach(standardArea => {
+                        standardArea.area_id = standardArea.id
+                    })
+                    this.isLoaded = true
+                }).catch(this.handleErrorResponse)
+            },
+            saveArea: function() {
+                apiProjectAreas.store({
+                    project_id: this.project_id,
+                    project_areas: this.projectAreas
+                }).then(res => {
+                    this.showModal = false
+                }).catch(this.handleErrorResponse)
+            },
             selectArea: function (index) {
-                var arrIndex = this._.findIndex(this.areas, {value: index})
-                this.areas[arrIndex].selected = !this.areas[arrIndex].selected
+                var arrIndex = this._.findIndex(this.standardAreas, {id: index})
+                let selected = this.standardAreas[arrIndex].selected ? !this.standardAreas[arrIndex].selected : true
+                this.$set(this.standardAreas[arrIndex], 'selected', selected)
             },
             addArea: function () {
-                this.selectedAreas.push(...this._.filter(this.areas, {selected: true}))
-                this._.remove(this.areas, {selected: true})
+                this.projectAreas.push(...this._.filter(this.standardAreas, {selected: true}))
+                this._.remove(this.standardAreas, {selected: true})
             },
             deselectArea: function (index) {
-                var arrIndex = this._.findIndex(this.selectedAreas, {value: index})
-                this.selectedAreas[arrIndex].selected = !this.selectedAreas[arrIndex].selected
+                var arrIndex = this._.findIndex(this.projectAreas, {id: index})
+                let selected = this.projectAreas[arrIndex].selected ? !this.projectAreas[arrIndex].selected : true
+                this.$set(this.projectAreas[arrIndex], 'selected', selected)
             },
             removeArea: function () {
-                this.areas.push(...this._.filter(this.selectedAreas, {selected: false}))
-                this._.remove(this.selectedAreas, {selected: false})
+                this.standardAreas.push(...this._.filter(this.projectAreas, {selected: false}))
+                this._.remove(this.projectAreas, {selected: false})
             },
-            increaseArea: function () {
-                alert(this.newArea)
+            addNewArea: function() {
+                // this.$validator.validateAll()
+                // if (this.errors.any()) {
+                //     return
+                // }
+                // this.standardAreas.push(this.newArea)
             }
         }
     }

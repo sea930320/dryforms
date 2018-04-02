@@ -1,8 +1,11 @@
 <template>
     <div class="text-left">
         <div v-for="item in statement_infos" :key="item.id">
-            <h6 class="mt-3" v-text="item.title ? '* ' + item.title : '* Enter form body text'"></h6>
-            <froala :tag="'textarea'" :config="config" v-model="item.statement" @input='updateStatements(item)'></froala>
+            <h6 class="mt-3" v-text="item.title ? item.title : 'Enter form body text'"></h6>
+            <!-- <froala :tag="'textarea'" :config="config" v-model="item.statement" @input='updateStatements(item)'></froala> -->
+            <div class="m-3" v-html="item.statement">
+            </div>
+            <hr>
         </div>
     </div>
 </template>

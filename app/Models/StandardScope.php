@@ -39,7 +39,9 @@ class StandardScope extends Model
         'qty',
         'page',
         'uom',
-        'no'
+        'no',
+
+        'uom_info'
     ];
 
     /**

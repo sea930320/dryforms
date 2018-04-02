@@ -23,6 +23,9 @@ export default {
             value: 20
           }
         ]
+      },
+      get defLen() {
+        return 50
       }
     }
   }

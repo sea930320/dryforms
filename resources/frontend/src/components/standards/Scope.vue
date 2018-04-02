@@ -1,5 +1,5 @@
 <template>
-  <div class="standards-scope">    
+  <div class="project-scope">
     <div class="card text-left" v-if="isLoaded">
       <div class="card-header text-center">
           <h5> {{form.name}} </h5>
@@ -90,7 +90,6 @@
         form: null,
         isLoaded: false,
         isbusy: false,
-        defLen: 50,
         noteRowStart: this.defLen,
         curPageNum: 0,
         pageCount: 0,
