@@ -1,5 +1,5 @@
 <template>
-    <div class="standards-scope">
+    <div class="projects-scope">
         <div class="card" v-if="isLoaded">
             <div class="card-body text-center">
                 <form-header></form-header>
@@ -11,12 +11,20 @@
                         <h5 class="m-0"> {{projectAreas[area_index].standard_area.title}} </h5>
                     </div>
                     <scope-list class="mt-1 mb-5"
-                        :projectScopes="projectScopes"
+                        :projectAreaID="projectAreas[area_index].id"
+                        :projectID="project_id"
+                        :uoms="uoms"
+                        isMisc=0
                     ></scope-list>
                 </div>
                 <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
                     <div slot="no-more">
-                        
+                        <scope-list class="mt-1 mb-5"
+                            :projectID="project_id"
+                            :uoms="uoms"
+                            :miscScopes="miscScopes"
+                            isMisc=1
+                        ></scope-list>
                         <footer-text class="mt-0"></footer-text>
                     </div>
                 </infinite-loading>
@@ -32,7 +40,8 @@
     import ScopeList from './ScopeList'
     import FooterText from './FooterText'
     import apiProjectAreas from '../../api/project_areas'
-    import apiStandardScope from '../../api/standard_scope'
+    import apiProjectScope from '../../api/project_scope'
+    import apiUom from '../../api/uom'
     import ErrorHandler from '../../mixins/error-handler'
     import Loading from '../layout/Loading'
     import InfiniteLoading from 'vue-infinite-loading'
@@ -47,7 +56,8 @@
                 projectScopes: [],
                 miscScopes: [],
                 project_id: null,
-                isLoaded: false
+                isLoaded: false,
+                uoms: []
             }
         },
         created() {
@@ -60,13 +70,21 @@
                     apiProjectAreas.index({
                         project_id: this.project_id
                     }),
-                    apiStandardScope.index({curPageNum: this.curPageNum})
+                    apiUom.index(),
+                    apiProjectScope.index({
+                        project_id: this.project_id,
+                        curPageNum: 0
+                    })
                 ]
                 Promise.all(apis)
                 .then(res => {
                     this.projectAreas = res[0].data.project_areas
-                    this.miscScopes = res[1].data.misc_scopes
-                    this.projectScopes = Object.values(res[1].data.project_scopes)
+                    let uoms = res[1].data.uoms
+                    this.miscScopes = res[2].data.misc_page_scopes
+                    this.uoms = ['----']
+                    uoms.forEach((uom) => {
+                        this.uoms[uom.id] = uom.title
+                    })
                     this.isLoaded = true
                 }).catch(this.handleErrorResponse)
             },

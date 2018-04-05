@@ -17,6 +17,10 @@ class StandardScopesController extends ApiController
      * @var StandardScope
      */
     private $standard_scope;
+    
+    /**
+     * @var DefaultScope
+     */
     private $default_scope;
     /**
      * StandardScopesController constructor.
