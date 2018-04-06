@@ -18,16 +18,16 @@
                     ></scope-list>
                 </div>
                 <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
-                    <div slot="no-more">
-                        <scope-list class="mt-1 mb-5"
-                            :projectID="project_id"
-                            :uoms="uoms"
-                            :miscScopes="miscScopes"
-                            isMisc=1
-                        ></scope-list>
-                        <footer-text class="mt-0"></footer-text>
+                    <div slot="no-more">                        
                     </div>
                 </infinite-loading>
+                <scope-list class="mt-1 mb-5"
+                    :projectID="project_id"
+                    :uoms="uoms"
+                    :miscScopes="miscScopes"
+                    isMisc=1
+                ></scope-list>
+                <footer-text class="mt-0"></footer-text>
             </div>        
         </div>
         <loading v-else></loading>
@@ -94,6 +94,7 @@
             fetchNextPageScopes() {
                 this.curAreaNum++
                 if (this.curAreaNum > this.projectAreas.length - 1) {
+                    this.curAreaNum = this.projectAreas.length
                     this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
                 } else {
                     this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')

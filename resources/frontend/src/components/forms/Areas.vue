@@ -1,12 +1,12 @@
 <template>
-    <b-modal id="selectForm" :title="$route.meta.title" v-model="showModal" size="lg" @ok="saveArea">
+    <b-modal id="selectForm" :title="$route.meta.title" v-model="showModal" size="lg">
         <div v-if="isLoaded">
             <b-row align-h="around">
                 <b-col cols="4" class="text-center">
                     <h6>Selected affected areas</h6>
                     <div class="wrapper">
                         <b-list-group class="text-left">
-                            <b-list-group-item v-for="item in projectAreas" :key="item.id" :active="!item.selected" @click="deselectArea(item.id)">{{ item.title }}
+                            <b-list-group-item v-for="(item, index) in projectAreas" :key="index" :active="!item.selected" @click="deselectArea(index)">{{ item.title }}
                             </b-list-group-item>
                         </b-list-group>
                     </div>
@@ -19,7 +19,7 @@
                     <h6>Choose affected areas</h6>
                     <div class="wrapper">
                         <b-list-group class="text-left">
-                            <b-list-group-item v-for="item in standardAreas" :key="item.id" :active="item.selected"  @click="selectArea(item.id)">{{ item.title }}
+                            <b-list-group-item v-for="(item, index) in standardAreas" :key="index" :active="item.selected"  @click="selectArea(index)">{{ item.title }}
                             </b-list-group-item>
                         </b-list-group>
                     </div>
@@ -43,7 +43,14 @@
                 </b-col>
             </b-row>
         </div>
-        <loading v-else></loading>
+        <div slot="modal-footer" class="w-100">
+            <b-btn  class="float-right" variant="secondary" @click="showModal=false">
+                Close
+            </b-btn>
+            <b-btn class="float-right mr-2" variant="primary" @click="saveArea">
+                Ok
+            </b-btn>
+       </div>
     </b-modal>
 </template>
 
@@ -66,7 +73,8 @@
                 isLoaded: false,
                 newArea: {
                     title: '',
-                    project_id: ''
+                    selected: false,
+                    area_id: -1
                 }
             }
         },
@@ -84,16 +92,16 @@
         methods: {
             init: function() {
                 this.project_id = this.$route.params.project_id
-                this.newArea.project_id = this.project_id
                 apiProjectAreas.index({
                     project_id: this.project_id
                 }).then(res => {
-                    this.projectAreas = res.data.project_areas
+                    let projectAreas = res.data.project_areas
                     this.standardAreas = res.data.standard_areas
-                    this.projectAreas.forEach(projectArea => {
+                    projectAreas.forEach(projectArea => {
                         projectArea.title = projectArea.standard_area.title
                         projectArea.selected = true
                     })
+                    this.projectAreas = projectAreas
                     this.standardAreas.forEach(standardArea => {
                         standardArea.area_id = standardArea.id
                     })
@@ -103,35 +111,36 @@
             saveArea: function() {
                 apiProjectAreas.store({
                     project_id: this.project_id,
+                    standard_areas: this.standardAreas,
                     project_areas: this.projectAreas
                 }).then(res => {
                     this.showModal = false
                 }).catch(this.handleErrorResponse)
             },
             selectArea: function (index) {
-                var arrIndex = this._.findIndex(this.standardAreas, {id: index})
-                let selected = this.standardAreas[arrIndex].selected ? !this.standardAreas[arrIndex].selected : true
-                this.$set(this.standardAreas[arrIndex], 'selected', selected)
+                let selected = this.standardAreas[index].selected ? !this.standardAreas[index].selected : true
+                this.$set(this.standardAreas[index], 'selected', selected)
             },
             addArea: function () {
                 this.projectAreas.push(...this._.filter(this.standardAreas, {selected: true}))
                 this._.remove(this.standardAreas, {selected: true})
             },
             deselectArea: function (index) {
-                var arrIndex = this._.findIndex(this.projectAreas, {id: index})
-                let selected = this.projectAreas[arrIndex].selected ? !this.projectAreas[arrIndex].selected : true
-                this.$set(this.projectAreas[arrIndex], 'selected', selected)
+                let selected = this.projectAreas[index].selected ? !this.projectAreas[index].selected : true
+                this.$set(this.projectAreas[index], 'selected', selected)
             },
             removeArea: function () {
                 this.standardAreas.push(...this._.filter(this.projectAreas, {selected: false}))
                 this._.remove(this.projectAreas, {selected: false})
             },
             addNewArea: function() {
-                // this.$validator.validateAll()
-                // if (this.errors.any()) {
-                //     return
-                // }
-                // this.standardAreas.push(this.newArea)
+                this.$validator.validateAll()
+                if (this.errors.any()) {
+                    return
+                }
+                let newArea = Object.assign({}, this.newArea)
+                this.newArea.title = ''
+                this.standardAreas.push(newArea)
             }
         }
     }

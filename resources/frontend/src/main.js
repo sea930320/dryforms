@@ -52,7 +52,7 @@ axios.interceptors.response.use(response => {
     let res = error.response
     let lastRefresh = Vue.prototype.$session.get('lastRefresh')
 
-    if (res.data.message === 'Token has expired' && Vue.prototype.$session.get('apiToken') && res.config && !res.config.__isRetryRequest) {
+    if ((res.data.message === 'Token has expired' || res.data.message === 'Server Error') && Vue.prototype.$session.get('apiToken') && res.config && !res.config.__isRetryRequest) {
         if (!lastRefresh || new Date().getTime() - lastRefresh > 1000 * 60 * 5) {
             return new Promise((resolve, reject) => {
                 Vue.prototype.$session.set('lastRefresh', new Date().getTime())
@@ -80,10 +80,10 @@ axios.interceptors.response.use(response => {
         Vue.prototype.$session.remove('apiToken')
         vue.$router.push('/logout')
     }
-    if (res.data.message === 'Server Error') {
-        Vue.prototype.$session.remove('apiToken')
-        vue.$router.push('/logout')
-    }
+    // if (res.data.message === 'Server Error') {
+    //     Vue.prototype.$session.remove('apiToken')
+    //     vue.$router.push('/logout')
+    // }
     return Promise.reject(res)
 })
 

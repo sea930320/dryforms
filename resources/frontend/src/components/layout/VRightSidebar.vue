@@ -5,6 +5,10 @@
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
+            <router-link v-if="link.form_id" :to="{name: 'Form Affected Areas', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
+                <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
+                <img v-if="link.icon != ''" :src="link.icon" class="float-right">
+            </router-link>
             <div v-else-if="link.methodCall" class="pointer text-white text-center" @click="methodCall(link.methodCall)">
                 <p class="text-uppercase float-left m-0 right-sidebar-ellipse icon-margin">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
@@ -17,8 +21,12 @@
         data() {
             return {
                 isFormOrder: false,
-                formOrderHiddenMenu: ['Save', 'Add Statement']
+                formOrderHiddenMenu: ['Save', 'Add Statement'],
+                isForms: null,
+                projectId: null
             }
+        },
+        created() {
         },
         methods: {
             methodCall(mth) {
@@ -44,6 +52,9 @@
                     this.isFormOrder = true
                 } else {
                     this.isFormOrder = false
+                }
+                if (to.path.indexOf('forms') !== -1) {
+                    this.projectId = to.params.project_id
                 }
             }
         }

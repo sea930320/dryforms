@@ -35,7 +35,7 @@ const rightLinks = [
   //   icon: require('../assets/icon-save.png')
   // },
   {
-    path: '/forms/areas',
+    form_id: 12,
     name: 'Affected Areas',
     icon: '',
     mt: true

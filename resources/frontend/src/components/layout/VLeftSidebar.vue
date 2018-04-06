@@ -27,7 +27,7 @@
                     <div class="m-0"><img v-if="leftLinksIcon['Forms'] != ''" :src="leftLinksIcon['Forms']"> Forms </div>
                 </router-link>
             </b-list-group-item>
-            <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="link.selected === '1' || (projectSelectedForms && projectSelectedForms[link.form_id])">
+            <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="link.form_id !== 12 && (link.selected === '1' || (projectSelectedForms && projectSelectedForms[link.form_id]))">
                 <router-link :to="{name: 'Form ' + link.form.name, params: {project_id: projectId, form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                     <div class="m-0">
                         <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
@@ -117,17 +117,17 @@
         },
         watch: {
             '$route' (to, from) {
-                this.leftLinks = this.$route.meta.leftLinks
+                this.leftLinks = to.meta.leftLinks
                 if (to.path.indexOf('standards') !== -1) {
                     this.isStandards = true
                     this.fetchFormsOrder()
                 } else {
                     this.isStandards = false
                 }
-                if (this.$route.path.indexOf('forms') !== -1) {
+                if (to.path.indexOf('forms') !== -1) {
                     this.isForms = true
                     this.fetchFormsOrder()
-                    this.projectId = this.$route.params.project_id
+                    this.projectId = to.params.project_id
                     apiProjectForms.index({
                         project_id: this.projectId
                     }).then((response) => {

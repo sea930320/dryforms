@@ -199,17 +199,7 @@
                     })
                     this.isLoaded = true
                 } else {
-                    this.leftProjectScopes = []
-                    this.rightProjectScopes = []
-
-                    apiProjectScope.index({
-                        project_id: this.projectID,
-                        project_area_id: this.projectAreaID,
-                        curPageNum: this.curPageNum
-                    }).then(res => {
-                        this.maxPage = res.data.max_page
-                        this.isLoaded = true
-                    }).catch(this.handleErrorResponse)
+                    this.isLoaded = true
                 }
             },
             infinitePageHandler($state) {
