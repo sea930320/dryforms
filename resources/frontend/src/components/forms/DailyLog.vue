@@ -54,10 +54,15 @@
         },
          methods: {
             init() {
+                const fmt = 'YYYY-MM-DD hh:mm:ss'
                 apiProjectDailylogs.index({
                     project_id: this.projectId
                 }).then(res => {
                     this.dailyLogs = res.data.projectDailylogs
+                    this.dailyLogs.forEach(dailylog => {
+                        let updatedAt = dailylog.updated_at + ' GMT'
+                        dailylog.updated_at = this.$moment(updatedAt).utc().local().format(fmt)
+                    })
                     this.userName = res.data.userName
                 }).catch(this.handleErrorResponse)
             },
@@ -65,9 +70,11 @@
                 this.$emit('openCreateDailyLogModal')
             },
             updateNotes: _.debounce(function(dailylog) {
+                const fmt = 'YYYY-MM-DD hh:mm:ss'
                 apiProjectDailylogs.patch(dailylog.id, dailylog)
                 .then(res => {
-                    dailylog.updated_at = res.data.projectDailylog.updated_at
+                    let updatedAt = res.data.projectDailylog.updated_at + ' GMT'
+                    dailylog.updated_at = this.$moment(updatedAt).utc().local().format(fmt)
                 }).catch(this.handleErrorResponse)
             }, 500)
          }
