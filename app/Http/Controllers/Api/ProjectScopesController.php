@@ -59,12 +59,12 @@ class ProjectScopesController extends ApiController
     public function index(ProjectScopesIndex $request): JsonResponse
     {
     	if ($request->input('curPageNum') == 0) {
-            $projectScopesPerArea = $this->projectScope
+            $projectScopes = $this->projectScope
                 ->with(['uom_info'])
                 ->where('project_id', $request->input('project_id'))
                 ->where('page', $request->get('curPageNum'));
 
-            if ($projectScopesPerArea->count() == 0) {
+            if ($projectScopes->count() == 0) {
                 $standardScopes = $this->standardScope
                     ->where('page', $request->get('curPageNum'))
                     ->get()
@@ -77,7 +77,7 @@ class ProjectScopesController extends ApiController
                 }
             }
 
-            $scopes = $projectScopesPerArea
+            $scopes = $projectScopes
                 ->orderBy('no')
                 ->get();
 

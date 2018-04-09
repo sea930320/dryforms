@@ -22,7 +22,9 @@ class ProjectForm extends Model
         'company_id',
         'project_id',
         'insured_signature',
-        'company_signature'
+        'company_signature',
+        'insured_signature_upated_at',
+        'company_signature_upated_at'
     ];
 
     /**
@@ -34,6 +36,8 @@ class ProjectForm extends Model
         'project_id',
         'insured_signature',
         'company_signature',
+        'insured_signature_upated_at',
+        'company_signature_upated_at',
         'updated_at',
 
         'company',

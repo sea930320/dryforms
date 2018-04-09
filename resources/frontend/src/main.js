@@ -17,6 +17,8 @@ import globalMixin from './mixins/global-mixin'
 import appConfig from './config/app'
 import FullCalendar from 'vue-full-calendar'
 import VueFroala from 'vue-froala-wysiwyg'
+import moment from 'moment'
+import VueMomentJS from 'vue-momentjs'
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
@@ -32,7 +34,7 @@ Vue.use(VeeValidate)
 Vue.use(FullCalendar)
 Vue.use(VueFroala)
 Vue.use(vueSignature)
-
+Vue.use(VueMomentJS, moment)
 Vue.mixin(globalMixin)
 
 const bus = new Vue()

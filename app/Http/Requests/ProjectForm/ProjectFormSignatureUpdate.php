@@ -27,7 +27,9 @@ class ProjectFormSignatureUpdate extends BaseRequest
             'project_id' => 'required|exists:projects,id',
             'form_id' => 'required|exists:forms,id',
             'insured_signature' => 'sometimes|nullable|string',
-            'company_signature' => 'sometimes|nullable|string'
+            'company_signature' => 'sometimes|nullable|string',
+            'insured_signature_upated_at' => 'nullable',
+            'company_signature_upated_at' => 'nullable'
         ];
     }
 }
