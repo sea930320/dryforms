@@ -5,27 +5,27 @@
 			    <h5>{{ $route.meta.title }}</h5>
 			</div>
 			<div class="card-body">
-			<b-row>
-				<div class="col-md-12">
-                    <b-table ref="areasTable" :items="areas" small striped hover foot-clone :fields="areasHeader" head-variant="" align-v="center">
-                        <template slot="no" slot-scope="data">
-                            {{ data.index + 1 }}
-                        </template>
-                        <template slot="actions" slot-scope="row">
-                            <i class="fa fa-trash text-danger" @click="deleteArea(row.item.id)"></i>
-                        </template>
-                    </b-table>
-				</div>
-				<div class="col-md-6">
-                    <label>Add Area:</label>
-                    <b-input-group :size="template_size">
-                        <input type="text" class="form-control form-control-sm" placeholder="Input title" v-model="newArea" name="newArea" :class="{'is-invalid': errors.has('newArea')}" v-validate data-vv-rules="required">
-                        <b-input-group-button>
-                            <b-btn :size="template_size" :variant="'primary'" @click='addArea'>+</b-btn>
-                        </b-input-group-button>
-                    </b-input-group>
-				</div>
-			</b-row>      
+                <b-row>
+                    <div class="col-md-12">
+                        <b-table ref="areasTable" :items="areas" small striped hover foot-clone :fields="areasHeader" head-variant="" align-v="center">
+                            <template slot="no" slot-scope="data">
+                                {{ data.index + 1 }}
+                            </template>
+                            <template slot="actions" slot-scope="row">
+                                <i class="fa fa-trash text-danger" @click="deleteArea(row.item.id)"></i>
+                            </template>
+                        </b-table>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Add Area:</label>
+                        <b-input-group :size="template_size">
+                            <input type="text" class="form-control form-control-sm" placeholder="Input title" v-model="newArea" name="newArea" :class="{'is-invalid': errors.has('newArea')}" v-validate data-vv-rules="required">
+                            <b-input-group-button>
+                                <b-btn :size="template_size" :variant="'primary'" @click='addArea'>+</b-btn>
+                            </b-input-group-button>
+                        </b-input-group>
+                    </div>
+                </b-row>      
 			</div>
 		</div>
         <loading v-else></loading>
