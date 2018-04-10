@@ -8,12 +8,15 @@
             <div class="card-body text-left pt-3 pb-3">
                 <b-container class="content-container">
                     <label>* Enter side menu name</label>
-                    <input type="text" class="form-control mb-3" v-model="form.name">
+                    <input type="text" class="form-control mb-3" v-model="form.name" @input="save">
                     <label>* Enter form title</label>
-                    <input type="text" class="form-control" v-model="form.title">
-                    <div v-for="item in form.statements" :key="item.id">
-                        <label class="mt-3" v-text="item.title ? '* ' + item.title : '* Enter form body text'"></label>
-                        <froala :tag="'textarea'" :config="config" v-model="item.statement"></froala>
+                    <input type="text" class="form-control" v-model="form.title" @input="save">
+                    <div v-for="(item, index) in form.statements" :key="item.id">
+                        <div class="mt-3 mb-1">
+                            <label v-text="item.title ? '* ' + item.title : '* Enter form body text'"></label>
+                            <button class="btn btn-sm btn-info pull-right" @click="showRevertConfirm(index)">Revert</button>
+                        </div>
+                        <froala :tag="'textarea'" :config="config" v-model="item.statement" @input="save"></froala>                        
                     </div>
                     <div class="mt-3">
                         <b-form-checkbox v-model="addNotes" @change="setAndFilter('additional_notes_show', $event)">Addtional notes.(Select if you wish to have Additional notes text box)</b-form-checkbox>  
@@ -21,7 +24,7 @@
                     <div>
                         <b-form-checkbox v-model="addFooter" @change="setAndFilter('footer_text_show', $event)">Footer Text.(Select if you wish to have a footer text)</b-form-checkbox> 
                         <div v-if="form.footer_text_show">
-                            <froala :tag="'textarea'" id="footerEditor" :config="config" v-model="form.footer_text" class="mb-3"></froala>
+                            <froala :tag="'textarea'" id="footerEditor" :config="config" v-model="form.footer_text" class="mb-3" @input="save"></froala>
                         </div>
                     </div>
                     <b-row class="info-bottom mt-3">
@@ -56,25 +59,15 @@
                             </div>
                         </b-col>
                     </b-row>
-                    <!-- <b-modal id="standardsSignature" title="Electronic Sign Pad" class="text-left" v-model="showSignature">
-                        <vueSignature ref="signature" :sigOption="option" :w="'466px'" :h="'200px'"></vueSignature>
-                        <template slot="modal-footer">
-                            <b-btn variant="primary" @click="save">
-                                Ok
-                            </b-btn>
-                            <b-btn variant="info" @click="clear">
-                                Clear
-                            </b-btn>
-                            <b-btn variant="" @click="showSignature = false">
-                                Cancel
-                            </b-btn>
-                        </template>
-                    </b-modal> -->
                 </b-container>
             </div>
             <div class="card-footer"></div>
         </div>
         <loading v-else></loading>
+        <b-modal id="rejectStatement" title="Revert Statement" class="text-left" @ok="revertStatement()" v-model="show"
+                :ok-title="'Confirm'" :ok-variant="'danger'">
+            <h5>Are you sure you want to revert to the default statement?</h5>
+        </b-modal>
     </div>
 </template>
 
@@ -85,6 +78,7 @@
     import '../../../node_modules/froala-editor/js/froala_editor.pkgd.min'
 
     import apiStandardForm from '../../api/standard_form'
+    import _ from 'lodash'
 
     export default {
         mixins: [ErrorHandler],
@@ -102,48 +96,36 @@
                             console.log('initialized')
                         }
                     }
-                }
-                // showSignature: false,
-                // modal_type: '',
-                // option: {
-                //     penColor: 'rgb(0, 0, 0)'
-                // }
+                },
+                revertingIndex: null,
+                show: false
             }
         },
         created() {
             this.$on('reloadStatement', () => {
                 this.setForm(this.$route.params.form_id)
             })
-            this.$bus.$on('standards_save', this.save)
+            // this.$bus.$on('standards_save', this.save)
         },
         methods: {
-            save() {
+            save: _.debounce(function () {
                 if (this.form.id) {
                     apiStandardForm.patch(this.form.id, this.form)
                     .then(response => {
-                        this.$notify({
-                            type: 'success',
-                            title: 'Success',
-                            text: 'Successfully saved'
-                        })
                         this.setForm(this.$route.params.form_id)
                     }).catch(this.handleErrorResponse)
                 } else {
                     apiStandardForm.store(this.form)
                     .then(response => {
                         this.form.id = response.data.form.id
-                        this.$notify({
-                            type: 'success',
-                            title: 'Success',
-                            text: 'Successfully saved'
-                        })
                         this.setForm(this.$route.params.form_id)
                     }).catch(this.handleErrorResponse)
                 }
-            },
+            }, 500),
             setAndFilter(field, value) {
                 this.form[field] = (value ? 1 : 0)
                 if (field === 'footer_text_show' && !value) this.form.footer_text = null
+                this.save()
             },
             setForm(formID) {
                 let formPerID = this.$store.getters.formPerID(formID)
@@ -164,6 +146,15 @@
                     this.form = null
                 }
             },
+            showRevertConfirm(index) {
+                this.revertingIndex = index
+                this.show = true
+            },
+            revertStatement() {
+                let formPerID = this.$store.getters.formPerID(this.$route.params.form_id)
+                let defaultStatements = formPerID[0].default_statements
+                this.$set(this.form.statements[this.revertingIndex], 'statement', defaultStatements[this.revertingIndex].statement)
+            },
             removeStatement(id) {
                 apiStandardForm.deleteStatement(id)
                     .then(response => {
@@ -171,33 +162,9 @@
                     })
                     .catch(this.handleErrorResponse)
             }
-            // signatureModal(type) {
-            //     this.modal_type = type
-            //     document.querySelector('#standardsSignature canvas').setAttribute('width', '466')
-            //     document.querySelector('#standardsSignature canvas').setAttribute('height', '200')
-            //     this.showSignature = true
-            // },
-            // save() {
-            //     var _this = this
-            //     debugger
-            //     var png = _this.$refs.signature.save()
-            //     if (_this.$refs.signature.isEmpty()) {
-            //         png = ''
-            //     }
-            //     if (_this.modal_type === 'insured') {
-            //         _this.form.insured_signature = png
-            //     } else {
-            //         _this.form.company_signature = png
-            //     }
-            //     _this.showSignature = false
-            // },
-            // clear() {
-            //     var _this = this
-            //     _this.$refs.signature.clear()
-            // }
         },
         beforeDestroy () {
-            this.$bus.$off('standards_save', this.save)
+            // this.$bus.$off('standards_save', this.save)
         },
         watch: {
             '$store.state.StandardForm.formsOrder': function() {
