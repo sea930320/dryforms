@@ -54,6 +54,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->delete('standard/statement/{id}', ['uses' => 'StandardsController@statementDelete', 'as' => 'standard.statement.delete']);
     $router->get('project/get-footer', 'ProjectFormsController@getFooter');
     $router->post('project/set-signature', 'ProjectFormsController@setSignature');
+    $router->post('project/restore-status', 'ProjectsController@restoreStatus');
 
     /** Account */
     $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);

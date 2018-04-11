@@ -18,6 +18,10 @@ class ProjectModelQueryBuilder extends QueryBuilder
             $this->query->whereHas('status_info', function ($query) use ($params) {
                 $query->where('id', $params['status']);
             });
+        } else {
+            $this->query->whereHas('status_info', function ($query) use ($params) {
+                $query->where('id', '<>', 3);
+            });
         }
         if (isset($params['filter'])) {
             $filter = $params['filter'];

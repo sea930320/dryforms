@@ -377,8 +377,11 @@
                 }
             }, 500),
             changeDate(formModel1, model) {
-                var date = new Date(formModel1[model])
-                formModel1[model] = date.getFullYear() + '-' + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + '-' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+                if (formModel1[model]) {
+                    var date = new Date(formModel1[model])
+                    formModel1[model] = date.getFullYear() + '-' + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + '-' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+                }
+                this.save()
             }
         },
         watch: {

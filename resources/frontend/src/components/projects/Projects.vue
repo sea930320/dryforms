@@ -32,12 +32,19 @@
                   {{ row.item.status_info ? row.item.status_info.name: '' }}
               </template>
               <template slot="actions" slot-scope="row">
-                <button class="btn btn-xs btn-default" @click='editProject(row.item.id)'>
-                  <i class="fa fa-pencil"></i> Edit
-                </button>
-                <button class="btn btn-xs btn-danger" @click='removeProject(row.item.id)'>
-                  <i class="fa fa-trash"></i> Remove
-                </button>
+                <div v-if="row.item.status === 3">
+                  <button class="btn btn-xs btn-info" @click='restoreProject(row.item.id)'>
+                    <i class="fa fa-undo"></i> Restore
+                  </button>
+                </div>
+                <div v-else>
+                  <button class="btn btn-xs btn-default" @click='editProject(row.item.id)'>
+                    <i class="fa fa-pencil"></i> Edit
+                  </button>
+                  <button class="btn btn-xs btn-danger" @click='removeProject(row.item.id)'>
+                    <i class="fa fa-trash"></i> Remove
+                  </button>
+                </div>
               </template>
           </b-table>
           <div class="justify-content-center row-margin-tweak row">
@@ -151,7 +158,7 @@
             this.count = response[0].data.total
             let statuses = response[1].data.statuses
             this.statuses = [{
-              text: '----Select Status----',
+              text: 'All',
               value: null
             }]
             statuses.forEach(status => {
@@ -191,6 +198,14 @@
         this.$emit('openRemoveModal', {
             id: projectId
         })
+      },
+      restoreProject(projectId) {
+        apiProjects.restore({
+          project_id: projectId
+        })
+          .then(response => {
+            this.$refs.projectTable.refresh()
+          })
       }
     },
     computed: {

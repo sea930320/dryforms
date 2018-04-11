@@ -17,5 +17,8 @@ export default {
     },
     delete(id) {
         return axios.delete(projectsResource + '/' + id)
+    },
+    restore(data) {
+        return axios.post('/api/project/restore-status', data)
     }
 }

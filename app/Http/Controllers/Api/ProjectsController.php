@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Projects\ProjectsIndex;
 use App\Http\Requests\Projects\ProjectStore;
 use App\Http\Requests\Projects\ProjectUpdate;
+use Illuminate\Http\Request;
 
 use App\Services\QueryBuilder;
 use App\Services\QueryBuilders\ProjectModelQueryBuilder;
 
 use App\Models\Project;
+use App\Models\ProjectCallReport;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Database\QueryException;
 
@@ -21,13 +23,20 @@ class ProjectsController extends ApiController
     private $project;
 
     /**
+     * @var ProjectCallReport
+     */
+    private $projectCallReport;
+
+    /**
      * ProjectsController constructor.
      *
      * @param Project $project
+     * @param ProjectCallReport $projectCallReport
      */
-    public function __construct(Project $project)
+    public function __construct(Project $project, ProjectCallReport $projectCallReport)
     {
         $this->project = $project;
+        $this->projectCallReport = $projectCallReport;
     }
 
     /**
@@ -85,14 +94,41 @@ class ProjectsController extends ApiController
     }
 
     /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function restoreStatus(Request $request)
+    {
+        $projectID = $request->input('project_id');
+        
+        $projectCallReport = $this->projectCallReport
+            ->where('project_id', $projectID)
+            ->first();
+        $status = 1;
+        if ($projectCallReport && $projectCallReport->date_completed) {
+            $status = 2;
+        }
+
+        $project = $this->project->findOrFail($projectID);
+        $project->update([
+            'status' => $status
+        ]);
+
+        return $this->respond(['message' => 'Project successfully updated', 'project' => $project]);
+    }
+    
+    /**
      * @param int $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(int $id)
     {
-        $this->project->findOrFail($id)->delete();
-
+        $project = $this->project->findOrFail($id);
+        $project->update([
+            'status' => 3
+        ]);
         return $this->respond(['message' => 'Project successfully deleted']);
     }
 }

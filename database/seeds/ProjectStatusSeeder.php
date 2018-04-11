@@ -10,18 +10,14 @@ class ProjectStatusSeeder extends Seeder
     private $statuses = [
         [
             'id' => 1,
-            'name' => 'New'
-        ],
-        [
-            'id' => 2,
             'name' => 'In Progress'
         ],
         [
-            'id' => 3,
+            'id' => 2,
             'name' => 'Completed'
         ],
         [
-            'id' => 4,
+            'id' => 3,
             'name' => 'Deleted'
         ]
     ];
