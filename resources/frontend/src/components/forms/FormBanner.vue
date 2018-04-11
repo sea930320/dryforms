@@ -39,7 +39,7 @@
               return this.$store.state.ProjectForm.callReport ? this.$store.state.ProjectForm.callReport.insured_name : ''
           },
           jobAddress: function() {
-              return this.$store.state.ProjectForm.callReport ? this.$store.state.ProjectForm.callReport.billing_address : ''
+              return this.$store.state.ProjectForm.callReport ? this.$store.state.ProjectForm.callReport.job_address : ''
           },
           claimNumber: function() {
               return this.$store.state.ProjectForm.callReport ? this.$store.state.ProjectForm.callReport.insurance_claim_no : ''

@@ -74,7 +74,7 @@ class ProjectCallReportsController extends ApiController
         $project = $this->project->findOrFail($request->get('project_id'));
         $project->update([
             'owner_name' => $request->get('insured_name'),
-            'address' => $request->get('billing_address'),
+            'address' => $request->get('job_address'),
             'phone' => $request->get('insured_cell_phone') ? $request->get('insured_cell_phone') : ($request->get('insured_home_phone') ? $request->get('insured_home_phone') : ($request->get('insured_work_phone') ? $request->get('insured_work_phone'): '')),
             'status' => $request->get('date_completed') ? 2 : 1,
             'assigned_to' => $request->get('assigned_to')
