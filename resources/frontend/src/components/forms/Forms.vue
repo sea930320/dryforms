@@ -98,7 +98,15 @@
         },
         watch: {
             showModal: function () {
-                if (!this.showModal) this.$router.push('/projects')
+                if (!this.showModal) {
+                    this.$router.push({
+                        name: 'Form Call Report',
+                        params: {
+                            project_id: this.projectId,
+                            form_id: 1
+                        }
+                    })
+                }
             }
         }
     }

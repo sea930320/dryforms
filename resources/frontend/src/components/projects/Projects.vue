@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-container v-if="isLoaded" class="pt-2">
+      <delete-modal></delete-modal>
       <b-row>
         <b-col cols="3" class="text-left">
           <b-form-select v-model="selectedYear" :options="years" id="select_year"></b-form-select>
@@ -34,7 +35,7 @@
                 <button class="btn btn-xs btn-default" @click='editProject(row.item.id)'>
                   <i class="fa fa-pencil"></i> Edit
                 </button>
-                <button class="btn btn-xs btn-danger">
+                <button class="btn btn-xs btn-danger" @click='removeProject(row.item.id)'>
                   <i class="fa fa-trash"></i> Remove
                 </button>
               </template>
@@ -58,10 +59,11 @@
   import apiProjects from '../../api/projects'
   import apiProjectStatus from '../../api/project_status'
   import ErrorHandler from '../../mixins/error-handler'
+  import DeleteModal from './modals/Remove'
 
   export default {
     mixins: [ErrorHandler],
-    components: { Loading },
+    components: { Loading, DeleteModal },
     data () {
       return {
         selectedYear: new Date().getFullYear(),
@@ -123,6 +125,7 @@
       })
       this.$on('reloadData', () => {
         this.initData()
+        this.$refs.projectTable.refresh()
       })
     },
     methods: {
@@ -182,6 +185,11 @@
             project_id: projectId,
             form_id: 1
           }
+        })
+      },
+      removeProject(projectId) {
+        this.$emit('openRemoveModal', {
+            id: projectId
         })
       }
     },
