@@ -94,12 +94,17 @@
                 return apiTeams.index({page: 1})
                     .then(response => {
                         this.newTeam = ''
+                        this.errors.clear()
                         this.count = response.data.total
                         this.isLoaded = true
                         return response
                     })
             },
             addTeam() {
+                this.$validator.validateAll()
+                if (this.errors.any()) {
+                    return
+                }
                 apiTeams.store({
                     name: this.newTeam
                 })
