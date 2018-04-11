@@ -17,9 +17,10 @@
                     </b-col>                    
                 </b-row>
             </b-col>
-            <b-col cols="3" v-if="ownerSignatureUpdatedAt" class="text-right pt-4">
-                <h6>Date: {{ ownerSignatureUpdatedAt.split(' ')[0] }}</h6>
-                <p>{{ ownerSignatureUpdatedAt.split(' ')[1] }}</p>
+            <b-col cols="3" class="text-right pt-4">
+                <!-- <h6>Date: {{ ownerSignatureUpdatedAt.split(' ')[0] }}</h6>
+                <p>{{ ownerSignatureUpdatedAt.split(' ')[1] }}</p> -->
+                <date-picker v-model="ownerSignatureUpdatedAt" type="datetime" format="yyyy-MM-dd HH:mm:ss" lang="en" @input="changeOwnerDate(ownerSignatureUpdatedAt)" placeholder="Select Datetime"></date-picker>
             </b-col>
         </b-row>
         <b-row>
@@ -37,9 +38,10 @@
                     </b-col>                    
                 </b-row>
             </b-col>
-            <b-col cols="3" v-if="companySignatureUpdatedAt" class="text-right pt-4">
-                <h6>Date: {{ companySignatureUpdatedAt.split(' ')[0] }}</h6>
-                <p>{{ companySignatureUpdatedAt.split(' ')[1] }}</p>
+            <b-col cols="3" class="text-right pt-4">
+                <!-- <h6>Date: {{ companySignatureUpdatedAt.split(' ')[0] }}</h6>
+                <p>{{ companySignatureUpdatedAt.split(' ')[1] }}</p> -->
+                <date-picker v-model="companySignatureUpdatedAt" type="datetime" format="yyyy-MM-dd HH:mm:ss" lang="en" @input="changeCompanyDate(companySignatureUpdatedAt)" placeholder="Select Datetime"></date-picker>
             </b-col>
         </b-row>
         <b-modal ref="ownerSignatureModalRef" size="sm" title="Owner Signature" @ok="saveOwnerSignature">
@@ -54,12 +56,15 @@
 <script type="text/babel">
     import ErrorHandler from '../../mixins/error-handler'
     import apiProjectFormSignature from '../../api/project_signature'
+    import DatePicker from 'vue2-datepicker'
 
     export default {
         mixins: [ErrorHandler],
         name: 'signature',
+        components: {DatePicker},
         data() {
             return {
+                test: null,
                 date: '12/12/2017',
                 time: '0:00:00',
                 ownerSignaturePng: '',
@@ -130,6 +135,20 @@
                 })
                     .then(res => {
                     }).catch(this.handleErrorResponse)
+            },
+            changeOwnerDate(signatureUpdatedAt) {
+                if (signatureUpdatedAt) {
+                    let moment = this.$moment(signatureUpdatedAt)
+                    this.ownerSignatureUpdatedAt = moment.format('YYYY-MM-DD hh:mm:ss')
+                }
+                this.saveSignature()
+            },
+            changeCompanyDate(signatureUpdatedAt) {
+                if (signatureUpdatedAt) {
+                    let moment = this.$moment(signatureUpdatedAt)
+                    this.companySignatureUpdatedAt = moment.format('YYYY-MM-DD hh:mm:ss')
+                }
+                this.saveSignature()
             }
         },
         computed: {
