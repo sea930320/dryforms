@@ -23,7 +23,7 @@
         </template>
         <template v-else-if="isForms === true">
             <b-list-group-item class="bg-blue mb-2 list-complete-item">
-                <router-link :to="{name: 'Forms'}" class="pointer text-white">
+                <router-link :to="{name: 'Forms', params: {project_id: projectId}}" class="pointer text-white">
                     <div class="m-0"><img v-if="leftLinksIcon['Forms'] != ''" :src="leftLinksIcon['Forms']"> Forms </div>
                 </router-link>
             </b-list-group-item>
@@ -52,7 +52,7 @@
     import {mapActions} from 'vuex'
     import Loading from './Loading'
     import apiStandardForm from '../../api/standard_form'
-    import apiProjectForms from '../../api/project_forms'
+    // import apiProjectForms from '../../api/project_forms'
 
     import _ from 'lodash'
     import ErrorHandler from '../../mixins/error-handler'
@@ -65,6 +65,13 @@
         computed: {
             formsOrder: function() {
                 return this.$store.state.StandardForm.formsOrder
+            },
+            projectSelectedForms: function() {
+                let projectSelectedForms = []
+                this.$store.state.ProjectForm.projectForms.forEach(projectForm => {
+                    projectSelectedForms[projectForm.form_id] = true
+                })
+                return projectSelectedForms
             },
             isLoaded: function() {
                 return this.isStandards === false || (this.isStandards === true && this.formsOrder.length !== 0)
@@ -92,13 +99,13 @@
                 isStandards: null,
                 isForms: null,
                 leftLinksIcon: {},
-                projectSelectedForms: null,
                 projectId: null
             }
         },
         methods: {
             ...mapActions([
-                'fetchFormsOrder'
+                'fetchFormsOrder',
+                'fetchProjectForm'
             ]),
             updateFormName: _.debounce(function (standardForm) {
                 if (standardForm.id) {
@@ -128,17 +135,8 @@
                     this.isForms = true
                     this.fetchFormsOrder()
                     this.projectId = to.params.project_id
-                    apiProjectForms.index({
-                        project_id: this.projectId
-                    }).then((response) => {
-                        let projectForms = response.data
-                        this.$store.state.ProjectForm.projectForms = projectForms
-                        this.$store.state.ProjectForm.projectId = this.projectId
-                        this.projectSelectedForms = []
-                        projectForms.forEach(projectForm => {
-                            this.projectSelectedForms[projectForm.form_id] = true
-                        })
-                    })
+                    this.$store.state.ProjectForm.projectId = this.projectId
+                    this.fetchProjectForm()
                 } else {
                     this.isForms = false
                 }

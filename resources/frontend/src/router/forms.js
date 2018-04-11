@@ -44,7 +44,7 @@ const rightLinks = [
 
 const routes = (configRoute) => [
   {
-    path: '/forms/select',
+    path: '/forms/:project_id/select',
     name: 'Forms',
     props: {title: 'Forms'},
     meta: {

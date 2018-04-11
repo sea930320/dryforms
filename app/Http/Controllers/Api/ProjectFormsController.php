@@ -8,6 +8,7 @@ use App\Models\DefaultFromData;
 use Illuminate\Http\JsonResponse;
 
 use App\Http\Requests\ProjectForm\ProjectFormIndex;
+use App\Http\Requests\ProjectForm\ProjectFormUpdate;
 use App\Http\Requests\ProjectForm\ProjectFormStore;
 use App\Http\Requests\ProjectForm\ProjectFormSignatureUpdate;
 use App\Http\Requests\ProjectFooterText\ProjectFooterTextIndex;
@@ -66,6 +67,44 @@ class ProjectFormsController extends ApiController
         	$projectForm = $this->projectForm->create($project_form);
         }
         return $this->respond(['message' => 'Project Forms successfully created']);
+    }
+
+    /**
+     * @param ProjectFormUpdate $request
+     *
+     * @return JsonResponse
+     */
+    public function update(ProjectFormUpdate $request): JsonResponse
+    {
+        $queryParams = $request->validatedOnly();
+        $projectID = $queryParams['project_id'];
+        $oldProjectForms = $this->projectForm
+            ->where('project_id', $projectID)
+            ->get();
+        $newProjectForms = $queryParams['project_forms'];
+        foreach ($oldProjectForms as $key => $oldProjectForm) {
+            $oldFormID = $oldProjectForm->form_id;
+            $found = array_filter($newProjectForms, function($newProjectForm) use ($oldFormID) {
+                return $newProjectForm['form_id'] == $oldFormID;
+            });
+            if (count($found) === 0) {
+                $oldProjectForm->delete();
+            }
+        }
+        foreach ($newProjectForms as $key => $newProjectForm) {
+            $isExist = $this->projectForm
+                ->where('project_id', $projectID)
+                ->where('form_id', $newProjectForm['form_id'])
+                ->exists();
+            if (!$isExist) {
+                $this->projectForm->create([
+                    'form_id' => $newProjectForm['form_id'],
+                    'company_id' => auth()->user()->company_id,
+                    'project_id' => $projectID
+                ]);
+            }
+        }
+        return $this->respond(['message' => 'Project Forms successfully updated']);
     }
 
     /**
