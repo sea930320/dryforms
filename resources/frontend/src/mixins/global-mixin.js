@@ -26,6 +26,9 @@ export default {
       },
       get defLen() {
         return 50
+      },
+      get logoRootPath() {
+        return '/public/storage/'
       }
     }
   }

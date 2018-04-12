@@ -5,6 +5,8 @@ use App\Http\Requests\Companies\CompanyStore;
 use App\Http\Requests\Companies\CompanyUpdate;
 use App\Models\Company;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Webpatser\Uuid\Uuid;
+use Illuminate\Support\Facades\File;
 
 class CompaniesController extends ApiController
 {
@@ -75,10 +77,42 @@ class CompaniesController extends ApiController
      */
     public function update(CompanyUpdate $request): JsonResponse
     {
-        $company = $this->company->find($request->input('company_id'));
-        $company->update($request->validatedOnly());
+        $request_params = $request->validatedOnly();
+        $company = $this->company->find($request_params['company_id']);
+        $storagePath = storage_path('app/public/settings');
+        if (!File::exists($storagePath)) {
+            File::makeDirectory($storagePath, 0775);
+        }
+        $logoPath = ($storagePath . '/logo');
+        if (!File::exists($logoPath)) {
+            File::makeDirectory($logoPath, 0775);
+        }
 
-        return $this->respond(['message' => 'Company successfully updated', 'company' => $company]);
+        $oldLogoName = $company->logo;
+        if ($oldLogoName) {
+            if (File::exists($logoPath. '/'. $oldLogoName)) {
+                File::delete($logoPath. '/'. $oldLogoName);
+            }
+        }
+
+        $newLogoName = Uuid::generate();
+        $logoImg = $request_params['logo'];
+        $logoImg = substr($logoImg, strpos($logoImg, ",")+1);
+        $logoDecode = base64_decode($logoImg);
+        $success = file_put_contents($logoPath. '/'. $newLogoName, $logoDecode);
+
+        if ($success) {
+            $request_params['logo'] = $newLogoName;
+            $company->update($request_params);
+            $company = $this->company->find($request_params['company_id']);
+            return $this->respond(['message' => 'Company successfully updated', 'company' => $company]);
+        } else {
+            return $this->respondWithError([
+                'message' => 'Something wrong'
+            ],
+                422
+            );
+        }
     }
 
     /**

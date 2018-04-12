@@ -20,7 +20,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group logo-preview"  v-if="company.logo">
-                                    <img :src="company.logo" height="90">
+                                    <img :src="logoRootPath + 'settings/logo/' + company.logo" height="90">
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-sm" @click.prevent="imageUpload">
@@ -182,7 +182,7 @@
                     .then(response => {
                       apiCompanies.patch(response.data.user.company_id, this.company)
                           .then(response => {
-                              this.company = response.data.company
+                              this.$set(this.company, 'logo', response.data.company.logo)
                               this.$notify({
                                   type: 'info',
                                   title: response.data.message
