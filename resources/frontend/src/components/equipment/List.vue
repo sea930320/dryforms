@@ -177,7 +177,7 @@
                     .then(response => {
                         let items = response.data.data
                         items = items.map(item => {
-                            item.status = null
+                            item.status = 1
                             return item
                         })
                         this.count = response.data.total

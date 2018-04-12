@@ -213,7 +213,7 @@
                     model_id: null,
                     category_id: null,
                     team_id: null,
-                    status_id: null,
+                    status_id: 1,
                     quantity: 1,
                     auto_assign: 'yes',
                     serials: [{
@@ -533,7 +533,7 @@
                     model_id: null,
                     category_id: null,
                     team_id: null,
-                    status_id: null,
+                    status_id: 1,
                     quantity: 1,
                     auto_assign: 'yes',
                     serials: [{

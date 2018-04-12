@@ -17,6 +17,7 @@
   import Loading from '../layout/Loading'
   import apiProjects from '../../api/projects'
   import apiProjectForms from '../../api/project_forms'
+  import apiProjectCallReports from '../../api/project_call_reports'
   import ErrorHandler from '../../mixins/error-handler'
 
   export default {
@@ -72,9 +73,19 @@
           projectForms.forEach((projectForm) => {
             projectForm.project_id = projectId
           })
-          apiProjectForms.store({
-            project_forms: projectForms
-          }).then(() => {
+          let moment = this.$moment()
+          const apis = [
+            apiProjectForms.store({
+              project_forms: projectForms
+            }),
+            apiProjectCallReports.store({
+              project_id: projectId,
+              company_id: this.user.company_id,
+              date_contacted: moment.format('YYYY-MM-DD')
+            })
+          ]
+          Promise.all(apis)
+          .then(res => {
             this.$router.push({
               name: 'Form Call Report',
               params: {
@@ -92,7 +103,7 @@
     },
     computed: {
       forms: function() {
-          return this.$store.state.StandardForm.formsOrder
+        return this.$store.state.StandardForm.formsOrder
       },
       user: function() {
         return this.$store.state.User.user
