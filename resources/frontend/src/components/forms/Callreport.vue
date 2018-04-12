@@ -378,8 +378,10 @@
             }, 500),
             changeDate(formModel1, model) {
                 if (formModel1[model]) {
-                    var date = new Date(formModel1[model])
-                    formModel1[model] = date.getFullYear() + '-' + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + '-' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
+                    let moment = this.$moment(formModel1[model])
+                    formModel1[model] = moment.format('YYYY-MM-DD')
+                    // var date = new Date(formModel1[model])
+                    // formModel1[model] = date.getFullYear() + '-' + (date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth()) + '-' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate())
                 }
                 this.save()
             }
