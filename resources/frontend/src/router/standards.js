@@ -32,14 +32,6 @@ const rightLinksMain = [
     path: '/standards/dailylog',
     name: 'Daily Log'
   }
-  // {
-  //   methodCall: {
-  //     section: 'standards',
-  //     name: 'save'
-  //   },
-  //   name: 'Save',
-  //   icon: require('../assets/icon-save.png')
-  // }
 ]
 
 const rightLinks = [

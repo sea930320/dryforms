@@ -82,7 +82,7 @@ export default {
                 },
                 title: {
                     label: 'Title',
-                    sortable: false,
+                    sortable: true,
                     'class': 'text-center'
                 },
                 actions: {

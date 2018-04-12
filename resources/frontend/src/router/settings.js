@@ -21,7 +21,18 @@ const leftLinks = [
     }
 ]
 
-const rightLinks = []
+const rightLinks = [
+    {
+      path: '/settings/support',
+      name: 'Suggestions/Support',
+      icon: require('../assets/icon-support.png')
+    },
+    {
+      path: '/settings/calendar',
+      name: 'Calendar',
+      icon: require('../assets/icon-calendar.png')
+    }
+]
 
 const routes = (configRoute) => [
     {
@@ -93,7 +104,21 @@ const routes = (configRoute) => [
         component: resolve => {
             require(['../components/settings/Teams.vue'], resolve)
         }
-    }
+    },
+    {
+        path: '/settings/calendar',
+        name: 'Calendar',
+        props: {title: 'Calendar'},
+        meta: {
+          title: 'Calendar',
+          roles: ['customer'],
+          leftLinks: leftLinks,
+          rightLinks: rightLinks
+        },
+        component: resolve => {
+          require(['../components/standards/right-link/Calendar.vue'], resolve)
+        }
+      }
 ]
 
 export default routes

@@ -57,7 +57,7 @@
                         </div>
                         <div class="form-group row justify-content-end">
                             <div class="col-md-7">
-                              <input type="submit" class="btn btn-sm btn-primary" value="Subscribe" :disabled="pending"/>
+                              <input type="submit" class="btn btn-sm btn-primary" value="Update" :disabled="pending"/>
                             </div>
                         </div>
                     </form>
