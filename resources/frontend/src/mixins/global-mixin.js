@@ -28,7 +28,7 @@ export default {
         return 50
       },
       get logoRootPath() {
-        return '/public/storage/'
+        return '/storage/'
       }
     }
   }

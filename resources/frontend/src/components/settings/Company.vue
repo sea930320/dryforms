@@ -20,7 +20,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group logo-preview"  v-if="company.logo">
-                                    <img :src="logoRootPath + 'settings/logo/' + company.logo" height="90">
+                                    <img :src="company.logo" height="90">
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-sm" @click.prevent="imageUpload">
@@ -133,6 +133,26 @@
             ...mapActions([
                 'fetchUser'
             ]),
+            generateLogoToBase64() {
+                var _this = this
+                let logo = this.company.logo
+                this.company.logo = ''
+
+                var canvas = document.createElement('CANVAS')
+                var img = document.createElement('img')
+                img.src = this.logoRootPath + 'settings/logo/' + logo
+                img.onload = function () {
+                    canvas.height = img.height
+                    canvas.width = img.width
+                    let context = canvas.getContext('2d')
+                    context.drawImage(img, 0, 0)
+                    _this.$set(_this.company, 'logo', canvas.toDataURL('image/png'))
+                    canvas = null
+                }
+                img.onerror = function (error) {
+                    this.handleErrorResponse(error)
+                }
+            },
             cropSuccess(imgDataUrl, field) {
                 this.company.logo = imgDataUrl
                 this.image.show = false
@@ -182,12 +202,11 @@
                     .then(response => {
                       apiCompanies.patch(response.data.user.company_id, this.company)
                           .then(response => {
-                              this.$set(this.company, 'logo', response.data.company.logo)
-                              this.$notify({
-                                  type: 'info',
-                                  title: response.data.message
-                              })
-                              this.pending.update = false
+                                this.$notify({
+                                    type: 'info',
+                                    title: response.data.message
+                                })
+                                this.pending.update = false
                           })
                           .catch(error => {
                               console.log(error)
@@ -206,7 +225,13 @@
               return this.$store.state.User.isGracePeriod
           },
           isLoaded: function() {
-              return this.company.length !== 0
+              if (this.company.length !== 0) {
+                  if (this.company.logo && this.company.logo.indexOf('data:image/png;') === -1) {
+                      this.generateLogoToBase64()
+                  }
+                  return true
+              }
+              return false
           }
         }
     }

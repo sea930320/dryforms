@@ -94,15 +94,18 @@ class CompaniesController extends ApiController
                 File::delete($logoPath. '/'. $oldLogoName);
             }
         }
-
-        $newLogoName = Uuid::generate();
+        $success = true;
+        
         $logoImg = $request_params['logo'];
-        $logoImg = substr($logoImg, strpos($logoImg, ",")+1);
-        $logoDecode = base64_decode($logoImg);
-        $success = file_put_contents($logoPath. '/'. $newLogoName, $logoDecode);
-
-        if ($success) {
+        if ($logoImg) {
+            $newLogoName = Uuid::generate();
+            $logoImg = substr($logoImg, strpos($logoImg, ",")+1);
+            $logoDecode = base64_decode($logoImg);
+            $success = file_put_contents($logoPath. '/'. $newLogoName, $logoDecode);
             $request_params['logo'] = $newLogoName;
+        }        
+
+        if ($success) {            
             $company->update($request_params);
             $company = $this->company->find($request_params['company_id']);
             return $this->respond(['message' => 'Company successfully updated', 'company' => $company]);
