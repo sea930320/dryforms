@@ -1,7 +1,7 @@
 <template>
     <b-row>
         <b-col class="text-left">
-            <img v-if="company.logo" :src="company.logo" alt="Company Logo" height="90">
+            <img v-if="company.logo" :src="logoRootPath + 'settings/logo/' + company.logo" alt="Company Logo" height="90">
             <img v-else :src="companyLogo" alt="Company Logo" height="90">
         </b-col>
         <b-col class="text-right">

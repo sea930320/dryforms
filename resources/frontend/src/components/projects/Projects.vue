@@ -8,7 +8,7 @@
           <b-form-select v-model="selectedStatus" :options="statuses" class="mt-2"></b-form-select>
         </b-col>
         <b-col cols="6" class="text-center">
-          <img v-if="company.logo" :src="company.logo" alt="Company Logo" height="90">
+          <img v-if="company.logo" :src="logoRootPath + 'settings/logo/' + company.logo" alt="Company Logo" height="90">
           <img v-else :src="companyLogo" alt="Company Logo" height="90">
         </b-col>
         <b-col cols="3" class="text-right">
