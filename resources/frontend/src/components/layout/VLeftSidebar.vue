@@ -10,13 +10,15 @@
                 <router-link v-if="link.form.name !== 'Project Scope'" :to="{name: 'Standards Form', params: {form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                     <div class="m-0">
                         <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
-                        <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
+                        <!-- <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])"> -->
+                        <span class="left-sidebar-ellipse" :class="icon-margin"> {{ link.standard_form[0].name }} </span>
                     </div>
                 </router-link>
                 <router-link v-else :to="{name: 'Project Scope'}" class="pointer text-black">
                     <div class="m-0">
                         <img v-if="leftLinksIcon['Project Scope'] != ''" :src="leftLinksIcon['Project Scope']" class="left-sidebar-img">
-                         <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])">
+                        <!-- <input type="text" v-model="link.standard_form[0].name" class="leftLinkInput" @input="updateFormName(link.standard_form[0])"> -->
+                        <span class="left-sidebar-ellipse" :class="icon-margin"> {{ link.standard_form[0].name }} </span>
                     </div>
                 </router-link>
             </b-list-group-item>
