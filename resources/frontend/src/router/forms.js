@@ -39,6 +39,12 @@ const rightLinks = [
     name: 'Affected Areas',
     icon: '',
     mt: true
+  },
+  {
+    form_id: 13,
+    name: 'Add Days',
+    icon: '',
+    mt: true
   }
 ]
 
@@ -55,6 +61,20 @@ const routes = (configRoute) => [
     },
     component: resolve => {
       require(['../components/forms/Forms.vue'], resolve)
+    }
+  },
+  {
+    path: '/print/:project_id/select',
+    name: 'Print',
+    props: {title: 'Print'},
+    meta: {
+      title: 'Print',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/print/Print.vue'], resolve)
     }
   },
   {
@@ -223,6 +243,20 @@ const routes = (configRoute) => [
     },
     component: resolve => {
       require(['../components/forms/Areas.vue'], resolve)
+    }
+  },
+  {
+    path: '/forms/:project_id/days/:form_id',
+    name: 'Form Add Days',
+    props: {title: 'Days'},
+    meta: {
+      title: 'Add Days',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/forms/Days.vue'], resolve)
     }
   },
   {

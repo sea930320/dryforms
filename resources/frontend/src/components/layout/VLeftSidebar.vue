@@ -38,6 +38,16 @@
                 </router-link>
             </b-list-group-item>
         </template>
+        <template v-else-if="isTraining === true">
+            <b-list-group-item v-for="link in trainingCategories" :key="link.id" class="list-complete-item bg-grey" >
+                <router-link :to="{name: 'TrainingCategories', params: {category_id: link.id}}" class="pointer text-black">
+                    <div class="m-0">
+                        <div class="left-sidebar-img" v-if="link.icon != ''"><img :src="link.icon"/></div>
+                        <span class="left-sidebar-ellipse" :class="link.icon ? 'icon-margin' : ''"> {{ link.name }} </span>
+                    </div>
+                </router-link>
+            </b-list-group-item>
+        </template>
         <b-list-group-item v-for="link in leftLinks" :key="link.name" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'">
             <router-link :to="link.path" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                 <div class="m-0">
@@ -75,11 +85,14 @@
                 })
                 return projectSelectedForms
             },
+            trainingCategories: function() {
+                return this.$store.state.TrainingCategory.trainingCategories
+            },
             isLoaded: function() {
                 return this.isStandards === false || (this.isStandards === true && this.formsOrder.length !== 0)
             }
         },
-        created() {
+        mounted() {
             this.leftLinksIcon = this.$config.get('leftLinksIcon')
             this.leftLinks = this.$route.meta.leftLinks
             if (this.$route.path.indexOf('standards') !== -1) {
@@ -94,12 +107,20 @@
             } else {
                 this.isForms = false
             }
+
+            if (this.$route.path.indexOf('training') !== -1) {
+                this.isTraining = true
+                this.fetchTrainingCategory()
+            } else {
+                this.isTraining = false
+            }
         },
         data() {
             return {
                 leftLinks: [],
                 isStandards: null,
                 isForms: null,
+                isTraining: null,
                 leftLinksIcon: {},
                 projectId: null
             }
@@ -107,7 +128,8 @@
         methods: {
             ...mapActions([
                 'fetchFormsOrder',
-                'fetchProjectForm'
+                'fetchProjectForm',
+                'fetchTrainingCategory'
             ]),
             updateFormName: _.debounce(function (standardForm) {
                 if (standardForm.id) {
@@ -141,6 +163,12 @@
                     this.fetchProjectForm()
                 } else {
                     this.isForms = false
+                }
+                if (to.path.indexOf('training') !== -1) {
+                    this.isTraining = true
+                    this.fetchTrainingCategory()
+                } else {
+                    this.isTraining = false
                 }
             }
         }

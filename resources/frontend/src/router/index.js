@@ -9,6 +9,7 @@ import equipment from './equipment'
 import projects from './projects'
 import standards from './standards'
 import forms from './forms'
+import training from './training'
 
 Vue.use(VueRouter)
 
@@ -33,7 +34,8 @@ const router = new VueRouter({
         ...settings(),
         ...equipment(),
         ...standards(),
-        ...forms()
+        ...forms(),
+        ...training()
     ]
 })
 

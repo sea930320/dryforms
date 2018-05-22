@@ -14,6 +14,8 @@
 //Auth::routes();
 
 Route::middleware(['auth'])->namespace('Backend')->prefix('admin')->group(function() {
+
+    Route::get('dropboxFileUpload', 'UsersController@dropboxFileUpload');
     Route::resource('users', 'UsersController');
     Route::resource('plans', 'PlansController');
     Route::resource('coupons', 'CouponsController');
@@ -36,7 +38,12 @@ Route::middleware(['auth'])->namespace('Backend')->prefix('admin')->group(functi
     Route::post('standard-moisture/form-update', 'StandardMoistureMapController@formUpdate');
     Route::get('standard-areas/form', 'StandardAffectedAreasController@form');
     Route::post('standard-areas/form-update', 'StandardAffectedAreasController@formUpdate');
+
+    Route::resource('training/categories', 'TrainingController');
+    Route::resource('training/videos', 'TrainingVideosController');
 });
+
+Route::get('/project/print/{id}', 'Api\ProjectFormsController@print');
 
 Route::middleware([])->namespace('Frontend')->group(function() {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'main.index']);

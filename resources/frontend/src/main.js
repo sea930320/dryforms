@@ -19,6 +19,7 @@ import FullCalendar from 'vue-full-calendar'
 import VueFroala from 'vue-froala-wysiwyg'
 import moment from 'moment'
 import VueMomentJS from 'vue-momentjs'
+import VueYouTubeEmbed from 'vue-youtube-embed'
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
@@ -36,6 +37,7 @@ Vue.use(VueFroala)
 Vue.use(vueSignature)
 Vue.use(VueMomentJS, moment)
 Vue.mixin(globalMixin)
+Vue.use(VueYouTubeEmbed)
 
 const bus = new Vue()
 Vue.prototype.$bus = bus

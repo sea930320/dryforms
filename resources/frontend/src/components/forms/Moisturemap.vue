@@ -1,29 +1,16 @@
 <template>
     <div class="card">
-        <div class="card-body text-center">
+        <div v-if="isLoaded" class="card-body text-center">
             <form-header></form-header>
             <h4 class="mb-2">{{ $route.meta.title }}</h4>
             <div class="dropdown-divider"></div>
             <form-banner></form-banner>
-            <b-row>
-                <b-col class="text-left">Instrument Make: Flir 501</b-col>
-                <b-col>Instrument Model: 5654319</b-col>
-                <b-col class="text-right">Dry Goal: </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <div class="bg-grey row-border p-1">
-                        <i class="fa fa-times text-danger"></i>
-                        Initial Inspection Date 12/12/17 00:00:00
-                    </div>
-                </b-col>
-            </b-row>
-            <mois-area title="Master Bedroom" class="mt-3"></mois-area>
-            <mois-area title="Master Bath" class="mt-3"></mois-area>
-            <mois-area title="Bedroom 1" class="mt-3"></mois-area>
-            <mois-area title="Hallway" class="mt-3"></mois-area>
+            <div v-for="projectarea in projectAreas" :key="projectarea.id" >
+                <mois-area :title="projectarea.title" :areaid="projectarea.id" class="mt-3"></mois-area>
+            </div>
             <notes class="mt-3"></notes>
         </div>
+        <loading v-else></loading>
     </div>
 </template>
 
@@ -32,11 +19,38 @@
     import FormBanner from './FormBanner'
     import MoisArea from './MoisArea'
     import Notes from './Notes'
-
+    import apiProjectAreas from '../../api/project_areas'
+    import Loading from '../layout/Loading'
+    import DatePicker from 'vue2-datepicker'
     export default {
-        components: {FormHeader, FormBanner, MoisArea, Notes},
+        components: {FormHeader, FormBanner, MoisArea, Notes, Loading, DatePicker},
         data() {
-            return {}
+            return {
+                projectAreas: [],
+                project_id: null,
+                structures: [],
+                materials: [],
+                isLoaded: false
+            }
+        },
+        created() {
+            this.init()
+        },
+        methods: {
+            init: function() {
+                this.project_id = this.$route.params.project_id
+                apiProjectAreas.index({
+                    project_id: this.project_id
+                }).then(res => {
+                    let projectAreas = res.data.project_areas
+                    this.standardAreas = res.data.standard_areas
+                    projectAreas.forEach(projectArea => {
+                        projectArea.title = projectArea.standard_area.title
+                    })
+                    this.projectAreas = projectAreas
+                    this.isLoaded = true
+                }).catch(this.handleErrorResponse)
+            }
         }
     }
 </script>

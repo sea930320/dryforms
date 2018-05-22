@@ -163,6 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Elibyy\TCPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -177,7 +178,8 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class
+        App\Providers\RouteServiceProvider::class,
+        App\Providers\DropboxServiceProvider::class,
     ],
 
     /*
@@ -226,7 +228,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'PDF' => Elibyy\TCPDF\Facades\TCPDF::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
     ],
 

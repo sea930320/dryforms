@@ -76,7 +76,12 @@
                         {{--<i class="fa fa-align-justify"></i> <span>Certificate of Completion</span>--}}
                     {{--</a>--}}
                 {{--</li>--}}
-
+                <li class="header">Training</li>
+                <li>
+                    <a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/training/categories') }}">
+                        <i class="fa fa-align-justify"></i> <span>Videos</span>
+                    </a>
+                </li>
                 <!-- ======================================= -->
                 <li class="header">{{ trans('backpack::base.user') }}</li>
                 <li><a href="{{ url(config('backpack.base.route_prefix', 'admin') . '/setting') }}"><i

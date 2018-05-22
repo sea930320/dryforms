@@ -6,13 +6,16 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "elibyy/tcpdf-laravel": "5.5.*",
         "backpack/base": "^0.7.25",
         "backpack/settings": "^2.0",
         "fideloper/proxy": "~3.3",
+        "guzzlehttp/guzzle": "^6.3",
         "laravel/cashier": "~7.0",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.5",
+        "spatie/flysystem-dropbox": "^1.0",
         "tymon/jwt-auth": "dev-develop",
         "webpatser/laravel-uuid": "^3.0",
         "williamoliveira/eloquent-array-query-builder": "^1.3"

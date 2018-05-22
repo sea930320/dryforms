@@ -1,11 +1,19 @@
 <template>
     <b-list-group class="text-center">
         <b-list-group-item v-for="link in $route.meta.rightLinks" :key="link.name" :class="link.mt ? 'mt-2': ''">
-            <router-link v-if="link.path" :to="link.path" class="pointer text-white text-center">
+            <router-link v-if="link.name == 'Print'" :to="{name: 'Print', params: {project_id: projectId}}" class="pointer text-white text-center">
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
-            <router-link v-if="link.form_id" :to="{name: 'Form Affected Areas', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
+            <router-link v-else-if="link.path" :to="link.path" class="pointer text-white text-center">
+                <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
+                <img v-if="link.icon != ''" :src="link.icon" class="float-right">
+            </router-link>
+            <router-link v-if="link.form_id == 12" :to="{name: 'Form Affected Areas', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
+                <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
+                <img v-if="link.icon != ''" :src="link.icon" class="float-right">
+            </router-link>
+            <router-link v-else-if="link.form_id == 13" :to="{name: 'Form Add Days', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
@@ -23,7 +31,8 @@
                 isFormOrder: false,
                 formOrderHiddenMenu: ['Save', 'Add Statement'],
                 isForms: null,
-                projectId: null
+                projectId: null,
+                formId: null
             }
         },
         created() {
@@ -55,6 +64,9 @@
                 }
                 if (to.path.indexOf('forms') !== -1) {
                     this.projectId = to.params.project_id
+                }
+                if (to.path.indexOf('callreport') !== -1) {
+                    this.formId = to.params.form_id
                 }
             }
         }

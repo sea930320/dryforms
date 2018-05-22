@@ -17,5 +17,8 @@ export default {
     },
     delete(id) {
         return axios.delete(projectFormsResource + '/' + id)
+    },
+    print (id, data) {
+        return axios.post('/project/print/' + id, data)
     }
 }
