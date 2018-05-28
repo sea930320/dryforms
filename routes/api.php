@@ -64,6 +64,8 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->post('project/set-signature', 'ProjectFormsController@setSignature');
     $router->post('project/restore-status', 'ProjectsController@restoreStatus');
 
+    $router->get('psychometric/calculate', 'PsychometricCalculationsController@calculate');
+
     /** Account */
     $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);
     $router->post('account/password/change', ['uses' => 'AccountController@changePassword', 'as' => 'account.password.change']);

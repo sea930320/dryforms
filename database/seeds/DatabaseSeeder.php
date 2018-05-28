@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DefaultFormsDataSeeder::class);
         $this->call(DefaultStatementsSeeder::class);
         $this->call(ProjectStatusSeeder::class);
+        $this->call(PsychometricCalculationsSeeder::class);
     }
 }
