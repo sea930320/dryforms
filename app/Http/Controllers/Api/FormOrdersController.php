@@ -41,16 +41,17 @@ class FormOrdersController extends ApiController
         $formOrders = $this->formOrder
         	->with(['form', 'default_forms_data', 'standard_form', 'default_statements'])
         	->where('company_id', auth()->user()->company_id);
-
         $forms = $this->form->get();
-
         if ($formOrders->count() === 0) {
         	$this->storeNewOrders($forms);
         } else if ($formOrders->count() !== $this->form->count()) {
         	$formOrders->delete();
 			$this->storeNewOrders($forms);
         }
-
+        else{
+            $formOrders->delete();
+            $this->storeNewOrders($forms);
+        }
         $formOrders = $formOrders->get();
         return $this->respond($formOrders);
     }
@@ -84,10 +85,12 @@ class FormOrdersController extends ApiController
     	$company_id = auth()->user()->company_id;
 
     	foreach ($forms as $key => $form) {
-			$formOrder = $this->formOrder->create([
-	            'company_id' => $company_id,
-	            'form_id' => $form->id
-	        ]);
+            if(($form->company_id == $company_id) || ($form->company_id == -1)){
+                $formOrder = $this->formOrder->create([
+                    'company_id' => $company_id,
+                    'form_id' => $form->id
+                ]);
+            }
 		}
     }
 }

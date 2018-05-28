@@ -5,6 +5,14 @@
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
+            <div v-else-if="link.name == 'Preview'" @click="preview()" class="pointer text-white text-center">
+                <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
+                <img v-if="link.icon != ''" :src="link.icon" class="float-right">
+            </div>
+            <router-link v-else-if="link.name == 'Email'" :to="{name: 'Email', params: {project_id: projectId}}" class="pointer text-white text-center">
+                <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
+                <img v-if="link.icon != ''" :src="link.icon" class="float-right">
+            </router-link>
             <router-link v-else-if="link.path" :to="link.path" class="pointer text-white text-center">
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
@@ -14,6 +22,10 @@
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
             <router-link v-else-if="link.form_id == 13" :to="{name: 'Form Add Days', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
+                <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
+                <img v-if="link.icon != ''" :src="link.icon" class="float-right">
+            </router-link>
+            <router-link v-else-if="link.form_id == 14" :to="{name: 'Form Equipment Manager', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
@@ -53,6 +65,9 @@
                     let routeName = this.$route.name
                     this.$bus.$emit('forms_save', routeName)
                 }
+            },
+            preview(flag) {
+                window.location.href = '/project/print/' + this.projectId
             }
         },
         watch: {

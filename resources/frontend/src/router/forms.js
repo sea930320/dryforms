@@ -45,6 +45,12 @@ const rightLinks = [
     name: 'Add Days',
     icon: '',
     mt: true
+  },
+  {
+    form_id: 14,
+    name: 'Equipment Manager',
+    icon: '',
+    mt: true
   }
 ]
 
@@ -75,6 +81,20 @@ const routes = (configRoute) => [
     },
     component: resolve => {
       require(['../components/print/Print.vue'], resolve)
+    }
+  },
+  {
+    path: '/email/:project_id/select',
+    name: 'Email',
+    props: {title: 'Email'},
+    meta: {
+      title: 'Email',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/email/Email.vue'], resolve)
     }
   },
   {
@@ -246,6 +266,20 @@ const routes = (configRoute) => [
     }
   },
   {
+    path: '/forms/:project_id/customs/:form_id',
+    name: 'Custom Form',
+    props: {title: 'Custom'},
+    meta: {
+      title: 'Custom Form',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/forms/Custom.vue'], resolve)
+    }
+  },
+  {
     path: '/forms/:project_id/days/:form_id',
     name: 'Form Add Days',
     props: {title: 'Days'},
@@ -260,17 +294,17 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/email',
-    name: 'Email',
-    props: {title: 'Email'},
+    path: '/forms/:project_id/equipment_manager/:form_id',
+    name: 'Form Equipment Manager',
+    props: {title: 'Days'},
     meta: {
-      title: 'Email',
+      title: 'Add Days',
       roles: ['customer'],
       leftLinks: leftLinks,
       rightLinks: rightLinks
     },
     component: resolve => {
-      require(['../components/forms/Email.vue'], resolve)
+      require(['../components/forms/EquipmentManager.vue'], resolve)
     }
   }
 ]

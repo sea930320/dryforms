@@ -48,6 +48,10 @@ const rightLinks = [
   {
     path: '/standards/dailylog',
     name: 'Daily Log'
+  },
+  {
+    path: '/standards/formbuild',
+    name: 'Form Builder'
   }
 ]
 
@@ -164,6 +168,20 @@ const routes = (configRoute) => [
     },
     component: resolve => {
       require(['../components/standards/Dailylog.vue'], resolve)
+    }
+  },
+  {
+    path: '/standards/formbuild',
+    name: 'Form Builder',
+    props: {title: 'Form Builder'},
+    meta: {
+      title: 'Form Builder',
+      roles: ['customer'],
+      leftLinks: leftLinks,
+      rightLinks: rightLinks
+    },
+    component: resolve => {
+      require(['../components/standards/Formbuilder.vue'], resolve)
     }
   }
 ]

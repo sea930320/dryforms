@@ -15,44 +15,10 @@ use App\Http\Requests\ProjectFooterText\ProjectFooterTextIndex;
 
 //use Elibyy\TCPDF\Facades\TCPDF;
 use PDF;
-
 use DB;
-
-class MYPDF extends PDF {
-
-    //Page header
-
-    public function Header() {
-        // Logo
-        $this->Image($this->m_imgfile, 15, 10, 50, 25, 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-        // Set font
-        $this->SetFont('helvetica', 'B', 15);
-        // Title
-        $this->SetY(12);
-        $this->SetX(20);
-        $this->Cell(0, 15, $this->m_title, 0, false, 'R', 0, '', 0, false, 'M', 'M');
-
-        $this->SetFont('helvetica', 'B', 10);
-        $this->SetY(16);
-        $this->SetX(-85);
-        $this->MultiCell(70, 150, $this->m_companyinfo, 0, 'R', 0, 1, '', '', true, 0, false, true, 0, 'T', false);
-
-        $this->SetY(45);
-        $this->Cell(180, 0, '', 'T', 0, 'C');
-
-    }
-
-    // Page footer
-    public function Footer() {
-        // Position at 15 mm from bottom
-        $this->SetY(-15);
-        // Set font
-        $this->SetFont('helvetica', 'I', 8);
-        // Page number
-        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-    }
-}
-
+use Storage;
+use Mail;
+use App\Mail\DryFormsPlus;
 class ProjectFormsController extends ApiController
 {
     /**
@@ -871,9 +837,145 @@ class ProjectFormsController extends ApiController
         
     }
 
+    public function print_moisture_map($projectid)
+    {
+        // ---------------------------------------------------------
+        $project_callreport = DB::table('project_call_reports')->where('project_id', $projectid)->first();
+        
+        $structures = DB::table('standard_structures')->get();
+        $materials = DB::table('standard_materials')->get();
+
+        $project_area_ids = DB::table('project_areas')->where('project_id', $projectid)->get();
+
+        $result_areas = array();
+        $result_settings = array();
+        $result_days = array();
+        for($i = 0; $i < count($project_area_ids); $i ++){
+            $area = DB::table('areas')->where('id', $project_area_ids[$i]->area_id)->first();
+            $result_areas[] = $area->title;
+            $area_settings = DB::table('project_moisture_settings')->where('project_area_id', $project_area_ids[$i]->id)->get();
+            $result_settings[] = $area_settings;
+            $result = array();
+            for($j = 0; $j < count($area_settings); $j ++){
+                $current = DB::table('project_moisture_days')->where('area_setting_id', $area_settings[$j]->id)->get();
+                for($l = 0; $l < count($current); $l ++){
+                    $result[$l][] = $current[$l];
+                }
+            }
+            $result_days[] = $result;
+        }
+        for($i = 0; $i < count($result_areas); $i ++){
+            for($j = 0; $j <= 7; $j ++){
+                $standard_structure = DB::table('standard_structures')->where('id', $result_settings[$i][$j]->structure_id)->first();
+                $standard_matarial = DB::table('standard_materials')->where('id', $result_settings[$i][$j]->matarial_id)->first();
+                if(!isset($standard_structure->title)){
+                    $result_settings[$i][$j]->structure_title = "n/a";
+                }
+                else{
+                    $result_settings[$i][$j]->structure_title = $standard_structure->title;
+                }
+                if(!isset($standard_matarial->title)){
+                    $result_settings[$i][$j]->matarial_title = "n/a";
+                }
+                else{
+                    $result_settings[$i][$j]->matarial_title = $standard_matarial->title;
+                }
+            }
+        }
+
+        PDF::SetY(37);
+        PDF::SetFont('helvetica', 'BI', 15);
+        PDF::Cell(0, 5, 'Moisture Map', 0, 1, 'C');
+        PDF::Ln(10);
+
+        PDF::SetFont('helvetica', '', 9);
+
+        // Owner/Insured
+        PDF::SetXY(15,50);
+        PDF::Cell(25, 5, 'Owner/Insured:');
+        PDF::TextField("insured6", 30, 5, array(), array('v'=>$project_callreport->insured_name));
+
+        // Job Address
+        PDF::SetXY(15,60);
+        PDF::Cell(23, 5, 'Job Address:');
+        PDF::TextField("job6", 30, 5, array(), array('v'=>$project_callreport->job_address));
+        // Claim
+        PDF::SetXY(150,50);
+        PDF::Cell(20, 5, 'Claim#', 0, false, 'R');
+        PDF::TextField("claim6", 25, 5, array(), array('v'=>$project_callreport->insurance_claim_no));
+
+        $posX = 15; $posY = 70;
+        for($i = 0; $i < count($result_areas); $i ++){
+            if($posY+22+15*count($result_days[$i]) > 270){
+                PDF::AddPage();
+                $posX = 15; $posY = 10;
+            }
+            $menu_title = $result_areas[$i];
+            PDF::SetFont('helvetica', '', 10);
+            $tbl = "<table border=\"1\" cellpadding=\"5\" cellspacing=\"0.5\" nobr=\"true\" align=\"center\">
+                     <tr style=\"background-color:#c3c3c3; font-weight:bold;\">
+                      <th colspan=\"8\">$menu_title</th>
+                     </tr>
+                     <tr>
+                      <td style=\"background-color:#c3c3c3;\">".$result_settings[$i][0]->structure_title."</td>
+                      <td>".$result_settings[$i][1]->structure_title."</td>
+                      <td style=\"background-color:#c3c3c3;\">".$result_settings[$i][2]->structure_title."</td>
+                      <td>".$result_settings[$i][3]->structure_title."</td>
+                      <td style=\"background-color:#c3c3c3;\">".$result_settings[$i][4]->structure_title."</td>
+                      <td>".$result_settings[$i][5]->structure_title."</td>
+                      <td style=\"background-color:#c3c3c3;\">".$result_settings[$i][6]->structure_title."</td>
+                      <td>".$result_settings[$i][7]->structure_title."</td>
+                     </tr>
+                     <tr>
+                      <td style=\"background-color:#c3c3c3;\">".$result_settings[$i][0]->matarial_title."</td>
+                      <td>".$result_settings[$i][1]->matarial_title."</td>
+                      <td style=\"background-color:#c3c3c3;\">".$result_settings[$i][2]->matarial_title."</td>
+                      <td>".$result_settings[$i][3]->matarial_title."</td>
+                      <td style=\"background-color:#c3c3c3;\">".$result_settings[$i][4]->matarial_title."</td>
+                      <td>".$result_settings[$i][5]->matarial_title."</td>
+                      <td style=\"background-color:#c3c3c3;\">".$result_settings[$i][6]->matarial_title."</td>
+                      <td>".$result_settings[$i][7]->matarial_title."</td>
+                     </tr>
+                    </table>";
+            PDF::SetXY($posX,$posY);
+            $posY += 22;
+            PDF::writeHTML($tbl, true, false, false, false, '');
+            for($j = 0; $j < count($result_days[$i]); $j ++){
+                $tbl = "<table border=\"1\" cellpadding=\"5\" cellspacing=\"0.5\" nobr=\"true\" align=\"center\">
+                 <tr>
+                  <th colspan=\"8\">".$result_days[$i][$j][0]->current_time."</th>
+                 </tr>
+                 <tr>
+                  <td>".$result_days[$i][$j][0]->amount."</td>
+                  <td>".$result_days[$i][$j][1]->amount."</td>
+                  <td>".$result_days[$i][$j][2]->amount."</td>
+                  <td>".$result_days[$i][$j][3]->amount."</td>
+                  <td>".$result_days[$i][$j][4]->amount."</td>
+                  <td>".$result_days[$i][$j][5]->amount."</td>
+                  <td>".$result_days[$i][$j][6]->amount."</td>
+                  <td>".$result_days[$i][$j][7]->amount."</td>
+                 </tr>
+                </table>";
+                PDF::SetXY($posX,$posY);
+                PDF::writeHTML($tbl, true, false, false, false, '');
+                $posY += 15;
+            }
+            $posY += 5;
+        }
+        
+    }
+
     public function print(Request $request, int $id)
     {
-        $company = DB::table('companies')->where('id', 2)->first();
+        $formids = $request->all();
+        $flag = 0;
+        if(isset($formids['form0'])){
+            $flag = 1;
+        }
+        
+        $companyid = DB::table('project_forms')->where('project_id', $id)->first();
+        $companyid = $companyid->company_id;
+        $company = DB::table('companies')->where('id', $companyid)->first();
 
         $c_name = $company->name;
         $c_street = $company->street;
@@ -925,32 +1027,196 @@ class ProjectFormsController extends ApiController
         PDF::setFontSubsetting(false);
 
         $projectid = $id;
-
-        $this->print_header($c_imgfile, $c_name, $c_headerdata);
-        $this->print_call_report($projectid);
+        if($flag == 0){
+            for($i = 1; $i <= 12; $i ++){
+                $formids[] = $i;    
+            }
+        }
         
-        $this->print_header($c_imgfile, $c_name, $c_headerdata);        
-        $this->print_daily_log($projectid);
+        foreach($formids as $key => $value){
+            if($value == 1){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);
+                $this->print_call_report($projectid);
+            }
+            else if($value == 2){
+                
+            }
+            else if($value == 3){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_daily_log($projectid);
+            }
+            else if($value == 4){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_work_authorization($projectid, 4, "Work Authorization");
+            }
+            else if($value == 5){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_anti_microbial($projectid);
+            }
+            else if($value == 6){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata); 
+                $this->print_customer_responsibility($projectid);
+            }
+            else if($value == 7){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);
+                $this->print_moisture_map($projectid);
+            }
+            else if($value == 8){
 
-        $this->print_header($c_imgfile, $c_name, $c_headerdata);        
-        $this->print_work_authorization($projectid, 4, "Work Authorization");
-
-        $this->print_header($c_imgfile, $c_name, $c_headerdata);        
-        $this->print_anti_microbial($projectid);
-
-        $this->print_header($c_imgfile, $c_name, $c_headerdata); 
-        $this->print_customer_responsibility($projectid);
-
-        $this->print_header($c_imgfile, $c_name, $c_headerdata);        
-        $this->print_work_authorization($projectid, 9, "Release from Liability");
-
-        $this->print_header($c_imgfile, $c_name, $c_headerdata);        
-        $this->print_work_authorization($projectid, 10, "Work Stoppage");
-
-        $this->print_header($c_imgfile, $c_name, $c_headerdata);        
-        $this->print_work_authorization($projectid, 11, "Certificate of Completion");
-
-        PDF::Output('dryforms_project.pdf', 'I');
+            }
+            else if($value == 9){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_work_authorization($projectid, 9, "Release from Liability");
+            }
+            else if($value == 10){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_work_authorization($projectid, 10, "Work Stoppage");
+            }
+            else if($value == 11){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_work_authorization($projectid, 11, "Certificate of Completion");
+            }
+        }
+        //PDF::Output(__DIR__ . "/temp/dryforms_project.pdf",'F');
+        if($flag == 0){
+            PDF::Output("dryforms_project.pdf",'I');
+        }
+        else if($flag == 1){
+            PDF::Output("dryforms_project.pdf",'D');   
+        }
     }
 
+    public function primaryPrint()
+    {
+        //--------------------create PDF document----------------------//
+        //$pdf = new PDF();
+
+        // set document information
+        PDF::SetTitle('dryforms-print');
+
+        PDF::setPrintHeader(false);
+        
+        // Page footer
+        PDF::setFooterCallback(function($cpdf) {
+            // Position at 15 mm from bottom
+            $cpdf->SetY(-15);
+            // Set font
+            $cpdf->SetFont('helvetica', 'I', 8);
+            // Page number
+            $cpdf->Cell(0, 10, 'Page '.$cpdf->getAliasNumPage().'/'.$cpdf->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        });
+        
+        // set default monospaced font
+        PDF::SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // set margins
+        PDF::SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        PDF::SetHeaderMargin(PDF_MARGIN_HEADER);
+        PDF::SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        // set auto page breaks
+        PDF::SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // set image scale factor
+        PDF::setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+            require_once(dirname(__FILE__).'/lang/eng.php');
+            PDF::setLanguageArray($l);
+        }
+        // IMPORTANT: disable font subsetting to allow users editing the document
+        PDF::setFontSubsetting(false);
+    }
+
+    public function prepareEmail(Request $request)
+    {
+        $selectedPDFType = $request->selectedPDFType;
+        $selectedForms = array();
+        $formid = -1;
+        if($selectedPDFType == 1){
+            $selectedForms[] = $request->selectedForm;
+            $formid = $request->selectedForm;
+        }
+        else{
+            $selectedForms = $request->selectedForm;
+        }
+        $selectedRecipients = $request->selectedRecipients;
+        $projectid = $request->project_id;
+
+        $companyid = DB::table('project_forms')->where('project_id', $projectid)->first();
+        $companyid = $companyid->company_id;
+        $company = DB::table('companies')->where('id', $companyid)->first();
+
+        
+        $this->primaryPrint();
+
+        $c_name = $company->name;
+        $c_street = $company->street;
+        $c_address = $company->city . ' ' . $company->state . ' ' . $company->zip;
+        $c_phone = $company->phone;
+        $c_email = $company->email;
+
+        $c_imgfile = "../resources/frontend/src/assets/fallback-logo.jpg";
+        $c_headerdata = "$c_street\n$c_address\n$c_phone\n$c_email";
+
+        foreach($selectedForms as $key => $value){
+            if($value == 1){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);
+                $this->print_call_report($projectid);
+            }
+            else if($value == 2){
+                
+            }
+            else if($value == 3){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_daily_log($projectid);
+            }
+            else if($value == 4){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_work_authorization($projectid, 4, "Work Authorization");
+            }
+            else if($value == 5){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_anti_microbial($projectid);
+            }
+            else if($value == 6){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata); 
+                $this->print_customer_responsibility($projectid);
+            }
+            else if($value == 7){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);
+                $this->print_moisture_map($projectid);
+            }
+            else if($value == 8){
+
+            }
+            else if($value == 9){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_work_authorization($projectid, 9, "Release from Liability");
+            }
+            else if($value == 10){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_work_authorization($projectid, 10, "Work Stoppage");
+            }
+            else if($value == 11){
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);        
+                $this->print_work_authorization($projectid, 11, "Certificate of Completion");
+            }
+        }
+        if($selectedPDFType == 1){
+            PDF::Output(__DIR__ . "/temp/dryforms_project$projectid-$formid.pdf",'F');
+            if($request->lastForm == $formid){
+                return redirect()->route('send-email', ['projectId'=>$projectid, 'pdfFlag'=>1, 'allForms' => $request->allFroms, 'address'=>$request->address]);
+            }
+        }
+        else{
+            PDF::Output(__DIR__ . "/temp/dryforms_project$projectid.pdf",'F');
+            return redirect()->route('send-email',['projectId'=>$projectid, 'pdfFlag'=>2, 'address'=>$request->address]);
+        }
+    }
+    public function sendEmail(Request $request)
+    {
+        Mail::to($request->address)->send(new DryFormsPlus($request->projectId, $request->pdfFlag, $request->allForms));
+    }
 }

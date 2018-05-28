@@ -54,41 +54,19 @@
                     })
                     return
                 }
-                /*
-                apiProjectForms.print(this.projectId, {
-                    project_forms: projectForms,
-                    project_id: this.projectId
-                }).then((res) => {
-                    // this.$router.push({
-                    //     name: 'Form Call Report',
-                    //     params: {
-                    //         project_id: this.projectId,
-                    //         form_id: 1
-                    //     }
-                    // })
-                    this.$notify({
-                        type: 'success',
-                        text: res.data
-                    })
-                })
-                */
-               /*
-                let method = 'get'
-                let url = '/project/print'
-                let form = document.createElement('form')
-                form.setAttribute('method', method)
-                form.setAttribute('action', url)
+                var form = document.createElement('form')
+                form.setAttribute('method', 'get')
+                form.setAttribute('action', '/project/print/' + this.projectId)
+                for (var key in projectForms) {
+                    var hiddenField = document.createElement('input')
+                    hiddenField.setAttribute('type', 'hidden')
+                    hiddenField.setAttribute('name', 'form' + key)
+                    hiddenField.setAttribute('value', projectForms[key].form_id)
 
-                var hiddenField = document.createElement('input')
-                hiddenField.setAttribute('type', 'hidden')
-                hiddenField.setAttribute('name', 'projectid')
-                hiddenField.setAttribute('value', this.projectId)
-                form.appendChild(hiddenField)
-
+                    form.appendChild(hiddenField)
+                }
                 document.body.appendChild(form)
                 form.submit()
-                */
-                window.location.href = '/project/print/' + this.projectId
             }
         },
         computed: {

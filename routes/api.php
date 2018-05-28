@@ -52,7 +52,8 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
 
     $router->get('training/categories', 'TrainingManageController@index');
     $router->get('training/videos', 'TrainingManageController@getVideos');
-
+    $router->get('project/email', 'ProjectFormsController@prepareEmail');
+    $router->get('project/email/send', 'ProjectFormsController@sendEmail')->name('send-email');
     $router->delete('equipments-bulk-delete', 'EquipmentsController@bulkDestroy');
     $router->get('get-models/{id}', 'EquipmentCategoriesController@getModels');
     $router->get('validate-serial/{serial}/category_id/{categoryId}', 'EquipmentsController@validateSerial');
@@ -71,5 +72,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->post('account/subscribe', ['uses' => 'AccountController@subscribe', 'as' => 'account.subscribe.create']);
     $router->get('account/cancel-subscribe', ['uses' => 'AccountController@cancelSubscribe', 'as' => 'account.subscribe.cancel']);
     $router->get('account/resume-subscribe', ['uses' => 'AccountController@resumeSubscription', 'as' => 'account.subscribe.resume']);
+    $router->get('account/get-invoices', ['uses' => 'AccountController@getInvoices', 'as' => 'account.get.invoices']);
+
 /*---------------------------*/
 });

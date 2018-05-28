@@ -171,6 +171,12 @@
             isLoaded: function() {
                 return this.$store.state.User.company.length !== 0 && this.$store.state.ProjectForm.callReport && this.projectFormPerID
             }
+        },
+        watch: {
+            '$route' (to, from) {
+                this.project_id = this.$route.params.project_id
+                this.form_id = this.$route.params.form_id
+            }
         }
     }
 </script>

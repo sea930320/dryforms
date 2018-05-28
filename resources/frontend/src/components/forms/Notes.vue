@@ -65,6 +65,13 @@
                     }).catch(this.handleErrorResponse)
                 }
             }, 500)
+        },
+        watch: {
+            '$route' (to, from) {
+                this.dailylog.project_id = this.$route.params.project_id
+                this.dailylog.form_id = this.$route.params.form_id
+                this.init()
+            }
         }
     }
 </script>

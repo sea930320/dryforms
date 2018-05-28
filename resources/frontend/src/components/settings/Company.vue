@@ -65,6 +65,7 @@
                                     </div>
                                     <div class="col-lg-12 mb-1 col-xl-4" v-if="isSubscribed && !isGracePeriod">
                                       <input type="button" class="btn btn-sm btn-danger float-left" @click.prevent="cancelSubscription" :disabled="pending.cancel" value="Cancel Subscription"/>
+                                      <input type="button" class="btn btn-sm float-left" @click.prevent="getInvoices" :disabled="pending.cancel" value="Get Invoices"/>
                                     </div>
                                     <div class="col-lg-12 mb-1 col-xl-4" v-else-if="isSubscribed && isGracePeriod">
                                       <input type="button" class="btn btn-sm float-left" @click.prevent="resumeSubscription" :disabled="pending.resume" value="Resume Subscription"/>
@@ -177,6 +178,14 @@
             },
             cancelSubscription() {
                 this.$emit('openCancelSubscriptionModal')
+            },
+            getInvoices() {
+                apiAccount.getInvoices()
+                    .then(response => {
+                        this.fetchUser()
+                        console.log(response.data)
+                    })
+                    .catch(self.handleErrorResponse)
             },
             continueCancel(feedback) {
                 this.pending.cancel = true

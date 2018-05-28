@@ -26,6 +26,19 @@
                     this.footerText = res.data.standardForm.footer_text
                 }
             }).catch(this.handleErrorResponse)
+        },
+        watch: {
+            '$route' (to, from) {
+                apiProjectFooterText.index({
+                form_id: this.$route.params.form_id
+                }).then(res => {
+                    if (res.data.message === 'invisible') {
+                        this.footerText = ''
+                    } else {
+                        this.footerText = res.data.standardForm.footer_text
+                    }
+                }).catch(this.handleErrorResponse)
+            }
         }
     }
 </script>

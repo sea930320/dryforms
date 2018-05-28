@@ -55,7 +55,7 @@ class AccountController extends ApiController
 /*------ testing code -------*/
         $isSubscribed  = $user->subscribed('DryForms');
         $subscription   = $user->subscription('DryForms');
-        $user->load(['role', 'company']);
+        $user->load(['role', 'company', 'teams']);
         return $this->respond([
             'user'          => $user, 
             'isSubscribed'  => $isSubscribed,
@@ -176,7 +176,14 @@ class AccountController extends ApiController
         }
         return $this->respond(['message' => 'Glad to see you back. Your Subscription has been resumed.']);
     }
-/*---------------------------*/
 
+    public function getInvoices(Request $request)
+    {
+        $me = auth()->user();
+        //return $this->respond($me);
+        $invoices = ($me->subscribed('DryForms') or $me->subscription('DryForms')->cancelled()) ? $me->invoices() : null;
+        return $this->respond($invoices);
+    }
+/*---------------------------*/
 
 }

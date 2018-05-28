@@ -6,6 +6,7 @@ const userInfoRoute = '/api/account'
 const subscribeRoute = '/api/account/subscribe'
 const cancelSubscribeRoute = '/api/account/cancel-subscribe'
 const resumeSubscribeRoute = '/api/account/resume-subscribe'
+const getInvoicesRoute = '/api/account/get-invoices'
 
 export default {
     changeEmail (data) {
@@ -25,5 +26,8 @@ export default {
     },
     resumeSubscribe(data) {
         return axios.get(resumeSubscribeRoute, {params: data})
+    },
+    getInvoices(data) {
+        return axios.get(getInvoicesRoute, {params: data})
     }
 }

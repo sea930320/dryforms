@@ -15,6 +15,7 @@ class CreateFormsTable extends Migration
     {
         Schema::create('forms', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('company_id');
             $table->string('name');
             $table->timestamps();
         });

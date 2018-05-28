@@ -17,6 +17,7 @@ class DefaultFromData extends Model
     public $fillable = [
         'name',
         'title',
+        'form_id',
         'additional_notes_show',
         'footer_text_show',
         'footer_text',

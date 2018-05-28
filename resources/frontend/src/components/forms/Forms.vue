@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="selectForm" title="Select Forms for this project" v-model="showModal" v-if="isLoaded">
+  <b-modal id="selectEquipment" class="selectEquipment" title="Select Forms for this project" v-model="showModal" v-if="isLoaded">
     <div v-for="form in forms" :key="form.form_id" v-if="form.form_id != 1">
       <b-form-checkbox v-model="selelctedForms[form.form_id]" value=1 unchecked-value=0>
         {{form.standard_form[0].name}}

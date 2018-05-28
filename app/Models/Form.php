@@ -13,10 +13,10 @@ class Form extends Model
     /**
      * @var array
      */
-    public $fillable = ['name'];
+    public $fillable = ['name', 'company_id'];
 
     /**
      * @var array
      */
-    public $visible = ['id', 'name', 'default_data'];
+    public $visible = ['id', 'name', 'company_id', 'default_data'];
 }

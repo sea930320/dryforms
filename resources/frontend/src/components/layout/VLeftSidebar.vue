@@ -30,7 +30,13 @@
                 </router-link>
             </b-list-group-item>
             <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="link.form_id !== 12 && (link.selected === '1' || (projectSelectedForms && projectSelectedForms[link.form_id]))">
-                <router-link :to="{name: 'Form ' + link.form.name, params: {project_id: projectId, form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+                <router-link v-if="link.form.company_id != -1" :to="{name: 'Custom Form', params: {project_id: projectId, form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
+                    <div class="m-0">
+                        <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
+                        <span class="left-sidebar-ellipse" :class="icon-margin"> {{ link.standard_form[0].name }} </span>
+                    </div>
+                </router-link>
+                <router-link v-else :to="{name: 'Form ' + link.form.name, params: {project_id: projectId, form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                     <div class="m-0">
                         <img v-if="leftLinksIcon[link.form.name] != ''" :src="leftLinksIcon[link.form.name]" class="left-sidebar-img">
                         <span class="left-sidebar-ellipse" :class="icon-margin"> {{ link.standard_form[0].name }} </span>

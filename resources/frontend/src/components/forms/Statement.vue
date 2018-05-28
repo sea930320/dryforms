@@ -55,6 +55,11 @@
                 .then(res => {
                 }).catch(this.handleErrorResponse)
             }, 500)
+        },
+        watch: {
+            '$route' (to, from) {
+                this.init()
+            }
         }
     }
 </script>

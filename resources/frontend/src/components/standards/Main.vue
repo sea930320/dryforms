@@ -170,6 +170,7 @@
             '$store.state.StandardForm.formsOrder': function() {
                 this.isLoaded = false
                 this.setForm(this.$route.params.form_id)
+                console.log('sdf')
             }
         }
     }
