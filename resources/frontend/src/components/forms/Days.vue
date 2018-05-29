@@ -72,34 +72,20 @@
                 }).catch(this.handleErrorResponse)
             },
             save () {
-                let flag = false
-                this.selectedAreas.forEach((area) => {
-                    if (area === 1) {
-                        flag = true
-                    }
-                })
-                if (this.rangedate !== null && flag === true) {
-                    if (this.prevformId === 7) {
+                if (this.prevformId === 7) {
                     apiProjectMoistureDays.store({
                         selectedAreas: this.selectedAreas,
                         rangedate: this.rangedate
                     }).then(res => {
                         this.showModal = false
                     }).catch(this.handleErrorResponse)
-                    } else if (this.prevformId === 8) {
-                        apiProjectPsychometricDays.store({
-                            selectedAreas: this.selectedAreas,
-                            rangedate: this.rangedate
-                        }).then(res => {
-                            this.showModal = false
-                        }).catch(this.handleErrorResponse)
-                    }
-                } else {
-                    this.$notify({
-                        type: 'error',
-                        title: 'Error',
-                        text: 'Error : Invalid Input'
-                    })
+                } else if (this.prevformId === 8) {
+                    apiProjectPsychometricDays.store({
+                        selectedAreas: this.selectedAreas,
+                        rangedate: this.rangedate
+                    }).then(res => {
+                        this.showModal = false
+                    }).catch(this.handleErrorResponse)
                 }
             }
         },
