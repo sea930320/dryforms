@@ -280,7 +280,7 @@ const routes = (configRoute) => [
     }
   },
   {
-    path: '/forms/:project_id/days/:form_id',
+    path: '/forms/:project_id/days/:form_id/:prev_id',
     name: 'Form Add Days',
     props: {title: 'Days'},
     meta: {

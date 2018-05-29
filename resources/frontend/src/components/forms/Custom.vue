@@ -2,7 +2,7 @@
     <div class="card" style="min-height: 100vh;">
         <div class="card-body text-center">
             <form-header></form-header>
-            <h4 class="mb-2">{{ $route.meta.title }}</h4>
+            <h4 class="mb-2">{{ form_title }}</h4>
             <div class="dropdown-divider"></div>
             <form-banner class="mt-2"></form-banner>
             <div class="dropdown-divider"></div>
@@ -22,6 +22,7 @@
     import Signature from './Signature'
     import Statement from './Statement'
     import ErrorHandler from '../../mixins/error-handler'
+    import apiForms from '../../api/forms'
 
     export default {
         mixins: [ErrorHandler],
@@ -29,9 +30,24 @@
         components: {FormHeader, FormBanner, Notes, FooterText, Signature, Statement},
         data() {
             return {
+                project_id: null,
+                form_id: null,
+                form_title: null
             }
         },
         created() {
+            this.project_id = this.$route.params.project_id
+            this.form_id = this.$route.params.form_id
+            apiForms.index({
+                form_id: this.form_id
+            }).then(res => {
+                let formdata = res.data
+                formdata.forEach((item) => {
+                    if (item.id === this.form_id) {
+                        this.form_title = item.name
+                    }
+                })
+            }).catch(this.handleErrorResponse)
             this.$nextTick(() => {
                 this.init()
             })

@@ -69,6 +69,17 @@ class ProjectScopesController extends ApiController
                     ->where('page', $request->get('curPageNum'))
                     ->get()
                     ->toArray();
+                if(count($standardScopes) == 0){
+                    $default_scopes = $this->defaultScope->get()->toArray();
+                    foreach ($default_scopes as $key => $scope) {
+                        $scope['company_id'] = auth()->user()->company_id;
+                        $this->standardScope->create($scope);
+                    }
+                    $standardScopes = $this->standardScope
+                    ->where('page', $request->get('curPageNum'))
+                    ->get()
+                    ->toArray();
+                }
                 foreach ($standardScopes as $key => $scope) {
                     $scope['project_id'] = $request->input('project_id');
                     $scope['standard_scope_edited'] = 0;

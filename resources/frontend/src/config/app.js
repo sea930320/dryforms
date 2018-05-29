@@ -18,6 +18,7 @@ export default {
       'Work Stoppage': require('../assets/icon-workstop.png'),
       'Certificate of Completion': require('../assets/icon-complete.png'),
       'Affected Areas': require('../assets/icon-antimicrobial.png'),
-      'Moisture Map': require('../assets/icon-moisture.png')
+      'Moisture Map': require('../assets/icon-moisture.png'),
+      'Custom': require('../assets/icon-moisture.png')
     }
 }

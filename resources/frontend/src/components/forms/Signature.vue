@@ -44,11 +44,11 @@
                 <date-picker v-model="companySignatureUpdatedAt" type="datetime" format="yyyy-MM-dd HH:mm:ss" lang="en" @input="changeCompanyDate(companySignatureUpdatedAt)" placeholder="Select Datetime"></date-picker>
             </b-col>
         </b-row>
-        <b-modal ref="ownerSignatureModalRef" size="sm" title="Owner Signature" @ok="saveOwnerSignature">
-            <vueSignature ref="ownerSignature" w="250px" h="80px" :sigOption="onwerSignOption" class="signature m-auto"></vueSignature>
+        <b-modal ref="ownerSignatureModalRef" size="md" title="Owner Signature" @ok="saveOwnerSignature">
+            <vueSignature ref="ownerSignature" w="450px" h="150px" :sigOption="onwerSignOption" class="signature m-auto"></vueSignature>
         </b-modal>
-        <b-modal ref="companySignatureModalRef" size="sm" title="CompanySignature" @ok="saveCompanySignature">
-            <vueSignature ref="companySignature" w="250px" h="80px" :sigOption="companySignOption" class="signature m-auto"></vueSignature>
+        <b-modal ref="companySignatureModalRef" size="md" title="CompanySignature" @ok="saveCompanySignature">
+            <vueSignature ref="companySignature" w="450px" h="150px" :sigOption="companySignOption" class="signature m-auto"></vueSignature>
         </b-modal>
     </b-container>
 </template>
@@ -89,14 +89,14 @@
             showOwnerModal() {
                 this.$refs.ownerSignatureModalRef.show()
                 let canvasEle = document.getElementsByTagName('canvas')
-                canvasEle[0].setAttribute('width', '250')
-                canvasEle[0].setAttribute('height', '80')
+                canvasEle[0].setAttribute('width', '450')
+                canvasEle[0].setAttribute('height', '150')
             },
             showCompanyModal() {
                 this.$refs.companySignatureModalRef.show()
                 let canvasEle = document.getElementsByTagName('canvas')
-                canvasEle[1].setAttribute('width', '250')
-                canvasEle[1].setAttribute('height', '80')
+                canvasEle[1].setAttribute('width', '450')
+                canvasEle[1].setAttribute('height', '150')
             },
             saveOwnerSignature() {
                 let moment = this.$moment()

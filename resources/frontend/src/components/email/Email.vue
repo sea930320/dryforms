@@ -8,7 +8,7 @@
         <b-form-checkbox-group stacked v-model="selectedRecipients" :options="recipients"></b-form-checkbox-group>
         <input type="text" v-model="address" name="">
         <div slot="modal-footer" class="w-100">
-            <b-btn variant="primary" class="float-right" @click="saveForm()">Save</b-btn>
+            <b-btn variant="primary" class="float-right" @click="saveForm()">Send</b-btn>
         </div>
     </b-modal>
 </template>

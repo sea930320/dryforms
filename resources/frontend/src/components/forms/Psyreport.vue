@@ -1,23 +1,23 @@
 <template>
     <div class="card">
-        <div class="card-body text-center">
+        <div v-if="isLoaded" class="card-body text-center">
             <form-header></form-header>
             <h4 class="mb-2">{{ $route.meta.title }}</h4>
             <div class="dropdown-divider"></div>
             <form-banner></form-banner>
-            <b-row class="text-left">
-                <b-col cols="5">Instrument Make: Flir 501</b-col>
-                <b-col>Instrument Model: 5654319</b-col>
-            </b-row>
+            <div v-for="(time, index) in timedatas" :key="index" class="timefield">
             <b-row class="mt-3">
                 <b-col>
                     <table>
                         <tr>
-                            <th colspan="4" class="bg-grey">Outside</th>
-                            <th colspan="4">Uneffected</th>
-                            <th colspan="4" class="bg-grey">Affected</th>
-                            <th colspan="4">Dehumidifier1</th>
-                            <th colspan="4" class="bg-grey">Dehumidifier2</th>
+                            <th colspan="20" class="bg-grey">Inspection Date <date-picker v-model="time[0].current_time" type="date" format="yyyy-MM-dd" lang="en" input-class="date-field" @input="save(index,time[0].current_time)"></date-picker></th>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="bg-grey">Outside</td>
+                            <td colspan="4">Unaffected</th>
+                            <td colspan="4" class="bg-grey">Affected</td>
+                            <td colspan="4">Dehumidifier</th>
+                            <td colspan="4" class="bg-grey">Hvac</td>
                         </tr>
                         <tr>
                             <td class="bg-grey">TEMP</td>
@@ -39,19 +39,20 @@
                             <td class="bg-grey">TEMP</td>
                             <td class="bg-grey">RH%</td>
                             <td class="bg-grey">GPP</td>
-                            <td class="bg-grey" DEW
-                            </td>
+                            <td class="bg-grey">DEW</td>
                         </tr>
                     </table>
                 </b-col>
             </b-row>
-            <psy-area title="Master Bedroom" class="mt-3"></psy-area>
-            <psy-area title="Master Bathroom" class="mt-3"></psy-area>
-            <psy-area title="Bedroom 1 (containment 1)" class="mt-3"></psy-area>
-            <psy-area title="Bedroom 1 (containment 2)" class="mt-3"></psy-area>
-            <psy-area title="Hallway" class="mt-3"></psy-area>
+            <b-row class="mt-3">
+                <b-col>
+                    <psy-area v-for="(area, index) in time" :key="index" :title="areadatas[area.area_id]" :data="area" class="mt-3"></psy-area>
+                </b-col>
+            </b-row>
+            </div>
             <notes class="mt-3"></notes>
         </div>
+        <loading v-else></loading>
     </div>
 </template>
 
@@ -60,11 +61,72 @@
     import FormBanner from './FormBanner'
     import PsyArea from './PsyArea'
     import Notes from './Notes'
-
+    import apiProjectPsychometricDays from '../../api/project_psychometric_days'
+    import Loading from '../layout/Loading'
+    import DatePicker from 'vue2-datepicker'
+    import _ from 'lodash'
     export default {
-        components: {FormHeader, FormBanner, PsyArea, Notes}
+        components: {FormHeader, FormBanner, PsyArea, Notes, Loading, DatePicker},
+        data() {
+            return {
+                areadatas: [],
+                timedatas: [],
+                newtime: [],
+                project_id: null,
+                isLoaded: false
+            }
+        },
+        created() {
+            this.init()
+            this.$bus.$on('remove', () => {
+                this.isLoaded = false
+                this.init()
+            })
+            this.$bus.$on('add', () => {
+                this.isLoaded = false
+                this.init()
+            })
+        },
+        methods: {
+            init: function() {
+                this.project_id = this.$route.params.project_id
+                apiProjectPsychometricDays.index({
+                    project_id: this.project_id
+                }).then(res => {
+                    this.areadatas = res.data.areadatas
+                    this.timedatas = res.data.timedatas
+                    for (var item in this.timedatas) {
+                        this.newtime[item] = item
+                    }
+                    this.isLoaded = true
+                }).catch(this.handleErrorResponse)
+            },
+            save: _.debounce(function (oldtime, newtime) {
+                apiProjectPsychometricDays.updatetime({
+                    project_id: this.project_id,
+                    old_time: oldtime,
+                    new_time: newtime
+                }).then(res => {
+                }).catch(this.handleErrorResponse)
+            }, 500)
+        }
     }
 </script>
+
+<style>
+    .timefield {
+        padding-bottom: 20px;
+    }
+    .date-field {
+        text-align: left;
+        width: 70%;
+        border-width: 0px;
+        background-color: transparent;
+    }
+    .mx-input-icon {
+        display: none;
+    }
+</style>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
     table, th, td {
@@ -72,7 +134,7 @@
         border-collapse: collapse;
         padding: 3px;
     }
-
+    
     table {
         width: 100%;
         td {

@@ -27,6 +27,7 @@
         data() {
             return {
                 projectAreas: [],
+                standardAreas: [],
                 project_id: null,
                 structures: [],
                 materials: [],

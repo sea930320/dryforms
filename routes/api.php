@@ -40,6 +40,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('project/area', 'ProjectAreasController');
     $router->resource('project/scope', 'ProjectScopesController');
     $router->resource('project/moisture', 'ProjectMoistureController');
+    $router->resource('project/psychometric', 'ProjectPsychometricController');
     $router->resource('project/days', 'ProjectMoistureDaysController');
     $router->post('project/days/delete/{id}', 'ProjectMoistureDaysController@deleteItem');
     $router->resource('standard/forms', 'StandardsController');
@@ -50,6 +51,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('standard/structures', 'StructuresController');
     $router->resource('standard/materials', 'MaterialsController');
 
+    $router->post('project/psychometric/updatetime', 'ProjectPsychometricController@updatetime');
     $router->get('training/categories', 'TrainingManageController@index');
     $router->get('training/videos', 'TrainingManageController@getVideos');
     $router->get('project/email', 'ProjectFormsController@prepareEmail');

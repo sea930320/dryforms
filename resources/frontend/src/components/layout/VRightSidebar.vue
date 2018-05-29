@@ -21,15 +21,15 @@
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
-            <router-link v-else-if="link.form_id == 13" :to="{name: 'Form Add Days', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
+            <router-link v-else-if="link.form_id == 13" :to="{name: 'Form Add Days', params: {project_id: projectId, form_id: link.form_id, prev_id: formId}}" class="pointer text-white text-center">
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
-            <router-link v-else-if="link.form_id == 14" :to="{name: 'Form Equipment Manager', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
+            <router-link v-else-if=" formId == 6 && link.form_id == 14" :to="{name: 'Form Equipment Manager', params: {project_id: projectId, form_id: link.form_id}}" class="pointer text-white text-center">
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
-            <div v-else-if="link.methodCall" class="pointer text-white text-center" @click="methodCall(link.methodCall)">
+            <div v-if="link.methodCall" class="pointer text-white text-center" @click="methodCall(link.methodCall)">
                 <p class="text-uppercase float-left m-0 right-sidebar-ellipse icon-margin">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </div>
@@ -79,8 +79,6 @@
                 }
                 if (to.path.indexOf('forms') !== -1) {
                     this.projectId = to.params.project_id
-                }
-                if (to.path.indexOf('callreport') !== -1) {
                     this.formId = to.params.form_id
                 }
             }

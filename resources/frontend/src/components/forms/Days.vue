@@ -25,6 +25,7 @@
     import Loading from '../layout/Loading'
     import apiProjectAreas from '../../api/project_areas'
     import apiProjectMoistureDays from '../../api/project_moisture_days'
+    import apiProjectPsychometricDays from '../../api/project_psychometric_days'
     import ErrorHandler from '../../mixins/error-handler'
     import DatePicker from 'vue2-datepicker'
     export default {
@@ -39,6 +40,7 @@
                 projectAreas: [],
                 selectedAreas: [],
                 projectId: null,
+                prevformId: null,
                 isLoaded: false,
                 shortcuts: [
                     {
@@ -56,6 +58,7 @@
         methods: {
             init: function() {
                 this.projectId = parseInt(this.$route.params.project_id)
+                this.prevformId = parseInt(this.$route.params.prev_id)
                 apiProjectAreas.index({
                     project_id: this.projectId
                 }).then(res => {
@@ -69,12 +72,35 @@
                 }).catch(this.handleErrorResponse)
             },
             save () {
-                apiProjectMoistureDays.store({
-                    selectedAreas: this.selectedAreas,
-                    rangedate: this.rangedate
-                }).then(res => {
-                    this.showModal = false
-                }).catch(this.handleErrorResponse)
+                let flag = false
+                this.selectedAreas.forEach((area) => {
+                    if (area === 1) {
+                        flag = true
+                    }
+                })
+                if (this.rangedate !== null && flag === true) {
+                    if (this.prevformId === 7) {
+                    apiProjectMoistureDays.store({
+                        selectedAreas: this.selectedAreas,
+                        rangedate: this.rangedate
+                    }).then(res => {
+                        this.showModal = false
+                    }).catch(this.handleErrorResponse)
+                    } else if (this.prevformId === 8) {
+                        apiProjectPsychometricDays.store({
+                            selectedAreas: this.selectedAreas,
+                            rangedate: this.rangedate
+                        }).then(res => {
+                            this.showModal = false
+                        }).catch(this.handleErrorResponse)
+                    }
+                } else {
+                    this.$notify({
+                        type: 'error',
+                        title: 'Error',
+                        text: 'Error : Invalid Input'
+                    })
+                }
             }
         },
         watch: {
