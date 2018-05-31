@@ -17,8 +17,8 @@ class PsychometricCalculationRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'temperature' => ['required', 'integer'],
-            'rh' => ['required', 'integer'],
+            'temperature' => ['required', 'integer', 'min:1'],
+            'rh' => ['required', 'integer', 'min:1'],
         ];
     }
 }

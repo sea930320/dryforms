@@ -20,7 +20,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     $router->get('refresh', 'Auth\ApiAuthController@refresh');
 });
 
-Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
+Route::namespace('Api')->middleware([])->group(function($router) {
     $router->resource('companies', 'CompaniesController');
     $router->resource('categories', 'EquipmentCategoriesController');
     $router->resource('models', 'EquipmentModelsController');
