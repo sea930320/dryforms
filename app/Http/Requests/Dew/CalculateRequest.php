@@ -19,8 +19,8 @@ class CalculateRequest extends FormRequest
     public function rules()
     {
         return [
-            'temperature' => 'required|integer',
-            'rh' => 'required|integer'
+            'temperature' => ['required', 'integer'],
+            'rh' => ['required', 'integer']
         ];
     }
 }

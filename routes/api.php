@@ -67,6 +67,7 @@ Route::namespace('Api')->middleware([])->group(function($router) {
     $router->post('project/restore-status', 'ProjectsController@restoreStatus');
 
     $router->get('psychometric/calculate', 'PsychometricCalculationsController@calculate');
+    $router->get('psychometric/dew', 'DewCalculationController@calculate');
 
     /** Account */
     $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);
