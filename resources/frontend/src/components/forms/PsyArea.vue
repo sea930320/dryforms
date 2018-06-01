@@ -4,7 +4,7 @@
             <table>
                 <tr>
                     <th colspan="20">
-                        <i class="fa fa-times text-danger" @click="removeArea()"></i> {{ title }} <i v-if="containId === 0" class="fa fa-plus text-primary" @click="addArea()"></i>
+                        <i class="fa fa-times text-danger" @click="removeArea()"></i> {{ ftitle }} <i v-if="containId === 0" class="fa fa-plus text-primary" @click="addArea()"></i>
                     </th>
                 </tr>
                 <tr>
@@ -103,14 +103,19 @@
         created() {
             this.init()
         },
+        computed: {
+            ftitle: function() {
+                this.containId = this.data.containment_id
+                if (this.containId !== 0) {
+                    return this.title + ' (Containment ' + this.containId + ')'
+                }
+                return this.title
+            }
+        },
         methods: {
             init() {
                 this.timeId = this.data.id
                 this.areaId = this.data.area_id
-                this.containId = this.data.containment_id
-                if (this.containId !== 0) {
-                    this.title = this.title + ' (Containment ' + this.containId + ')'
-                }
                 this.curdate = this.data.current_time
                 this.outside = JSON.parse(this.data.outside)
                 this.unaffected = JSON.parse(this.data.unaffected)
