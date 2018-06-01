@@ -21,7 +21,7 @@
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>
-            <router-link v-else-if="link.form_id == 13" :to="{name: 'Form Add Days', params: {project_id: projectId, form_id: link.form_id, prev_id: formId}}" class="pointer text-white text-center">
+            <router-link v-else-if="(formId == 7 || formId == 8) && link.form_id == 13" :to="{name: 'Form Add Days', params: {project_id: projectId, form_id: link.form_id, prev_id: formId}}" class="pointer text-white text-center">
                 <p :class="link.mt ? 'text-uppercase m-0 right-sidebar-ellipse icon-margin' : 'text-uppercase float-left m-0 right-sidebar-ellipse icon-margin'">{{ link.name }}</p>
                 <img v-if="link.icon != ''" :src="link.icon" class="float-right">
             </router-link>

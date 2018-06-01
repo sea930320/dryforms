@@ -79,6 +79,16 @@
                 Promise.all(apis)
                 .then(res => {
                     this.projectAreas = res[0].data.project_areas
+                    if (this.projectAreas.length === 0) {
+                        this.$router.push({
+                            name: 'Form Affected Areas',
+                            params: {
+                                project_id: this.project_id,
+                                form_id: 12
+                            }
+                        })
+                        return
+                    }
                     let uoms = res[1].data.uoms
                     this.miscScopes = res[2].data.misc_page_scopes
                     this.uoms = ['----']

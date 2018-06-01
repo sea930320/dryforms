@@ -44,6 +44,16 @@
                     project_id: this.project_id
                 }).then(res => {
                     let projectAreas = res.data.project_areas
+                    if (projectAreas.length === 0) {
+                        this.$router.push({
+                            name: 'Form Affected Areas',
+                            params: {
+                                project_id: this.project_id,
+                                form_id: 12
+                            }
+                        })
+                        return
+                    }
                     this.standardAreas = res.data.standard_areas
                     projectAreas.forEach(projectArea => {
                         projectArea.title = projectArea.standard_area.title

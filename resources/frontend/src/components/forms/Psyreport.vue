@@ -94,6 +94,16 @@
                     project_id: this.project_id
                 }).then(res => {
                     this.areadatas = res.data.areadatas
+                    if (this.areadatas.length === 0) {
+                        this.$router.push({
+                            name: 'Form Affected Areas',
+                            params: {
+                                project_id: this.project_id,
+                                form_id: 12
+                            }
+                        })
+                        return
+                    }
                     this.timedatas = res.data.timedatas
                     for (var item in this.timedatas) {
                         this.newtime[item] = item

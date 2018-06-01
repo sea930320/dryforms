@@ -711,7 +711,8 @@ class ProjectFormsController extends ApiController
         // ---------------------------------------------------------
         $project_callreport = DB::table('project_call_reports')->where('project_id', $projectid)->first();
         $project_forms = DB::table('project_forms')->where('project_id', $projectid)->where('form_id', 6)->first();
-        //$project_statements = DB::table('project_statements')->where('project_id', $projectid)->where('form_id', 4)->first();
+        $project_statements = DB::table('project_statements')->where('project_id', $projectid)->where('form_id', 6)->first();
+        $equipments = DB::table('equipments')->where('status_id', 3)->where('company_id', $project_forms->company_id)->get();
         //get company id
         $company = DB::table('companies')->where('id', $project_forms->company_id)->first();
 
@@ -740,98 +741,70 @@ class ProjectFormsController extends ApiController
         PDF::SetY(70);
         PDF::Cell(180, 0, '', 'T', 0, 'C');
         
+        //statement
+        PDF::SetFont('helvetica', '', 10, '', false);
+        PDF::SetXY(15,75);
+        PDF::Cell(35, 6, $project_statements->title);
+        PDF::SetFont('helvetica', '', 15, '', false);
+        PDF::SetXY(15,82);
+        PDF::Cell(35, 6, $project_statements->statement);
 
-        $equipments = array('0' => array('name' => 'Air Movers:', 'info' => 'Air movers are designed to increase the rate of evaporation by changing water from a liquid into a vapor.'), '1' => array('name' => 'Dehumidifiers:', 'info' => 'Dehumidifiers are designed to reduce the humidity in the air. This helps increase the rate of drying.'), '2' => array('name' => 'Equipment Responsibility:', 'info' => 'By signing below the customer certifies that they have been informed and understand that they are responsible for loss or theft of the equipment while it is in their care and custody. This also certifies that the customer agrees to allow a company technician access to the property during normal business hours to monitor the equipment.'),'3' => array('name' => 'Safety and Health:', 'info' => 'If air movers and/or dehumidifiers must be moved, they must be shut off and unplugged as it may be hazardous to move while they are in operation. Exposed tackless strip is a danger even when covered. Please take care when walking near tackless strip. The floors may be slippery when wet. Please take extreme care if walking on or from wet flooring materials.'));
-        
-        for($i = 0; $i <= 3; $i ++){
-            PDF::SetFont('helvetica', 'B', 10, '', false);
-            PDF::SetXY(15,75 + $i * 20);
-            PDF::Cell(20 + $i * 6, 6, $equipments[$i]['name']);
-            PDF::SetFont('helvetica', '', 10, '', false);
-            PDF::SetXY(15,80 + $i * 20);
-            PDF::MultiCell(180, 5, $equipments[$i]['info'], 0, 'L', 0, 1, '', '', true);
+        PDF::SetY(95);
+        PDF::Cell(180, 0, '', 'T', 0, 'C');
+
+        PDF::SetFont('helvetica', '', 10);
+        $tbl = "<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" align=\"center\">
+            <tr>
+                <td width=\"90\" height=\"5\">Category</td>
+                <td width=\"90\" height=\"5\">Make/Model</td>
+                <td width=\"90\" height=\"5\">Equipment</td>
+                <td width=\"90\" height=\"5\">Crew/Team</td>
+                <td width=\"90\" height=\"5\">Location</td>
+                <td width=\"90\" height=\"5\">Status</td>
+                <td width=\"90\" height=\"5\">Action</td>
+            </tr>";
+        for($i = 0; $i < count($equipments); $i ++){
+            $model = DB::table('equipment_models')->where('id', $equipments[$i]->model_id)->first();
+            $category = DB::table('equipment_categories')->where('id', $model->category_id)->first();
+            $team = DB::table('teams')->where('id', $equipments[$i]->team_id)->first();
+            $status = DB::table('equipment_statuses')->where('id', $equipments[$i]->status_id)->first();
+            $tbl1 = "<tr>
+                <td width=\"90\">" . $category->name . "</td>
+                <td width=\"90\">" . $model->name . "</td>
+                <td width=\"90\">" . $equipments[$i]->serial . "</td>
+                <td width=\"90\">" . $team->name . "</td>
+                <td width=\"90\">" . $equipments[$i]->location . "</td>
+                <td width=\"90\">" . $status->name . "</td>
+                <td width=\"90\"></td>
+            </tr>";
+            $tbl .= $tbl1;
         }
-
-        PDF::SetFont('helvetica', '', 12);
-        PDF::SetXY(30,164);
-        PDF::Cell(45, 5, 'Air Mover - Dry Air Tempest');
-        PDF::SetFont('helvetica', '', 10);
-        $tbl = "<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" align=\"center\">
-            <tr>
-                <td width=\"90\" height=\"5\">Equipment #</td>
-                <td width=\"90\" height=\"5\">Set Date</td>
-                <td width=\"90\" height=\"5\">P/U Date</td>
-            </tr>
-            <tr>
-                <td width=\"90\">#A0001</td>
-                <td width=\"90\">9/23/2017</td>
-                <td width=\"90\">9/23/2017</td>
-            </tr>
-            <tr>
-                <td width=\"90\">#A0001</td>
-                <td width=\"90\">9/23/2017</td>
-                <td width=\"90\">9/23/2017</td>
-            </tr>
-            <tr>
-                <td width=\"90\">#A0001</td>
-                <td width=\"90\">9/23/2017</td>
-                <td width=\"90\">9/23/2017</td>
-            </tr>
-        </table>";
-        PDF::SetXY(20,170);
-        PDF::writeHTML($tbl, true, false, false, false, '');
-
-        PDF::SetFont('helvetica', '', 12);
-        PDF::SetXY(113,164);
-        PDF::Cell(45, 5, 'Dehumidifier - Dri-Eaz LGR 7000XLi');
-        PDF::SetFont('helvetica', '', 10);
-        $tbl = "<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" align=\"center\">
-            <tr>
-                <td width=\"90\" height=\"5\">Equipment #</td>
-                <td width=\"90\" height=\"5\">Set Date</td>
-                <td width=\"90\" height=\"5\">P/U Date</td>
-            </tr>
-            <tr>
-                <td width=\"90\">#D0001</td>
-                <td width=\"90\">9/23/2017</td>
-                <td width=\"90\">9/23/2017</td>
-            </tr>
-            <tr>
-                <td width=\"90\">#D0001</td>
-                <td width=\"90\">9/23/2017</td>
-                <td width=\"90\">9/23/2017</td>
-            </tr>
-            <tr>
-                <td width=\"90\">#D0001</td>
-                <td width=\"90\">9/23/2017</td>
-                <td width=\"90\">9/23/2017</td>
-            </tr>
-        </table>";
-        PDF::SetXY(110,170);
+        $tbl .= "</table>";
+        PDF::SetXY(15,100);
         PDF::writeHTML($tbl, true, false, false, false, '');
         
         //signature
         PDF::SetFont('helvetica', '', 10, '', false);
-        PDF::SetXY(15,200);
+        PDF::SetXY(15,130);
         PDF::Cell(35, 6, 'Owner/Insured:');
-        PDF::Image($project_forms->insured_signature, 80, 195, 60, 20, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-        PDF::SetXY(80,215);
+        PDF::Image($project_forms->insured_signature, 80, 125, 60, 20, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        PDF::SetXY(80,145);
         PDF::Cell(60, 0, '', 'T', 0, 'C');
-        PDF::SetXY(160,203);
+        PDF::SetXY(160,133);
         PDF::TextField("insureddate6", 35, 6, array(), array('v'=>$project_forms->insured_signature_upated_at));
-        PDF::SetXY(15,206);
+        PDF::SetXY(15,136);
         PDF::TextField("company6", 25, 5, array(), array('v'=>$project_callreport->insured_name));
         //PDF::Ln(6);
 
-        PDF::SetXY(15,225);
+        PDF::SetXY(15,155);
         PDF::Cell(35, 6, 'Company:');
         
-        PDF::Image($project_forms->company_signature, 80, 220, 60, 20, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-        PDF::SetXY(80,240);
+        PDF::Image($project_forms->company_signature, 80, 150, 60, 20, 'PNG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        PDF::SetXY(80,170);
         PDF::Cell(60, 0, '', 'T', 0, 'C');
-        PDF::SetXY(160,228);
+        PDF::SetXY(160,158);
         PDF::TextField("companydate6", 35, 6, array(), array('v'=>$project_forms->company_signature_upated_at));
-        PDF::SetXY(15,230);
+        PDF::SetXY(15,160);
         PDF::TextField("company6", 25, 5, array(), array('v'=>$company->name));
         //PDF::Ln(6);
         
@@ -882,7 +855,7 @@ class ProjectFormsController extends ApiController
                 }
             }
         }
-
+        
         PDF::SetY(37);
         PDF::SetFont('helvetica', 'BI', 15);
         PDF::Cell(0, 5, 'Moisture Map', 0, 1, 'C');
@@ -904,6 +877,9 @@ class ProjectFormsController extends ApiController
         PDF::Cell(20, 5, 'Claim#', 0, false, 'R');
         PDF::TextField("claim6", 25, 5, array(), array('v'=>$project_callreport->insurance_claim_no));
 
+        if (empty($result_settings)) {
+            return;
+        }
         $posX = 15; $posY = 70;
         for($i = 0; $i < count($result_areas); $i ++){
             if($posY+22+15*count($result_days[$i]) > 270){
@@ -964,7 +940,132 @@ class ProjectFormsController extends ApiController
         }
         
     }
+    public function print_psychometric_report($projectid)
+    {
+        // ---------------------------------------------------------
+        $project_callreport = DB::table('project_call_reports')->where('project_id', $projectid)->first();
+        $project_forms = DB::table('project_forms')->where('project_id', $projectid)->where('form_id', 8)->first();
+        
+        $projectAreas = DB::table('project_areas')->where('project_id', $projectid)->get();
+        $timedatas = array();
+        $areadatas = array();
+        foreach($projectAreas as $key => $area){
+            $areainfo = DB::table('areas')->where('id', $area->area_id)->first();
+            $areadatas[$area->id] = $areainfo->title;
+            $data = DB::table('project_psychometric_days')->where('area_id', $area->id)->get();
+            foreach($data as $i => $row){
+                $timedatas[$row->current_time][] = $row;
+            }
+        }
 
+        $company = DB::table('companies')->where('id', $project_forms->company_id)->first();
+
+        PDF::SetY(37);
+        PDF::SetFont('helvetica', 'BI', 15);
+        PDF::Cell(0, 5, 'Psychometric Report', 0, 1, 'C');
+        PDF::Ln(10);
+
+        PDF::SetFont('helvetica', '', 9);
+
+        // Owner/Insured
+        PDF::SetXY(15,50);
+        PDF::Cell(25, 5, 'Owner/Insured:');
+        PDF::TextField("insured8", 30, 5, array(), array('v'=>$project_callreport->insured_name));
+
+        // Job Address
+        PDF::SetXY(15,60);
+        PDF::Cell(23, 5, 'Job Address:');
+        PDF::TextField("job8", 30, 5, array(), array('v'=>$project_callreport->job_address));
+        // Claim
+        PDF::SetXY(150,50);
+        PDF::Cell(20, 5, 'Claim#', 0, false, 'R');
+        PDF::TextField("claim8", 25, 5, array(), array('v'=>$project_callreport->insurance_claim_no));
+
+        $posX = 15; $posY = 70;
+        foreach($timedatas as $key => $data){
+            if($posY+25+20*count($data) > 270){
+                PDF::AddPage();
+                $posX = 15; $posY = 10;
+            }
+            PDF::SetFont('helvetica', '', 10);
+            $tbl = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"0.5\" nobr=\"true\" align=\"center\">
+                     <tr style=\"background-color:#c3c3c3; font-weight:bold;\">
+                      <th colspan=\"20\">$key</th>
+                     </tr>
+                     <tr>
+                      <td colspan=\"4\" style=\"background-color:#c3c3c3;\">Outside</td>
+                      <td colspan=\"4\">Unaffected</td>
+                      <td colspan=\"4\" style=\"background-color:#c3c3c3;\">Affected</td>
+                      <td colspan=\"4\">Dehumidifier</td>
+                      <td colspan=\"4\" style=\"background-color:#c3c3c3;\">Hvac</td>
+                     </tr>
+                     <tr>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">TEMP</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">RH%</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">GPP</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">DEW</td>
+                      <td style=\"font-size:8px;\">TEMP</td>
+                      <td style=\"font-size:8px;\">RH%</td>
+                      <td style=\"font-size:8px;\">GPP</td>
+                      <td style=\"font-size:8px;\">DEW</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">TEMP</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">RH%</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">GPP</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">DEW</td>
+                      <td style=\"font-size:8px;\">TEMP</td>
+                      <td style=\"font-size:8px;\">RH%</td>
+                      <td style=\"font-size:8px;\">GPP</td>
+                      <td style=\"font-size:8px;\">DEW</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">TEMP</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">RH%</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">GPP</td>
+                      <td style=\"font-size:8px; background-color:#c3c3c3;\">DEW</td>
+                     </tr>
+                    </table>";
+            PDF::SetXY($posX,$posY);
+            $posY += 25;
+            PDF::writeHTML($tbl, true, false, false, false, '');
+            for($j = 0; $j < count($data); $j ++){
+                $outside = json_decode($data[$j]->outside);
+                $unaffected = json_decode($data[$j]->unaffected);
+                $affected = json_decode($data[$j]->affected);
+                $dehumidifier = json_decode($data[$j]->dehumidifier);
+                $hvac = json_decode($data[$j]->hvac);
+
+                $tbl = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"0.5\" nobr=\"true\" align=\"center\">
+                 <tr>
+                  <th colspan=\"20\">".$areadatas[$data[$j]->area_id]."</th>
+                 </tr>
+                 <tr>
+                  <td style=\"background-color:#c3c3c3;\">".$outside->temp."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$outside->rh."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$outside->gpp."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$outside->dew."</td>
+                  <td>".$unaffected->temp."</td>
+                  <td>".$unaffected->rh."</td>
+                  <td>".$unaffected->gpp."</td>
+                  <td>".$unaffected->dew."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$affected->temp."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$affected->rh."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$affected->gpp."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$affected->dew."</td>
+                  <td>".$dehumidifier->temp."</td>
+                  <td>".$dehumidifier->rh."</td>
+                  <td>".$dehumidifier->gpp."</td>
+                  <td>".$dehumidifier->dew."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$hvac->temp."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$hvac->rh."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$hvac->gpp."</td>
+                  <td style=\"background-color:#c3c3c3;\">".$hvac->dew."</td>
+                 </tr>
+                </table>";
+                PDF::SetXY($posX,$posY);
+                PDF::writeHTML($tbl, true, false, false, false, '');
+                $posY += 20;
+            }
+            $posY += 5;
+        }
+    }
     public function print(Request $request, int $id)
     {
         $formids = $request->all();
@@ -1034,6 +1135,11 @@ class ProjectFormsController extends ApiController
         }
         
         foreach($formids as $key => $value){
+            $project_statement = DB::table('project_statements')->where('project_id', $projectid)->where('form_id', $value)->first();
+            $stateflag = false;
+            if(isset($project_statement)){
+                $stateflag = true;
+            }
             if($value == 1){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);
                 $this->print_call_report($projectid);
@@ -1045,15 +1151,16 @@ class ProjectFormsController extends ApiController
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_daily_log($projectid);
             }
-            else if($value == 4){
+            else if($value == 4 && $stateflag == true){
+
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_work_authorization($projectid, 4, "Work Authorization");
             }
-            else if($value == 5){
+            else if($value == 5 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_anti_microbial($projectid);
             }
-            else if($value == 6){
+            else if($value == 6 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata); 
                 $this->print_customer_responsibility($projectid);
             }
@@ -1062,17 +1169,18 @@ class ProjectFormsController extends ApiController
                 $this->print_moisture_map($projectid);
             }
             else if($value == 8){
-
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);
+                $this->print_psychometric_report($projectid);
             }
-            else if($value == 9){
+            else if($value == 9 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_work_authorization($projectid, 9, "Release from Liability");
             }
-            else if($value == 10){
+            else if($value == 10 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_work_authorization($projectid, 10, "Work Stoppage");
             }
-            else if($value == 11){
+            else if($value == 11 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_work_authorization($projectid, 11, "Certificate of Completion");
             }
@@ -1161,6 +1269,11 @@ class ProjectFormsController extends ApiController
         $c_headerdata = "$c_street\n$c_address\n$c_phone\n$c_email";
 
         foreach($selectedForms as $key => $value){
+            $project_statement = DB::table('project_statements')->where('project_id', $projectid)->where('form_id', $value)->first();
+            $stateflag = false;
+            if(isset($project_statement)){
+                $stateflag = true;
+            }
             if($value == 1){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);
                 $this->print_call_report($projectid);
@@ -1172,15 +1285,15 @@ class ProjectFormsController extends ApiController
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_daily_log($projectid);
             }
-            else if($value == 4){
+            else if($value == 4 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_work_authorization($projectid, 4, "Work Authorization");
             }
-            else if($value == 5){
+            else if($value == 5 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_anti_microbial($projectid);
             }
-            else if($value == 6){
+            else if($value == 6 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata); 
                 $this->print_customer_responsibility($projectid);
             }
@@ -1189,17 +1302,18 @@ class ProjectFormsController extends ApiController
                 $this->print_moisture_map($projectid);
             }
             else if($value == 8){
-
+                $this->print_header($c_imgfile, $c_name, $c_headerdata);
+                $this->print_psychometric_report($projectid);
             }
-            else if($value == 9){
+            else if($value == 9 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_work_authorization($projectid, 9, "Release from Liability");
             }
-            else if($value == 10){
+            else if($value == 10 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_work_authorization($projectid, 10, "Work Stoppage");
             }
-            else if($value == 11){
+            else if($value == 11 && $stateflag == true){
                 $this->print_header($c_imgfile, $c_name, $c_headerdata);        
                 $this->print_work_authorization($projectid, 11, "Certificate of Completion");
             }

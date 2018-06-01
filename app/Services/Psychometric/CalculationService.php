@@ -32,7 +32,9 @@ class CalculationService
                 'temperature' => $temperature,
                 'rh' => $rh
             ])->first();
-
-        return $psychometricData->result;
+        if(isset($psychometricData)){
+            return $psychometricData->result;
+        }
+        return 0;
     }
 }

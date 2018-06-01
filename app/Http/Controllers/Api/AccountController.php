@@ -180,9 +180,9 @@ class AccountController extends ApiController
     public function getInvoices(Request $request)
     {
         $me = auth()->user();
-        //return $this->respond($me);
-        $invoices = ($me->subscribed('DryForms') or $me->subscription('DryForms')->cancelled()) ? $me->invoices() : null;
-        return $this->respond($invoices);
+        $invoices = $me->invoicesIncludingPending();
+        //$invoices = ($me->subscribed('DryForms') or $me->subscription('DryForms')->cancelled()) ? $me->invoices() : null;
+        return $this->respond(['message' => $invoices]);
     }
 /*---------------------------*/
 

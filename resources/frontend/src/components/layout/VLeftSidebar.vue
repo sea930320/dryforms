@@ -36,7 +36,7 @@
                     <div class="m-0"><img v-if="leftLinksIcon['Forms'] != ''" :src="leftLinksIcon['Forms']"> Forms </div>
                 </router-link>
             </b-list-group-item>
-            <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="link.form_id !== 12 && (link.selected === '1' || (projectSelectedForms && projectSelectedForms[link.form_id]))">
+            <b-list-group-item v-for="link in formsOrder" :key="link.id" class="list-complete-item" :class="link.mb ? 'bg-blue mb-2' : 'bg-grey'" v-if="(formId != 12) && (link.form_id !== 12 && (link.selected === '1' || (projectSelectedForms && projectSelectedForms[link.form_id])))">
                 <router-link v-if="link.form.id >= 13" :to="{name: 'Custom Form', params: {project_id: projectId, form_id: link.form_id}}" :class="link.mb ? 'pointer text-white' : 'pointer text-black'">
                     <div class="m-0">
                         <!--<img v-if="leftLinksIcon['Custom'] != ''" :src="leftLinksIcon['Custom']" class="left-sidebar-img">-->
@@ -115,8 +115,8 @@
             } else {
                 this.isStandards = false
             }
-
             if (this.$route.path.indexOf('forms') !== -1) {
+                this.fetchFormsOrder()
                 this.isForms = true
             } else {
                 this.isForms = false
@@ -136,7 +136,8 @@
                 isForms: null,
                 isTraining: null,
                 leftLinksIcon: {},
-                projectId: null
+                projectId: null,
+                formId: null
             }
         },
         methods: {
@@ -173,6 +174,7 @@
                     this.isForms = true
                     this.fetchFormsOrder()
                     this.projectId = to.params.project_id
+                    this.formId = to.params.form_id
                     this.$store.state.ProjectForm.projectId = this.projectId
                     this.fetchProjectForm()
                 } else {

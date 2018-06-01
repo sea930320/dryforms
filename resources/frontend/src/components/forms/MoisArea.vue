@@ -138,6 +138,7 @@
                         material.value = material.id
                         this.materials.push(material)
                     })
+                    console.log(response[2].data)
                     if (response[2].data.length === 0) {
                         return
                     }

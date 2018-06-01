@@ -103,7 +103,11 @@
     },
     computed: {
       forms: function() {
-        return this.$store.state.StandardForm.formsOrder
+        let tforms = this.$store.state.StandardForm.formsOrder
+        tforms.forEach((form) => {
+            form.selected = '1'
+        })
+        return tforms
       },
       user: function() {
         return this.$store.state.User.user

@@ -39,9 +39,17 @@ class ProjectPsychometricController extends ApiController
         $areadatas = array();
         foreach($projectAreas as $key => $area){
             $areadatas[$area->id] = $area->standard_area->title;
-            $data = $this->projectPsychometricDays->where('area_id', $area->id)->get();
+            $data = $this->projectPsychometricDays->where('area_id', $area->id)->orderBy('current_time', 'asc')->get();
             foreach($data as $i => $row){
                 $timedatas[$row->current_time][] = $row;
+            }
+        }
+        if(count($timedatas) == 0){
+            $nowdate = date('Y-m-d H:i:s');
+            $primary_val = '{"temp":0, "rh":0, "gpp":0, "dew":0}';
+            foreach($projectAreas as $key => $area){
+                $data = $this->projectPsychometricDays->create(['area_id' => $area->id, 'containment_id' => 0, 'current_time' => $nowdate, 'outside' => $primary_val, 'unaffected' => $primary_val, 'affected' => $primary_val, 'dehumidifier' => $primary_val, 'hvac' => $primary_val]);
+                $timedatas[$nowdate][] = $data;
             }
         }
         return $this->respond([
@@ -89,7 +97,7 @@ class ProjectPsychometricController extends ApiController
                 }
                 $date = date('Y-m-d', strtotime($date . ' +1 day'));
             }
-            return $this->respond(['message' => 'Form successfully saved']);    
+            return $this->respond(['message' => 'Form successfully saved']);
         }
         
     }

@@ -1,16 +1,16 @@
 <template>
     <b-container v-if='isLoaded'>
         <b-row class="mb-2">
-            <b-col cols="3" class="text-left pt-4">
+            <b-col cols="2" class="text-left pt-4">
                 <h6>Owner/Insured:</h6>
                 <p>{{ ownerName }}</p>
             </b-col>
-            <b-col cols="6">
+            <b-col cols="7">
                 <b-row align-h="center">
                     <b-col cols="2" class="text-right">
                         <i class="fa fa-times" @click="clearOwner"></i>
                     </b-col>
-                    <b-col cols="8" style="height:80px; border-bottom: 1px solid;" @click="showOwnerModal">
+                    <b-col cols="8" style="height:150px; border-bottom: 1px solid;" @click="showOwnerModal">
                         <b-row>
                             <img class="m-auto" v-if="ownerSignaturePng" :src="ownerSignaturePng"/>
                         </b-row>
@@ -24,16 +24,16 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-col cols="3" class="text-left pt-4">
+            <b-col cols="2" class="text-left pt-4">
                 <h6>Company:</h6>
                 <p>{{ companyName }}</p>
             </b-col>
-            <b-col cols="6">
+            <b-col cols="7">
                 <b-row align-h="center">
                     <b-col cols="2" class="text-right">
                         <i class="fa fa-times" @click="clearCompany"></i>
                     </b-col>             
-                    <b-col cols="8" style="height:80px; border-bottom: 1px solid;" @click="showCompanyModal">
+                    <b-col cols="8" style="height:150px; border-bottom: 1px solid;" @click="showCompanyModal">
                         <img class="m-auto" v-if="companySignaturePng" :src="companySignaturePng"/>
                     </b-col>                    
                 </b-row>
@@ -45,10 +45,10 @@
             </b-col>
         </b-row>
         <b-modal ref="ownerSignatureModalRef" size="md" title="Owner Signature" @ok="saveOwnerSignature">
-            <vueSignature ref="ownerSignature" w="450px" h="150px" :sigOption="onwerSignOption" class="signature m-auto"></vueSignature>
+            <vueSignature ref="ownerSignature" w="400px" h="150px" :sigOption="onwerSignOption" class="signature m-auto"></vueSignature>
         </b-modal>
         <b-modal ref="companySignatureModalRef" size="md" title="CompanySignature" @ok="saveCompanySignature">
-            <vueSignature ref="companySignature" w="450px" h="150px" :sigOption="companySignOption" class="signature m-auto"></vueSignature>
+            <vueSignature ref="companySignature" w="400px" h="150px" :sigOption="companySignOption" class="signature m-auto"></vueSignature>
         </b-modal>
     </b-container>
 </template>
@@ -89,13 +89,13 @@
             showOwnerModal() {
                 this.$refs.ownerSignatureModalRef.show()
                 let canvasEle = document.getElementsByTagName('canvas')
-                canvasEle[0].setAttribute('width', '450')
+                canvasEle[0].setAttribute('width', '400')
                 canvasEle[0].setAttribute('height', '150')
             },
             showCompanyModal() {
                 this.$refs.companySignatureModalRef.show()
                 let canvasEle = document.getElementsByTagName('canvas')
-                canvasEle[1].setAttribute('width', '450')
+                canvasEle[1].setAttribute('width', '400')
                 canvasEle[1].setAttribute('height', '150')
             },
             saveOwnerSignature() {

@@ -147,14 +147,17 @@
                 statuses: [],
                 teams: [{
                     name: '------'
-                }]
+                }],
+                teamId: null
             }
         },
         created() {
             this.projectId = parseInt(this.$route.params.project_id)
             this.user = this.$store.state.User.user
             this.statusId = 1
-            console.log(this.teamId)
+            if (this.user.role.id === 3) {
+                this.teamId = this.user.teams[0].id
+            }
             this.$nextTick(() => {
                 this.initData()
             })
@@ -201,6 +204,7 @@
                     category_id: this.$route.params.category_id || '',
                     model_id: this.$route.params.model_id || '',
                     status_id: this.statusId,
+                    team_id: this.teamId,
                     page: ctx.currentPage,
                     sort_by: ctx.sortBy || '',
                     sort_type: (ctx.sortDesc ? 'desc' : 'asc'),

@@ -28,8 +28,14 @@ class ProjectMoistureController extends ApiController
     public function index(Request $request)
     {
     	$data = DB::table('project_moisture_settings')->where('project_area_id', $request->area_id)->get();
+        if (count($data) == 0) {
+            for($i = 0; $i < 8; $i ++){
+                DB::table('project_moisture_settings')->insert(['project_area_id' => $request->area_id, 'structure_id' => NULL, 'matarial_id' => NULL, 'created_at' => date('Y-m-d H:i:s'),'updated_at' => date('Y-m-d H:i:s')]);
+            }
+            $data = DB::table('project_moisture_settings')->where('project_area_id', $request->area_id)->get();
+        }
         return $this->respond($data);
-    }   
+    }
 
      /**
      * @param ProjectCallReportStore $request
