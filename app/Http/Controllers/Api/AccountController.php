@@ -54,7 +54,7 @@ class AccountController extends ApiController
 
 /*------ testing code -------*/
         $isSubscribed  = $user->subscribed('DryForms');
-        $subscription   = $user->subscription('DryForms');
+        $subscription  = $user->subscription('DryForms');
         $user->load(['role', 'company', 'teams']);
         return $this->respond([
             'user'          => $user, 

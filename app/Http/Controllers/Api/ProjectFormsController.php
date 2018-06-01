@@ -1031,32 +1031,36 @@ class ProjectFormsController extends ApiController
                 $affected = json_decode($data[$j]->affected);
                 $dehumidifier = json_decode($data[$j]->dehumidifier);
                 $hvac = json_decode($data[$j]->hvac);
-
+                $outside->dew = round($outside->dew, 2);
+                $unaffected->dew = round($unaffected->dew, 2);
+                $affected->dew = round($affected->dew, 2);
+                $dehumidifier->dew = round($dehumidifier->dew, 2);
+                $hvac->dew = round($hvac->dew, 2);
                 $tbl = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"0.5\" nobr=\"true\" align=\"center\">
                  <tr>
                   <th colspan=\"20\">".$areadatas[$data[$j]->area_id]."</th>
                  </tr>
                  <tr>
-                  <td style=\"background-color:#c3c3c3;\">".$outside->temp."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$outside->rh."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$outside->gpp."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$outside->dew."</td>
-                  <td>".$unaffected->temp."</td>
-                  <td>".$unaffected->rh."</td>
-                  <td>".$unaffected->gpp."</td>
-                  <td>".$unaffected->dew."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$affected->temp."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$affected->rh."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$affected->gpp."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$affected->dew."</td>
-                  <td>".$dehumidifier->temp."</td>
-                  <td>".$dehumidifier->rh."</td>
-                  <td>".$dehumidifier->gpp."</td>
-                  <td>".$dehumidifier->dew."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$hvac->temp."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$hvac->rh."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$hvac->gpp."</td>
-                  <td style=\"background-color:#c3c3c3;\">".$hvac->dew."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$outside->temp."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$outside->rh."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$outside->gpp."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$outside->dew."</td>
+                  <td style=\"font-size:8px;\">".$unaffected->temp."</td>
+                  <td style=\"font-size:8px;\">".$unaffected->rh."</td>
+                  <td style=\"font-size:8px;\">".$unaffected->gpp."</td>
+                  <td style=\"font-size:8px;\">".$unaffected->dew."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$affected->temp."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$affected->rh."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$affected->gpp."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$affected->dew."</td>
+                  <td style=\"font-size:8px;\">".$dehumidifier->temp."</td>
+                  <td style=\"font-size:8px;\">".$dehumidifier->rh."</td>
+                  <td style=\"font-size:8px;\">".$dehumidifier->gpp."</td>
+                  <td style=\"font-size:8px;\">".$dehumidifier->dew."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$hvac->temp."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$hvac->rh."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$hvac->gpp."</td>
+                  <td style=\"font-size:8px; background-color:#c3c3c3;\">".$hvac->dew."</td>
                  </tr>
                 </table>";
                 PDF::SetXY($posX,$posY);

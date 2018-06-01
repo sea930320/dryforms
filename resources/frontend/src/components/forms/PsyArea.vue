@@ -144,12 +144,17 @@
                 if (field === 'outside') {
                     this.outside.temp = parseInt(this.outside.temp)
                     this.outside.rh = parseInt(this.outside.rh)
-                    this.outside.dew = parseInt(this.outside.temp) + parseInt(this.outside.rh)
                     apiPsychometricCalculations.index({
                         temperature: this.outside.temp,
                         rh: this.outside.rh
                     }).then(res => {
                         this.outside.gpp = res.data.result
+                    }).catch(this.handleErrorResponse)
+                    apiPsychometricCalculations.calculateDew({
+                        temperature: this.outside.temp,
+                        rh: this.outside.rh
+                    }).then(res => {
+                        this.outside.dew = res.data.result
                     }).catch(this.handleErrorResponse)
                 } else if (field === 'unaffected') {
                     this.unaffected.temp = parseInt(this.unaffected.temp)
@@ -161,6 +166,12 @@
                     }).then(res => {
                         this.unaffected.gpp = res.data.result
                     }).catch(this.handleErrorResponse)
+                    apiPsychometricCalculations.calculateDew({
+                        temperature: this.unaffected.temp,
+                        rh: this.unaffected.rh
+                    }).then(res => {
+                        this.unaffected.dew = res.data.result
+                    }).catch(this.handleErrorResponse)
                 } else if (field === 'affected') {
                     this.affected.temp = parseInt(this.affected.temp)
                     this.affected.rh = parseInt(this.affected.rh)
@@ -170,6 +181,12 @@
                         rh: this.affected.rh
                     }).then(res => {
                         this.affected.gpp = res.data.result
+                    }).catch(this.handleErrorResponse)
+                    apiPsychometricCalculations.calculateDew({
+                        temperature: this.affected.temp,
+                        rh: this.affected.rh
+                    }).then(res => {
+                        this.affected.dew = res.data.result
                     }).catch(this.handleErrorResponse)
                 } else if (field === 'dehumidifier') {
                     this.dehumidifier.temp = parseInt(this.dehumidifier.temp)
@@ -181,6 +198,12 @@
                     }).then(res => {
                         this.dehumidifier.gpp = res.data.result
                     }).catch(this.handleErrorResponse)
+                    apiPsychometricCalculations.calculateDew({
+                        temperature: this.dehumidifier.temp,
+                        rh: this.dehumidifier.rh
+                    }).then(res => {
+                        this.dehumidifier.dew = res.data.result
+                    }).catch(this.handleErrorResponse)
                 } else if (field === 'hvac') {
                     this.hvac.temp = parseInt(this.hvac.temp)
                     this.hvac.rh = parseInt(this.hvac.rh)
@@ -190,6 +213,12 @@
                         rh: this.hvac.rh
                     }).then(res => {
                         this.hvac.gpp = res.data.result
+                    }).catch(this.handleErrorResponse)
+                    apiPsychometricCalculations.calculateDew({
+                        temperature: this.hvac.temp,
+                        rh: this.hvac.rh
+                    }).then(res => {
+                        this.hvac.dew = res.data.result
                     }).catch(this.handleErrorResponse)
                 }
                 apiProjectPsychometricDays.store({
