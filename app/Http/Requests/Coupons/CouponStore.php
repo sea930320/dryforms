@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Requests\Coupons;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-class CouponStore extends FormRequest
+class CouponStore extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.

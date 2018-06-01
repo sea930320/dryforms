@@ -16,6 +16,14 @@ abstract class BaseRequest extends FormRequest
     }
 
     /**
+     * @return array
+     */
+    public function validatedData()
+    {
+        return array_filter($this->only(array_keys($this->rules())));
+    }
+
+    /**
      * @return bool
      */
     public function expectsJson(): bool

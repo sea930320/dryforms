@@ -20,7 +20,7 @@ Route::group(['middleware' => 'api'], function ($router) {
     $router->get('refresh', 'Auth\ApiAuthController@refresh');
 });
 
-Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
+Route::namespace('Api')->middleware([])->group(function($router) {
     $router->resource('companies', 'CompaniesController');
     $router->resource('categories', 'EquipmentCategoriesController');
     $router->resource('models', 'EquipmentModelsController');
@@ -67,6 +67,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->post('project/restore-status', 'ProjectsController@restoreStatus');
 
     $router->get('psychometric/calculate', 'PsychometricCalculationsController@calculate');
+    $router->get('psychometric/dew', 'DewCalculationController@calculate');
 
     /** Account */
     $router->get('account', ['uses' => 'AccountController@show', 'as' => 'account.show']);
