@@ -78,6 +78,7 @@ class ApiAuthController extends LoginController
         return response()->json([
             'message' => 'Welcome to DryForms!',
             'token' => $token,
+            'id' => $user->id
         ]);
     }
 

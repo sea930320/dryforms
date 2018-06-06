@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Dashboard from '@/components/main/Dashboard'
 import Login from '@/components/auth/Login'
 import Register from '@/components/auth/Register'
+import Company from '@/components/auth/Company'
 
 import settings from './settings'
 import equipment from './equipment'
@@ -29,6 +30,11 @@ const router = new VueRouter({
             path: '/register',
             name: 'Register',
             component: Register
+        },
+        {
+            path: '/company/:user_id/register',
+            name: 'Company Register',
+            component: Company
         },
         ...projects(),
         ...settings(),

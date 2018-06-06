@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Companies\CompanyStore;
 use App\Http\Requests\Companies\CompanyUpdate;
 use App\Models\Company;
+use App\Models\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Webpatser\Uuid\Uuid;
 use Illuminate\Support\Facades\File;
@@ -15,14 +16,17 @@ class CompaniesController extends ApiController
      */
     private $company;
 
+    private $user;
+
     /**
      * CompaniesController constructor.
      *
      * @param Company $company
      */
-    public function __construct(Company $company)
+    public function __construct(Company $company, User $user)
     {
         $this->company = $company;
+        $this->user = $user;
     }
 
     /**
@@ -66,8 +70,10 @@ class CompaniesController extends ApiController
             'email' => $request->input('email'),
             'cloud_link' => $request->input('cloud_link')
         ]);
-
-        return $this->respond(['message' => 'Company successfully created', 'company' => $company]);
+        $user = $this->user->where('id', $request->input('user_id'))->first();
+        $user->company_id = $company->id;
+        $user->save();
+        return $this->respond(['message' => 'Company successfully created', 'company' => $company, 'user' => $user]);
     }
 
     /**

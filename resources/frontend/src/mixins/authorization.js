@@ -5,7 +5,8 @@ import errorHandler from './error-handler'
 export default {
     mixins: [errorHandler],
     data() {
-        return {}
+        return {
+        }
     },
     methods: {
         logout() {
@@ -18,25 +19,43 @@ export default {
         login() {
             apiAuth.login(this.user)
                 .then(response => {
-                    this._setToken(response)
+                    this._setToken(response, 1)
                 })
                 .catch(this.handleErrorResponse)
         },
         register() {
             apiAuth.register(this.user)
                 .then(response => {
-                    this._setToken(response)
+                    this._setToken(response, 2)
                 })
                 .catch(this.handleErrorResponse)
         },
-        _setToken(response) {
+        _setToken(response, f) {
             this.$session.start()
             this.$session.set('apiToken', response.data.token)
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
-            if (this.$route.query.redirect) {
-              this.$router.push(this.$route.query.redirect)
+            if (f === 1) {
+                if (this.$route.query.redirect) {
+                    this.$router.push(this.$route.query.redirect)
+                  } else {
+                    this.$router.push('/')
+                  }
             } else {
-              this.$router.push('/')
+                if (this.$route.query.redirect) {
+                    this.$router.push({
+                        name: 'Company Register',
+                        params: {
+                            user_id: response.data.id
+                        }
+                    })
+                } else {
+                    this.$router.push({
+                      name: 'Company Register',
+                      params: {
+                          user_id: response.data.id
+                      }
+                    })
+                }
             }
         }
     }
