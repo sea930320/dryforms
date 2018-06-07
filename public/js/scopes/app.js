@@ -21,6 +21,7 @@ function MainCtrl($rootScope,$scope, $http, $q, State) {
     $scope.endPageFetch = false;
     $scope.curPageNum = 0;
     $scope.pageCount = 0;
+    $scope.max_page = 0;
     $scope.left_scopes= [];
     $scope.right_scopes= [];
     $scope.leftMiscScopes = [];
@@ -70,6 +71,7 @@ function MainCtrl($rootScope,$scope, $http, $q, State) {
         $scope.right_scopes.splice(pageIndex, 1)
         $scope.pageCount--
         $scope.curPageNum = $scope.pageCount
+        $scope.max_page--
         $http.delete('/admin/standard/scopes/' + (pageIndex + 1))
         .then(response => {
         }).catch(()=>{})
@@ -174,6 +176,7 @@ function MainCtrl($rootScope,$scope, $http, $q, State) {
         var url = "/admin/standard/scopes/" + $scope.curPageNum;
         $http.get(url).then(function(res) {
             $scope.pageCount = res.data.maxPage;
+            $scope.max_page = res.data.maxPage;
             if ($scope.curPageNum > $scope.pageCount) {
                 $scope.curPageNum = $scope.pageCount;                
                 $scope.loadingCompleted();
@@ -188,8 +191,11 @@ function MainCtrl($rootScope,$scope, $http, $q, State) {
         $http.get(url)
             .then(response => {
                 $scope.pageCount = response.data.maxPage
+                $scope.max_page = response.data.maxPage;
                 let miscPageScopes = response.data.curPageScopes
+                let initLength = miscPageScopes.length
                 let length = miscPageScopes.length
+                
                 for (let i = 0; i < $scope.defLen - length; i++) {
                     miscPageScopes.push({
                         page: 0,
@@ -208,6 +214,7 @@ function MainCtrl($rootScope,$scope, $http, $q, State) {
                         $scope.rightMiscScopes.push(miscPageScopes[i])
                     }
                 }
+
                 $scope.endPageFetch = true;
                 $scope.busy = false;
             }).catch(err => {
@@ -260,6 +267,7 @@ function MainCtrl($rootScope,$scope, $http, $q, State) {
         $http.post('/admin/standard/scopes', {
             scopes: scopes
         }).then(response => {
+                $scope.max_page ++;
                 this.refreshNewPageScopes(response.data.scopes)
             }).catch(()=>{})
       };

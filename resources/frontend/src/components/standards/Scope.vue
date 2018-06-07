@@ -14,6 +14,7 @@
             v-for="(page_index) in _.range(curPageNum)" :key="page_index"
             :leftScope="leftScopes[page_index]" 
             :rightScope="rightScopes[page_index]"
+            :pageCount='pageCount'
             :pageIndex="page_index"
             :uoms="uoms"
             :form="form"

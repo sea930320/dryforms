@@ -39,6 +39,25 @@ class StandardScopesController extends Controller
      */
     public function index()
     {    	
+        $scopesCount = $this->defaultScope
+            ->count();
+        if ($scopesCount == 0) {
+            for ($i = 0; $i < 50; $i++) {                
+                $scope = [
+                    'uom' => null,
+                    'page' => 0,
+                    'service' => '',
+                    'units' => '',
+                    'no' => ($i + 1)
+                ];
+                if ($i == 0 || $i == 25) {
+                    $scope['is_header'] = 1;
+                }
+                $this->defaultScope->create($scope);
+                $scope['page'] = 1;
+                $this->defaultScope->create($scope);
+            }
+        }
         return view('dashboard.standard-forms.scope');
     }
 

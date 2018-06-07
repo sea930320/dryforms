@@ -45,6 +45,7 @@
                                     right-page-scopes="right_scopes[page_index]"
                                     page-index="page_index"
                                     uoms="uoms"
+                                    max-page="max_page"
                                 >
                                 </scope-list>
                             </div>

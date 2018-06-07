@@ -96,14 +96,15 @@ class ProjectScopesController extends ApiController
             $projectScopesPerArea = $this->projectScope
                 ->with(['uom_info'])
                 ->where('project_id', $request->input('project_id'))
-                ->where('project_area_id', $request->input('project_area_id'))
-                ->where('page', $request->get('curPageNum'));
+                ->where('page', '<>', 0)
+                ->where('project_area_id', $request->input('project_area_id'));
 
             if ($projectScopesPerArea->count() == 0) {
                 $standardScopes = $this->standardScope
-                    ->where('page', $request->get('curPageNum'))
+                    ->where('page', '<>', 0)
                     ->get()
                     ->toArray();
+
                 foreach ($standardScopes as $key => $scope) {
                     $scope['project_id'] = $request->input('project_id');
                     $scope['project_area_id'] = $request->input('project_area_id');
@@ -113,10 +114,16 @@ class ProjectScopesController extends ApiController
                 }
             }
 
+            $projectScopesPerArea = $projectScopesPerArea
+                ->where('page', $request->get('curPageNum'));
+
             $scopes = $projectScopesPerArea
                 ->orderBy('no')
                 ->get();
-            $maxPage = $this->standardScope->max('page');
+            $maxPage = $this->projectScope
+                ->where('project_id', $request->input('project_id'))
+                ->where('project_area_id', $request->input('project_area_id'))
+                ->max('page');
 
             return $this->respond([
                 'cur_page_scopes' => $scopes,

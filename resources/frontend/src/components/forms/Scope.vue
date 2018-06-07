@@ -18,7 +18,7 @@
                     ></scope-list>
                 </div>
                 <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading">
-                    <div slot="no-more">                        
+                    <div slot="no-more">
                     </div>
                 </infinite-loading>
                 <scope-list class="mt-1 mb-5"
@@ -114,7 +114,7 @@
     }
 </script>
 
-<style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
+<style type="text/css" lang="scss" rel="stylesheet/scss">
     table, th, td {
         border: 1px solid black;
         border-collapse: collapse;
@@ -137,5 +137,9 @@
 
     .bg-grey {
         background-color: #c3c3c3;
+    }
+
+    .projects-scope .infinite-status-prompt {
+        display: none
     }
 </style>

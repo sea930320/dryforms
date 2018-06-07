@@ -3,7 +3,7 @@
         <b-row align-h="end">
             <b-col cols="2" class="text-center" style="font-size:14px; color: black;" v-if="pageIndex !== 'misc'">
                 Page: {{pageIndex + 1}} &nbsp;&nbsp;
-                <b-button class='btn-remove-page' variant="danger" @click="deletePage" :disabled="isbusy">
+                <b-button v-if="pageCount !== 1" class='btn-remove-page' variant="danger" @click="deletePage" :disabled="isbusy">
                     <i class="fa fa-times" aria-hidden="true" style="cursor:pointer;"></i>
                 </b-button>
                 <hr class="mt-0">
@@ -108,7 +108,7 @@
                 }
             }
         },
-        props: ['leftScope', 'rightScope', 'uoms', 'pageIndex', 'noteRowStart', 'defLen', 'form', 'isbusy'],
+        props: ['leftScope', 'rightScope', 'uoms', 'pageIndex', 'pageCount', 'noteRowStart', 'defLen', 'form', 'isbusy'],
         created() {
             this.$parent.$on('updateList', () => {
                 this.leftPageScopes = this.leftScope

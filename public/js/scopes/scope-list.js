@@ -6,6 +6,7 @@ app.directive('scopeList', ['State', '$rootScope', '$http', function(State, $roo
             rightPageScopes: '=rightPageScopes',
             pageIndex: '=pageIndex',
             uoms: '=uoms',
+            maxPage: '=maxPage'
         },
         templateUrl: '../../js/scopes/scope-list.html',
         link: function(scope) {
