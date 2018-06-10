@@ -1,6 +1,6 @@
 <template>
   <b-modal id="selectForm" :title="$route.meta.title" v-model="showModal" v-if="isLoaded">
-    <div v-for="form in forms" :key="form.form_id" v-if="form.form_id != 1">
+    <div v-for="form in forms" :key="form.form_id" v-if="form.form_id != 1 && form.form_id != 12">
       <b-form-checkbox v-model="form.selected" value="1" unchecked-value="0">
         {{form.standard_form[0].name}}
       </b-form-checkbox>
@@ -38,11 +38,7 @@
       ]),
       saveForm () {
         let isSel = false
-        let projectForms = [{
-          form_id: 1,
-          company_id: this.user.company_id,
-          project_id: null
-        }]
+        let projectForms = []
         this.forms.forEach((form) => {
           if (form.selected === '1') {
             isSel = true
@@ -51,9 +47,6 @@
               company_id: form.company_id,
               project_id: null
             })
-          }
-          if (form.form_id === 1) {
-            form.selected = '1'
           }
         })
         if (!isSel) {

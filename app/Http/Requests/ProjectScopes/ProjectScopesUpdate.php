@@ -30,7 +30,7 @@ class ProjectScopesUpdate extends BaseRequest
             'service' => 'nullable|string',
             'is_header' => 'sometimes|required|in:0,1',
             'qty' => 'nullable|string',
-            'uom' => 'nullable|exists:units_of_measure',
+            'uom' => 'nullable|exists:units_of_measure,id',
             'page' => 'sometimes|required|numeric',
             'no' => 'sometimes|required|numeric'
         ];

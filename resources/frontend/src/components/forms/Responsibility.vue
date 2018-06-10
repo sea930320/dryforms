@@ -23,8 +23,8 @@
                     <template slot="serial" slot-scope="row">
                         {{row.item.serial.number}}
                     </template>
-                    <template slot="location" slot-scope="row">
-                        {{row.item.location}}
+                    <template slot="updated_at" slot-scope="row">
+                        {{row.item.updated_at.split(" ")[0]}}
                     </template>
                     <template slot="team" slot-scope="row">
                         {{row.item.team.name}}
@@ -97,8 +97,8 @@
                         sortable: true,
                         'class': 'text-center field-team'
                     },
-                    location: {
-                        label: 'Location',
+                    updated_at: {
+                        label: 'Set Date',
                         sortable: true,
                         'class': 'text-center field-location'
                     },
@@ -130,15 +130,6 @@
         },
         created() {
             this.projectId = parseInt(this.$route.params.project_id)
-            this.fetchUser()
-            this.user = this.$store.state.User.user
-            this.statusId = 3
-            if (this.user.role.id === 3) {
-                this.teamId = this.user.teams[0].id
-            }
-            this.$nextTick(() => {
-                this.initData()
-            })
             this.$on('reloadData', () => {
                 this.initData()
                 this.$refs.DetailTable.refresh()
@@ -147,6 +138,16 @@
         watch: {
             filter: function (val) {
                 this.debouncer()
+            },
+            '$store.state.User.user': function(user) {
+                if (user.id) {
+                    this.user = this.$store.state.User.user
+                    this.statusId = 3
+                    if (this.user.role.id === 3) {
+                        this.teamId = this.user.teams[0].id
+                    }
+                    this.initData()
+                }
             }
         },
         methods: {

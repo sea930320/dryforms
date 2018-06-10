@@ -13,8 +13,16 @@
                     <input type="text" class="form-control" v-model="form.title" @input="save">
                     <div v-for="(item, index) in form.statements" :key="item.id">
                         <div class="mt-3 mb-1">
-                            <label v-text="item.title ? '* ' + item.title : '* Enter form body text'"></label>
-                            <button class="btn btn-sm btn-info pull-right" @click="showRevertConfirm(index)">Revert</button>
+                            <!-- <label v-text="item.title ? '* ' + item.title : '* Enter form body text'"></label> -->
+                            <div role="group" class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">*</div>
+                                </div>
+                                <input type="text" class="form-control" v-model="item.title" @input="save"/>
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-info" @click="showRevertConfirm(index)">Revert</button>
+                                </div>
+                            </div>                            
                         </div>
                         <froala :tag="'textarea'" :config="config" v-model="item.statement" @input="save"></froala>                        
                     </div>
@@ -23,7 +31,7 @@
                     </div>
                     <div>
                         <b-form-checkbox v-model="addFooter" @change="setAndFilter('footer_text_show', $event)">Footer Text.(Select if you wish to have a footer text)</b-form-checkbox> 
-                        <div v-if="form.footer_text_show">
+                        <div v-if="form.footer_text_show" class="footerText">
                             <froala :tag="'textarea'" id="footerEditor" :config="config" v-model="form.footer_text" class="mb-3" @input="save"></froala>
                         </div>
                     </div>
@@ -112,7 +120,7 @@
                 if (this.form.id) {
                     apiStandardForm.patch(this.form.id, this.form)
                     .then(response => {
-                        this.setForm(this.$route.params.form_id)
+                        // this.setForm(this.$route.params.form_id)
                     }).catch(this.handleErrorResponse)
                 } else {
                     apiStandardForm.store(this.form)
@@ -121,7 +129,7 @@
                         this.setForm(this.$route.params.form_id)
                     }).catch(this.handleErrorResponse)
                 }
-            }, 500),
+            }, 300),
             setAndFilter(field, value) {
                 this.form[field] = (value ? 1 : 0)
                 if (field === 'footer_text_show' && !value) this.form.footer_text = null
@@ -139,6 +147,11 @@
                             if (statements.length === 0) {
                                 statements = formPerID[0].default_statements
                             }
+                            statements.forEach(statement => {
+                                if (!statement.title) {
+                                    statement.title = 'Enter form body text'
+                                }
+                            })
                             this.$set(this.form, 'statements', statements)
                             this.isLoaded = true
                         })
@@ -154,6 +167,8 @@
                 let formPerID = this.$store.getters.formPerID(this.$route.params.form_id)
                 let defaultStatements = formPerID[0].default_statements
                 this.$set(this.form.statements[this.revertingIndex], 'statement', defaultStatements[this.revertingIndex].statement)
+                this.$set(this.form.statements[this.revertingIndex], 'title', defaultStatements[this.revertingIndex].title)
+                this.save()
             },
             removeStatement(id) {
                 apiStandardForm.deleteStatement(id)
@@ -170,7 +185,6 @@
             '$store.state.StandardForm.formsOrder': function() {
                 this.isLoaded = false
                 this.setForm(this.$route.params.form_id)
-                console.log('sdf')
             }
         }
     }
@@ -187,6 +201,10 @@
     }
     .fr-box.fr-basic.fr-top .fr-wrapper {
         height: 400px;
+        overflow: auto;
+    }
+    .footerText .fr-box.fr-basic.fr-top .fr-wrapper {
+        height: 150px;
         overflow: auto;
     }
     .info-line-bottom label {

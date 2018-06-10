@@ -20,5 +20,12 @@ export default {
     },
     restore(data) {
         return axios.post('/api/project/restore-status', data)
+    },
+    company(id) {
+        return axios.get('/api/project/company', {
+            params: {
+                project_id: id
+            }
+        })
     }
 }

@@ -8,7 +8,7 @@
                 <input type="text" class="form-control form-control-sm" style="background: white" v-model="colorValue" @focus="showPicker()" @input="updateFromInput" readonly>
                 <b-input-group-addon class="color-picker-container">
                     <span class="current-color" :style="'background-color: ' + colorValue" @click="togglePicker()"></span>
-                    <chrome-picker v-model="colors" @input="updateFromPicker" v-if="displayPicker" />
+                    <compact-picker v-model="colors" @input="updateFromPicker" v-if="displayPicker" />
                 </b-input-group-addon>
             </b-input-group>
         </b-form-group>
@@ -25,12 +25,12 @@
 </template>
 
 <script type="text/babel">
-    import { Chrome } from 'vue-color'
+    import { Compact } from 'vue-color'
 
     export default {
         name: 'create-event-modal',
         components: {
-            'chrome-picker': Chrome
+            'compact-picker': Compact
         },
         data() {
             return {

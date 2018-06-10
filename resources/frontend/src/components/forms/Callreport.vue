@@ -39,13 +39,20 @@
                         </b-row>
                     </b-form-checkbox-group>
                     <div v-for="item in inputGroup2" :key="item.label">
-                        <div v-if="item.type!=='phone'">
+                        <div v-if="item.type==='phone'">
                             <label>{{ item.label }}</label>
-                            <b-form-input v-model="formModel2[item.model]" @input="save()"></b-form-input>
+                            <masked-input class="form-control" v-model="formModel2[item.model]" mask="(111) 111-1111" placeholder="(702) 555-1212" @input="save()"/>                            
+                        </div>
+                        <div v-else-if="item.type==='state'">
+                            <label>{{ item.label }}</label>
+                            <select class="form-control" v-model="formModel2[item.model]" @change="save()">
+                                <option :value="null">-- Please select --</option>
+                                <option v-for="item in states" v-bind:key="item.value" :value="item.value">{{ item.text }}</option>
+                            </select>
                         </div>
                         <div v-else>
                             <label>{{ item.label }}</label>
-                            <masked-input class="form-control" v-model="formModel2[item.model]" mask="(111) 111-1111" placeholder="(702) 555-1212" @input="save()"/>
+                            <b-form-input v-model="formModel2[item.model]" @input="save()"></b-form-input>
                         </div>
                     </div>
                     <div>
@@ -69,11 +76,17 @@
                         <b-form-checkbox @change="save()" v-model="sameContactName" v-if="item.model == 'insuredName'" id="copy_name">Same
                             as contact name
                         </b-form-checkbox>
-                        <div v-if="item.type!=='phone'">
-                            <b-form-input @input="save()" v-model="formModel3[item.model]"></b-form-input>
+                        <div v-if="item.type==='phone'">
+                            <masked-input @input="save()" class="form-control" v-model="formModel3[item.model]" mask="(111) 111-1111" placeholder="(702) 555-1212"/>
+                        </div>
+                        <div v-else-if="item.type==='state'">
+                            <select class="form-control" v-model="formModel3[item.model]" @change="save()">
+                                <option :value="null">-- Please select --</option>
+                                <option v-for="item in states" v-bind:key="item.value" :value="item.value">{{ item.text }}</option>
+                            </select>
                         </div>
                         <div v-else>
-                            <masked-input @input="save()" class="form-control" v-model="formModel3[item.model]" mask="(111) 111-1111" placeholder="(702) 555-1212"/>
+                            <b-form-input @input="save()" v-model="formModel3[item.model]"></b-form-input>
                         </div>
                     </div>
                     <b-row>
@@ -81,11 +94,17 @@
                     </b-row>
                     <div v-for="item in inputGroup4" :key="item.label">
                         <label>{{ item.label }}</label>
-                        <div v-if="item.type!=='phone'">
-                            <b-form-input @input="save()" v-model="formModel4[item.model]"></b-form-input>
+                        <div v-if="item.type==='phone'">
+                            <masked-input @input="save()" class="form-control" v-model="formModel4[item.model]" mask="(111) 111-1111" placeholder="(702) 555-1212"/>                            
+                        </div>
+                        <div v-else-if="item.type==='state'">
+                            <select class="form-control" v-model="formModel4[item.model]" @change="save()">
+                                <option :value="null">-- Please select --</option>
+                                <option v-for="item in states" v-bind:key="item.value" :value="item.value">{{ item.text }}</option>
+                            </select>
                         </div>
                         <div v-else>
-                            <masked-input @input="save()" class="form-control" v-model="formModel4[item.model]" mask="(111) 111-1111" placeholder="(702) 555-1212"/>
+                            <b-form-input @input="save()" v-model="formModel4[item.model]"></b-form-input>
                         </div>
                     </div>
                 </b-col>
@@ -119,6 +138,7 @@
                 project: null,
                 teams: [],
                 isLoaded: false,
+                states: null,
                 customerTypes: [
                     {text: 'Residential', value: 'is_residential'},
                     {text: 'Commercial', value: 'is_commercial'},
@@ -170,7 +190,7 @@
                     {label: 'Class:', model: 'class'},
                     {label: 'Job Address:', model: 'jobAddress'},
                     {label: 'City:', model: 'city'},
-                    {label: 'State:', model: 'state'},
+                    {label: 'State:', model: 'state', type: 'state'},
                     {label: 'Zip Code:', model: 'zipCode'},
                     {label: 'Cross Streets:', model: 'crossStreets'},
                     {label: 'Apartment Name:', model: 'apartmentName'},
@@ -197,13 +217,13 @@
                     {label: 'Owner/Insured Name:', model: 'insuredName'},
                     {label: 'Billing Address:', model: 'billingAddress'},
                     {label: 'City:', model: 'insuredCity'},
-                    {label: 'State:', model: 'insuredState'},
+                    {label: 'State:', model: 'insuredState', type: 'state'},
                     {label: 'Zip Code:', model: 'insuredZipCode'},
                     {label: 'Home Phone:', model: 'insuredHomePhone', type: 'phone'},
                     {label: 'Cell Phone:', model: 'insuredCellPhone', type: 'phone'},
                     {label: 'Work Phone:', model: 'insuredWorkPhone', type: 'phone'},
                     {label: 'Email:', model: 'insuredEmail'},
-                    {label: 'Fax:', model: 'insuredFax'}
+                    {label: 'Fax:', model: 'insuredFax', type: 'phone'}
                 ],
                 formModel3: {
                     insuredName: null,
@@ -225,12 +245,12 @@
                     {label: 'Insurance Adjuster:', model: 'insuranceAdjuster'},
                     {label: 'Address', model: 'insuranceAddress'},
                     {label: 'City:', model: 'insuranceCity'},
-                    {label: 'State:', model: 'insuranceState'},
+                    {label: 'State:', model: 'insuranceState', type: 'state'},
                     {label: 'Zip Code:', model: 'insuranceZipCode'},
                     {label: 'Work Phone:', model: 'insuranceWorkPhone', type: 'phone'},
                     {label: 'Cell Phone:', model: 'insuranceCellPhone', type: 'phone'},
                     {label: 'Email:', model: 'insuranceEmail'},
-                    {label: 'Fax:', model: 'insuranceFax'}
+                    {label: 'Fax:', model: 'insuranceFax', type: 'phone'}
                 ],
                 formModel4: {
                     insuranceClaimNo: null,
@@ -267,6 +287,13 @@
         created() {
             this.projectId = this.$route.params.project_id
             this.formId = this.$route.params.form_id
+            let jsonStates = this.$config.get('states')
+            this.states = Object.keys(jsonStates).map(function(key) {
+                return {
+                  value: key,
+                  text: jsonStates[key]
+                }
+            })
             // this.$bus.$on('forms_save', this.save)
             this.init()
         },

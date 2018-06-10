@@ -1,5 +1,5 @@
 <template>
-    <b-row>
+    <b-row v-if="company">
         <b-col class="text-left">
             <img v-if="company.logo" :src="logoRootPath + 'settings/logo/' + company.logo" alt="Company Logo" height="90">
             <img v-else :src="companyLogo" alt="Company Logo" height="90">
@@ -15,12 +15,14 @@
 </template>
 
 <script type="text/babel">
-    import { mapActions } from 'vuex'
-
+    // import { mapActions } from 'vuex'
+    import apiProjects from '../../api/projects'
     export default {
         name: 'form-header',
         data() {
             return {
+                projectId: null,
+                company: null,
                 companyLogo: require('../../assets/fallback-logo.jpg'),
                 title: 'Flood out',
                 street: '8631 Rocky Ave',
@@ -32,17 +34,22 @@
             }
         },
         created() {
-            this.fetchUser()
+            this.projectId = parseInt(this.$route.params.project_id)
+            // this.fetchUser()
+            apiProjects.company(this.projectId)
+                .then((res) => {
+                    this.company = res.data
+                })
         },
         computed: {
-          company: function() {
-              return this.$store.state.User.company
-          }
+        //   company: function() {
+        //       return this.$store.state.User.company
+        //   }
         },
         methods: {
-            ...mapActions([
-                'fetchUser'
-            ])
+            // ...mapActions([
+            //     'fetchUser'
+            // ])
         }
     }
 </script>

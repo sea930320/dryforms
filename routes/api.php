@@ -25,6 +25,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('categories', 'EquipmentCategoriesController');
     $router->resource('models', 'EquipmentModelsController');
     $router->resource('teams', 'TeamsController');
+    $router->resource('events', 'EventController');
     $router->resource('statuses', 'EquipmentStatusesController');
     $router->resource('equipment', 'EquipmentsController');
     $router->resource('forms', 'FormsController');
@@ -32,6 +33,7 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('roles', 'RolesController');
     $router->resource('uoms', 'UomsController');
     $router->resource('projects', 'ProjectsController');
+    $router->get('project/company', 'ProjectsController@getCompany');
     $router->resource('project/status', 'ProjectStatusController');
     $router->resource('project/forms', 'ProjectFormsController');
     $router->resource('project/call_reports', 'ProjectCallReportsController');

@@ -7,7 +7,7 @@ const rightLinks = [
     icon: require('../assets/icon-support.png')
   },
   {
-    path: 'calendar',
+    path: '/standards/calendar',
     name: 'Calendar',
     icon: require('../assets/icon-calendar.png')
   },

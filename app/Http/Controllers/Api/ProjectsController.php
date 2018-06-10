@@ -11,6 +11,7 @@ use App\Services\QueryBuilder;
 use App\Services\QueryBuilders\ProjectModelQueryBuilder;
 
 use App\Models\Project;
+use App\Models\ProjectCompany;
 use App\Models\ProjectCallReport;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\Database\QueryException;
@@ -28,15 +29,22 @@ class ProjectsController extends ApiController
     private $projectCallReport;
 
     /**
+     * @var ProjectCompany
+     */
+    private $projectCompany;
+
+    /**
      * ProjectsController constructor.
      *
      * @param Project $project
      * @param ProjectCallReport $projectCallReport
+     * @param ProjectCompany $projectCompany
      */
-    public function __construct(Project $project, ProjectCallReport $projectCallReport)
+    public function __construct(Project $project, ProjectCallReport $projectCallReport, ProjectCompany $projectCompany )
     {
         $this->project = $project;
         $this->projectCallReport = $projectCallReport;
+        $this->projectCompany = $projectCompany;
     }
 
     /**
@@ -76,7 +84,9 @@ class ProjectsController extends ApiController
     public function store(ProjectStore $request)
     {
         $project = $this->project->create($request->validatedOnly());
-
+        $company = auth()->user()->company->toArray();
+        $company['project_id'] = $project['id'];
+        $projectCompany = $this->projectCompany->create($company);
         return $this->respond(['message' => 'Project successfully created', 'project' => $project]);
     }
 
@@ -130,5 +140,12 @@ class ProjectsController extends ApiController
             'status' => 3
         ]);
         return $this->respond(['message' => 'Project successfully deleted']);
+    }
+
+    public function getCompany(Request $request)
+    {
+        $projectID = $request->input('project_id');
+        $projectCompany = $this->projectCompany->where('project_id', $projectID)->first();
+        return $this->respond($projectCompany);
     }
 }

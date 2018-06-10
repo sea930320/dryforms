@@ -45,7 +45,7 @@ class EquipmentModelQueryBuilder extends QueryBuilder
         if (isset($params['model_name'])) {
             $this->query->where('equipment_models.name', 'like', "%{$params['model_name']}%");
         }
-
+        $this->query->where('equipment_models.total', '!=', 0);
         if (isset($params['sort_by'])) {
             $sort_type = isset($params['sort_type']) ? $params['sort_type'] : 'asc';
             $sort_by = $params['sort_by'];

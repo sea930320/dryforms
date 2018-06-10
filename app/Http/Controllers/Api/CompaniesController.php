@@ -58,10 +58,36 @@ class CompaniesController extends ApiController
      */
     public function store(CompanyStore $request): JsonResponse
     {
+        $storagePath = storage_path('app/public/settings');
+        if (!File::exists($storagePath)) {
+            File::makeDirectory($storagePath, 0775);
+        }
+        $logoPath = ($storagePath . '/logo');
+        if (!File::exists($logoPath)) {
+            File::makeDirectory($logoPath, 0775);
+        }
+
+        $success = true;        
+        $logoImg = $request->input('logo');
+        if ($logoImg) {
+            $logoName = Uuid::generate();
+            $logoImg = substr($logoImg, strpos($logoImg, ",")+1);
+            $logoDecode = base64_decode($logoImg);
+            $success = file_put_contents($logoPath. '/'. $logoName, $logoDecode);
+        }
+        if (!$success) 
+        {
+            return $this->respondWithError([
+                'message' => 'Something wrong'
+            ],
+                422
+            );
+        }
+
         $company = $this->company->create([
             'user_id' => $request->input('user_id'),
             'name' => $request->input('name'),
-            'logo' => $request->input('logo'),
+            'logo' => $logoName,
             'street' => $request->input('street'),
             'city' => $request->input('city'),
             'state' => $request->input('state'),
@@ -94,12 +120,12 @@ class CompaniesController extends ApiController
             File::makeDirectory($logoPath, 0775);
         }
 
-        $oldLogoName = $company->logo;
-        if ($oldLogoName) {
-            if (File::exists($logoPath. '/'. $oldLogoName)) {
-                File::delete($logoPath. '/'. $oldLogoName);
-            }
-        }
+        // $oldLogoName = $company->logo;
+        // if ($oldLogoName) {
+        //     if (File::exists($logoPath. '/'. $oldLogoName)) {
+        //         File::delete($logoPath. '/'. $oldLogoName);
+        //     }
+        // }
         $success = true;
         
         $logoImg = $request_params['logo'];

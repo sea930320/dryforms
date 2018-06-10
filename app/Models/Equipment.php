@@ -35,7 +35,8 @@ class Equipment extends Model
         'status',
         'category',
         'team',
-        'company'
+        'company',
+        'updated_at'
     ];
 
     /**

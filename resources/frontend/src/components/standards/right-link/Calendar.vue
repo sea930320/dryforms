@@ -4,18 +4,19 @@
             <div class="card-header">
                 <h5>{{ $route.meta.title }}</h5>
             </div>
-            <div class="card-body text-left">
+            <div class="card-body text-left" v-show="isShow">
                 <button @click="refreshEvents">Refresh</button>
                 <button v-if="selected.id" @click="removeEvent">Remove</button>
                 <pre>{{ selected.id }}</pre>
                 <create-event></create-event>
                 <delete-event></delete-event>
                 <full-calendar ref="calendar" :event-sources="eventSources" @event-selected="eventSelected" @event-created="eventCreated" :config="config" @event-drop="eventChanged" @event-resize="eventChanged"></full-calendar>
-            </div>
+            </div>            
             <div class="card-footer text-muted">
             </div>
         </div>
         <loading v-else></loading>
+        <loading  v-if="isLoaded" v-hide="isShow"></loading>
     </div>
 </template>
 
@@ -23,15 +24,28 @@
     import Loading from '../../layout/Loading'
     import CreateEvent from './modals/CreateEvent'
     import DeleteEvent from './modals/DeleteEvent'
+    import apiEvents from '../../../api/event'
     
     export default {
         name: 'Calendar',
         data() {
             return {
                 isLoaded: false,
-                events: [],
+                isShow: true,
+                events: [
+                    {
+                        title: 'event1',
+                        start: '2018-06-09'
+                    },
+                    {
+                        title: 'event2',
+                        start: '2018-06-12',
+                        end: '2018-06-15'
+                    }
+                ],
                 selected: {
                     id: null,
+                    eventID: null,
                     title: '',
                     start: '',
                     end: '',
@@ -46,12 +60,24 @@
         },
         components: { Loading, CreateEvent, DeleteEvent },
         created() {
-            // get events from remote and set to local
-            this.isLoaded = true
+            this.$nextTick(() => {
+                this.initData()
+            })
             this.$on('createEvent', (event) => {
                 this.refreshEvents()
                 this.$refs.calendar.$emit('render-event', event)
+                this.isShow = false
                 this.events = this.$refs.calendar.fireMethod('clientEvents')
+                apiEvents.store({
+                    start: this.$moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
+                    end: event.end ? this.$moment(event.end).format('YYYY-MM-DD HH:mm:ss') : null,
+                    title: event.title,
+                    color: event.color
+                })
+                    .then(response => {
+                        this.events[this.events.length - 1].id = response.data.event.id
+                        this.isShow = true
+                    })
             })
             this.$on('refreshCalendar', () => {
                 this.refreshEvents()
@@ -61,17 +87,31 @@
             })
         },
         methods: {
+            initData() {
+                apiEvents.index()
+                    .then(response => {
+                        this.isLoaded = true
+                        this.events = response.data
+                    })
+            },
             refreshEvents() {
                 this.$refs.calendar.$emit('refetch-events')
             },
             removeEvent() {
                 this.$refs.calendar.$emit('remove-event', this.selected.id)
+                this.isShow = false
                 this.events = this.$refs.calendar.fireMethod('clientEvents')
                 this.selected.id = null
+                apiEvents.delete(this.selected.eventID)
+                    .then(response => {
+                        this.isShow = true
+                        this.selected.eventID = null
+                    })
             },
             eventSelected(event) {
                 this.selected = {
-                    id: event._id
+                    id: event._id,
+                    eventID: event.id
                 }
                 this.$emit('openDeleteEventModal', event)
             },
@@ -80,7 +120,17 @@
                 this.$emit('openCreateEventModal', event)
             },
             eventChanged(event) {
+                this.isShow = false
                 this.events = this.$refs.calendar.fireMethod('clientEvents')
+                apiEvents.patch(event.id, {
+                    start: this.$moment(event.start).format('YYYY-MM-DD HH:mm:ss'),
+                    end: event.end ? this.$moment(event.end).format('YYYY-MM-DD HH:mm:ss') : null,
+                    title: event.title,
+                    color: event.color
+                })
+                    .then(response => {
+                        this.isShow = true
+                    })
             }
         },
         computed: {

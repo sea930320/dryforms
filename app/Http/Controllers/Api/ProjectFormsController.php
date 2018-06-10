@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\ProjectStatement;
+use App\Models\StandardStatement;
+use App\Models\DefaultStatement;
 use App\Models\ProjectForm;
 use App\Models\StandardForm;
 use App\Models\DefaultFromData;
@@ -22,6 +25,18 @@ use App\Mail\DryFormsPlus;
 class ProjectFormsController extends ApiController
 {
     /**
+     * @var ProjectStatement
+     */
+    private $projectStatement;
+    /**
+     * @var StandardStatement
+     */
+    private $standardStatement;
+    /**
+     * @var DefaultStatement
+     */
+    private $defaultStatement;
+    /**
      * @var ProjectForm
      */
     private $projectForm;
@@ -39,8 +54,11 @@ class ProjectFormsController extends ApiController
      *
      * @param ProjectForm $projectForm
      */
-    public function __construct(StandardForm $standardForm, DefaultFromData $defaultFromData, ProjectForm $projectForm)
+    public function __construct(ProjectStatement $projectStatement, StandardStatement $standardStatement, StandardForm $standardForm, DefaultFromData $defaultFromData, ProjectForm $projectForm, DefaultStatement $defaultStatement)
     {
+        $this->projectStatement = $projectStatement;
+        $this->standardStatement = $standardStatement;
+        $this->defaultStatement = $defaultStatement;
         $this->projectForm = $projectForm;
         $this->standardForm = $standardForm;
         $this->defaultFormData = $defaultFromData;
@@ -70,7 +88,37 @@ class ProjectFormsController extends ApiController
     {
     	$queryParams = $request->validatedOnly();
         foreach ($queryParams['project_forms'] as $key => $project_form) {
-        	$projectForm = $this->projectForm->create($project_form);
+            $projectForm = $this->projectForm->create($project_form);
+
+            $standardStatement = $this->standardStatement
+        		->where('form_id', $project_form['form_id']);        	
+        	if ($standardStatement->count() === 0) {
+        		$defaultStatements = $this->defaultStatement
+	        	->where('form_id', $project_form['form_id'])
+	        	->get();
+        		foreach ($defaultStatements as $key => $defaultStatement) {
+        			$defaultStatement = $defaultStatement->toArray();
+        			unset($defaultStatement['id']);
+        			unset($defaultStatement['created_at']);
+        			unset($defaultStatement['updated_at']);
+	        		$defaultStatement['company_id'] = auth()->user()->company_id;
+	        		
+	        		$this->standardStatement->create($defaultStatement);
+	        		$defaultStatement['project_id'] = $project_form['project_id'];
+	        		$this->projectStatement->create($defaultStatement);
+	        	}
+            } else {
+        		$standardStatements = $standardStatement->get();
+        		foreach ($standardStatements as $key => $standardStatement) {
+        			$standardStatement = $standardStatement->toArray();
+        			unset($standardStatement['id']);
+        			unset($standardStatement['created_at']);
+        			unset($standardStatement['updated_at']);
+	        		$standardStatement['company_id'] = auth()->user()->company_id;
+	        		$standardStatement['project_id'] = $project_form['project_id'];
+	        		$this->projectStatement->create($standardStatement);
+	        	}
+        	}
         }
         return $this->respond(['message' => 'Project Forms successfully created']);
     }

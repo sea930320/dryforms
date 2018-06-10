@@ -1,6 +1,6 @@
 <template>
     <div class="settings-company">
-        <my-upload field="img"
+        <!-- <my-upload field="img"
           width="180"
           height="81"
           url=""
@@ -8,7 +8,7 @@
           v-model="image.show"
           @crop-success="cropSuccess"
           @input="eventOnMyUpload"
-          img-format="png"></my-upload>
+          img-format="png"></my-upload> -->
         <div class="card text-center" v-if="isLoaded">
             <cancel-subscription-modal></cancel-subscription-modal>
             <div class="card-header">
@@ -20,11 +20,16 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group logo-preview"  v-if="company.logo">
-                                    <img :src="company.logo" height="90">
+                                    <img :src="company.logo" height="90"> <br/>
+                                    <button class="btn btn-sm mt-2" @click.prevent="removeImage">Remove Logo</button>
                                 </div>
-                                <div class="form-group">
-                                    <button class="btn btn-sm" @click.prevent="imageUpload">
-                                      {{company.logo? 'Reset Company Logo' : 'Set Company Logo'}}</button>
+                                <div v-else class="form-group">
+                                    <!-- <button class="btn btn-sm" @click.prevent="imageUpload">
+                                      {{company.logo? 'Reset Company Logo' : 'Set Company Logo'}}</button> -->
+                                    <label for="file-upload" class="custom-file-upload">
+                                        <i class="fa fa-cloud-upload"></i> Set Company Logo
+                                    </label>
+                                    <input id="file-upload" type="file" @change="onFileChange"/>
                                 </div>
                                 <div class="form-group">
                                     <label>Company Name:</label>
@@ -134,6 +139,23 @@
             ...mapActions([
                 'fetchUser'
             ]),
+            onFileChange(e) {
+                var files = e.target.files || e.dataTransfer.files
+                if (!files.length) return
+                this.createImage(files[0])
+            },
+            createImage(file) {
+                var reader = new FileReader()
+                var vm = this
+
+                reader.onload = (e) => {
+                    vm.company.logo = e.target.result
+                }
+                reader.readAsDataURL(file)
+            },
+            removeImage: function (e) {
+                this.company.logo = ''
+            },
             generateLogoToBase64() {
                 var _this = this
                 let logo = this.company.logo
@@ -247,4 +269,13 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
+    input[type="file"]#file-upload {
+        display: none;
+    }
+    .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 3px 12px;
+        cursor: pointer;
+    }
 </style>

@@ -29,7 +29,17 @@
         data() {
             return {
                 isLoaded: false,
-                events: [],
+                events: [
+                    {
+                        title: 'event1',
+                        start: '2018-06-09'
+                    },
+                    {
+                        title: 'event2',
+                        start: '2018-06-12',
+                        end: '2018-06-15'
+                    }
+                ],
                 selected: {
                     id: null,
                     title: '',
