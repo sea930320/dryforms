@@ -26,6 +26,8 @@ Route::namespace('Api')->middleware(['jwt.auth'])->group(function($router) {
     $router->resource('models', 'EquipmentModelsController');
     $router->resource('teams', 'TeamsController');
     $router->resource('events', 'EventController');
+    $router->resource('tickets', 'TicketsController');
+    $router->get('ticket/categories', 'TicketsController@getCategories');
     $router->resource('statuses', 'EquipmentStatusesController');
     $router->resource('equipment', 'EquipmentsController');
     $router->resource('forms', 'FormsController');

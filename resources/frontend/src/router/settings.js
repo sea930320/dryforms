@@ -23,7 +23,7 @@ const leftLinks = [
 
 const rightLinks = [
     {
-      path: '/settings/support',
+      path: '/settings/support/create',
       name: 'Suggestions/Support',
       icon: require('../assets/icon-support.png')
     },
@@ -118,7 +118,35 @@ const routes = (configRoute) => [
         component: resolve => {
           require(['../components/standards/right-link/Calendar.vue'], resolve)
         }
-      }
+    },
+    {
+        path: '/settings/support/list',
+        name: 'UserTickets',
+        props: {title: 'My Tickets'},
+        meta: {
+          title: 'My Tickets',
+          roles: ['customer'],
+          leftLinks: leftLinks,
+          rightLinks: rightLinks
+        },
+        component: resolve => {
+          require(['../components/ticket/UserTickets.vue'], resolve)
+        }
+    },
+    {
+        path: '/settings/support/create',
+        name: 'CreateTicket',
+        props: {title: 'Open New Ticket'},
+        meta: {
+          title: 'Open New Ticket',
+          roles: ['customer'],
+          leftLinks: leftLinks,
+          rightLinks: rightLinks
+        },
+        component: resolve => {
+          require(['../components/ticket/Create.vue'], resolve)
+        }
+    }
 ]
 
 export default routes

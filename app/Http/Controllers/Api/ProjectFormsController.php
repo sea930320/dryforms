@@ -1370,15 +1370,27 @@ class ProjectFormsController extends ApiController
                 $this->print_work_authorization($projectid, 11, "Certificate of Completion");
             }
         }
-        if($selectedPDFType == 1){
-            PDF::Output(__DIR__ . "/temp/dryforms_project$projectid-$formid.pdf",'F');
+        $storagePath = storage_path('app/public/forms');
+        if (!File::exists($storagePath)) {
+            File::makeDirectory($storagePath, 0775);
+        }
+        $pdfPath = ($storagePath . '/pdf');
+        if (!File::exists($pdfPath)) {
+            File::makeDirectory($pdfPath, 0775);
+        }
+        if($selectedPDFType == 1){            
+            PDF::Output($pdfPath . "/dryforms_project$projectid-$formid.pdf",'F');
             if($request->lastForm == $formid){
-                return redirect()->route('send-email', ['projectId'=>$projectid, 'pdfFlag'=>1, 'allForms' => $request->allFroms, 'address'=>$request->address]);
+                echo "success";
+                exit;
+                // return redirect()->route('send-email', ['projectId'=>$projectid, 'pdfFlag'=>1, 'allForms' => $request->allFroms, 'address'=>$request->address]);
             }
         }
         else{
-            PDF::Output(__DIR__ . "/temp/dryforms_project$projectid.pdf",'F');
-            return redirect()->route('send-email',['projectId'=>$projectid, 'pdfFlag'=>2, 'address'=>$request->address]);
+            PDF::Output($pdfPath . "/dryforms_project$projectid.pdf",'F');
+            echo "success";
+            exit;
+            // return redirect()->route('send-email',['projectId'=>$projectid, 'pdfFlag'=>2, 'address'=>$request->address]);
         }
     }
     public function sendEmail(Request $request)
